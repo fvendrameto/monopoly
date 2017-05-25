@@ -10,6 +10,9 @@ Projeto feito como trabalho final para a disciplina de Programação Orientada O
 ## Contribuidores
 
 Fernando Moura Leite Vendrameto
+
 Gustavo Sutter Pessurno de Carvalho
+
 Guilherme de Pinho Montemovo
+
 Leonardo Moreira Kobe
