@@ -38,8 +38,13 @@ public class Jogador{
 		this.posicao_tabuleiro = pos;
 	}
 	
+	public void andarPosicaoTabuleiro(int pos){
+		this.posicao_tabuleiro += pos;
+	}
+	
 	public void adicionarPropriedade(Propriedade propriedade){
-		this.propriedades.add(propriedade);
+		if(!this.propriedades.contains(propriedade))
+			this.propriedades.add(propriedade);
 	}
 	
 	public void removerPropriedade(Propriedade propriedade){
