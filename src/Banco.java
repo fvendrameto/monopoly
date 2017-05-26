@@ -12,6 +12,7 @@ public class Banco {
 		}
 	}
 	
+	
 	public static void hipotecaPropriedade(Propriedade propriedade, Jogador jogador){
 		if(propriedade.getJogador() == jogador){ //caso o jogador seja o dono da propriedade
 			propriedade.setJogador(null); //propriedade fica sem nome

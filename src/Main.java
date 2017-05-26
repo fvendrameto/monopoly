@@ -10,7 +10,7 @@ public class Main {
 		Jogador jogador_atual;
 		int dados;
 		
-		initComponentes();
+		initComponentes();	
 		while(tabuleiro.jogoContinua()){
 			idx_jogador_atual = tabuleiro.getJogadorAtual();
 			jogador_atual = jogadores[jogador_atual];
@@ -30,6 +30,7 @@ public class Main {
 						Banco.comprarPropriedade(espaco_atual, jogador_atual);
 					}
 				}
+				
 			}else{
 				//realiza ação
 			}

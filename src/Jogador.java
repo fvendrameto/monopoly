@@ -26,6 +26,7 @@ public class Jogador{
 		return this.saldo;
 	}	
 
+	
 	public boolean naPrisao(){
 		return this.preso == true;
 	}
