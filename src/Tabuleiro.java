@@ -6,6 +6,7 @@ public class Tabuleiro {
 	private ArrayList<Jogador> jogadores;
 	private Dados dados = new Dados(2);
 	private int[] ordem;
+	private boolean[] temDinheiro;
 	private int jogadorAtual;
 	private int indJogador;
 	
@@ -20,8 +21,6 @@ public class Tabuleiro {
 			this.ordem[i] = -1;
 			this.temDinheiro[i] = true;
 		}
-		
-		this.turno = 0;
 	}
 	
 	public void sortearJogadores() {
@@ -57,23 +56,33 @@ public class Tabuleiro {
 		return this.ordem[this.indJogador];
 	}
 	
-	public boolean jogoContinua() { 
-		for(Jogador j : this.jogadores)
-			if(j.getSaldo() > 0)
-				return true;
+	public boolean jogoContinua() {
+		int cont = 0;
+		
+		for(int i=0; i<jogadores.size(); i++)
+			if(this.temDinheiro[i])
+				cont++;
+		
+		if(cont > 2)
+			return true;
 		return false;
 	}
 	
 	public void proximoJogador() {
-		if((this.indJogador + 1) >= this.jogadores.size())
-			this.indJogador = 0;
-		else
-			this.indJogador++;
+		do {
+			if(this.indJogador+1 >= this.jogadores.size())
+				this.indJogador = 0;
+			else
+				this.indJogador++;
+		} while(!this.temDinheiro[this.indJogador]);
 	}
 	
 	public Espaco getEspacoPosicao(int posicao) {
 		return this.espacos.get(posicao);
 	}
 	
+	public void setFalencia(int pos) {
+		this.temDinheiro[pos] = false;
+	}
 	
 }
