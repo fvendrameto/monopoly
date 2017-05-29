@@ -6,7 +6,7 @@
 public abstract class Compravel extends Espaco {
     private Jogador propietario;
     
-    Compravel(String nome, int posicao) {
+    public Compravel(String nome, int posicao) {
         super(nome, posicao);
     }
     
@@ -20,7 +20,4 @@ public abstract class Compravel extends Espaco {
     
     abstract public int getPreco();
     
-    public void pagar(Jogador pagante) {
-        propietario.depositarDinheiro(pagante.sacarDinheiro(getPreco()));
-    }
 }

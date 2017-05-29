@@ -10,6 +10,7 @@ public class Companhia extends Compravel {
         super(nome, posicao);
     }
     
+    @Override
     public int getPreco() {
         return tabela_precos[n_companhias];
     }
