@@ -13,7 +13,7 @@ public class Main {
 		Espaco espaco_atual;
 		int resultado_dados;
 		int[] dados = null;
-		
+	
 		System.out.println("Digite o numero de jogadores: ");
 		numero_jogadores = EntradaTeclado.leInt();
 		System.out.println(numero_jogadores);

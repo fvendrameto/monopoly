@@ -32,4 +32,14 @@ public class Propriedade extends Compravel {
     	return quantidade_cor[cor];
     }
     
+    @Override
+    public String toString(){
+    	String str = this.getNome() + "\n";
+    	str += this.getPreco() + "\n";
+    	str += this.getValorHipoteca() + "\n";
+    	for(int i=0;i<6;i++) str += this.tabela_precos[i] + " ";
+    	str += "\n" + cor;
+    	return str;
+    }
+    
 }
