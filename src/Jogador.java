@@ -2,11 +2,12 @@ import java.util.ArrayList;
 
 public class Jogador{
 	private static final int SALDO_INICIAL = 500;
+	private static final int TAMANHO_TABULEIRO = 20;
 	private String nome;
 	private int saldo;
 	private int posicao_tabuleiro;
 	private boolean preso;
-	private ArrayList<Propriedade> propriedades;
+	private ArrayList<Compravel> compraveis;
 	private ArrayList<Carta> cartas;
 
 	public Jogador(String nome){
@@ -15,7 +16,7 @@ public class Jogador{
 		this.posicao_tabuleiro = 0;
 		this.preso = false;
 		this.propriedades = new ArrayList<Propriedade>();
-		this.cartas = new ArrayList<Cartas>();
+		this.cartas = new ArrayList<Carta>();
 	}
 
 	public String getNome(){
@@ -39,24 +40,29 @@ public class Jogador{
 		this.posicao_tabuleiro = pos;
 	}
 	
-	public void andarPosicaoTabuleiro(int pos){
+	public boolean andarPosicaoTabuleiro(int pos){
 		this.posicao_tabuleiro += pos;
+		if(this.posicao_tabuleiro >= TAMANHO_TABULEIRO){
+			this.posicao_tabuleiro %= TAMANHO_TABULEIRO;
+			return true;
+		}
+		return false;
 	}
 	
-	public void adicionarPropriedade(Propriedade propriedade){
-		if(!this.propriedades.contains(propriedade))
-			this.propriedades.add(propriedade);
+	public void adicionarCompravel(Compravel compravel){
+		if(!this.compraveis.contains(compravel))
+			this.compraveis.add(compravel);
 	}
 	
-	public void removerPropriedade(Propriedade propriedade){
-		this.propriedades.remove(propriedade);
+	public void removerCompravel(Compravel compravel){
+		this.compraveis.remove(compravel);
 	}
 	
 	public void depositarDinheiro(int quantia){
 		this.saldo += quantia;
 	}
 	
-	public int sacarDinheiro(int quantia){
+	public void sacarDinheiro(int quantia){
 		this.saldo -= quantia;
 	}
 

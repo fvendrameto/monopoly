@@ -1,23 +1,33 @@
-
-/**
- *
- * @author guimontemovo
- */
 public abstract class Compravel extends Espaco {
     private Jogador propietario;
+    private int preco;
+    private int hipoteca;
     
-    public Compravel(String nome, int posicao) {
-        super(nome, posicao);
+    public Compravel(String nome, int preco, int hipoteca) {
+        super(nome);
+        this.hipoteca = hipoteca;
+        this.propietario = null;
+        this.preco = preco;
     }
     
-    public Jogador getJogador() {
+    public Jogador getDono() {
         return propietario;
     }
 
-    public void setJogador(Jogador propietario) {
+    public void setDono(Jogador propietario) {
         this.propietario = propietario;
     }
+   
+    public boolean temDono(){
+    	return this.propietario != null;
+    }
     
-    abstract public int getPreco();
+    public int getPreco(){
+    	return this.preco;
+    }
+    
+    public int getValorHipoteca(){
+    	return this.hipoteca;
+    }
     
 }
