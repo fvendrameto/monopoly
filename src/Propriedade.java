@@ -1,34 +1,35 @@
 
-import java.util.LinkedList;
-
-/**
- *
- * @author guimontemovo
- */
 public class Propriedade extends Compravel {
-    int n_casas;
-    int n_predios;
-    int[][] tabela_precos;
-    int[][] tabela_hipoteca;
+    private int n_casas;
+    private int[] tabela_precos;
+    private int cor;
+    private static int[] quantidade_cor; //PRECISA CRIAR SETTER PARA ISSO
     
-    Propriedade(String nome, int posicao) {
-        super(nome, posicao);
-    }
-    
-    @Override
-    public int getPreco() {
-        return tabela_precos[n_casas][n_predios];
-    }
-
-    public void setTabela_precos(int[][] tabela_precos) {
+    Propriedade(String nome, int preco, int hipoteca,int[] tabela_precos, int cor) {
+        super(nome,preco,hipoteca);
         this.tabela_precos = tabela_precos;
+        this.n_casas = 0;
+        this.cor = cor;
     }
     
-    public int getValorHipoteca() {
-        return tabela_hipoteca[n_casas][n_predios];
+    public int getAluguel() {
+        return tabela_precos[n_casas];
     }
-
-    public void setTabela_hipoteca(int[][] tabela_hipoteca) {
-        this.tabela_hipoteca = tabela_hipoteca;
+    
+    public boolean adicionarCasa(){
+    	if(n_casas <= 5){
+    		n_casas++;
+    		return true;
+    	}
+    	return false;
     }
+    
+    public int getCor(){
+    	return this.cor;
+    }
+     
+    public static int getTotalCor(int cor){
+    	return quantidade_cor[cor];
+    }
+    
 }

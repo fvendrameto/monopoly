@@ -9,7 +9,7 @@ public abstract class Espaco {
     private String nome;
     LinkedList<Jogador> jogadores;
         
-    Espaco(String nome, int posicao) {
+    Espaco(String nome) {
         this.nome = nome;
         jogadores = new LinkedList<>();
     }
@@ -28,6 +28,12 @@ public abstract class Espaco {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }   
+    }  
+    
+    public boolean compravel(){
+    	if(this instanceof Compravel)
+    		return true;
+    	return false;
+    }
       
 }

@@ -7,7 +7,7 @@ public class Tabuleiro {
 	private boolean[] temDinheiro;
 	private int indJogador;
 	
-	public Tabuleiro(ArrayList<Jogador> j, ArrayList<Espaco> e) {
+	public Tabuleiro(ArrayList<Jogador> j, ArrayList<Espaco> e){
 		this.jogadores = j;
 		this.espacos = e;
 		
@@ -25,9 +25,9 @@ public class Tabuleiro {
 		} while(!this.temDinheiro[this.indJogador]);
 	}
 	
-	public int getJogadorAtual() {
+	public Jogador getJogadorAtual() {
 		proximoIndJogador();
-		return this.ordem[this.indJogador];
+		return jogadores.get(this.ordem[this.indJogador]);
 	}
 	
 	public boolean jogoContinua() {
