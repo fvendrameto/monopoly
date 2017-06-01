@@ -5,8 +5,8 @@ public class Companhia extends Compravel {
         super(nome,preco,hipoteca);
     }
     
-    public int getAluguel(int res_dados) {
-        return aluguel * res_dados;
+    public int getAluguel() {
+        return aluguel;
     }
     
 }

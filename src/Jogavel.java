@@ -1,10 +1,9 @@
-/**
- *
- * @author guimontemovo
- */
 public class Jogavel extends Espaco {
-    Jogavel(String nome, int posicao) {
-        super(nome, posicao);
+    int acao;
+	
+	Jogavel(String nome, int acao) {
+        super(nome);
+        this.acao = acao;
     }
     
     public void jogar(Jogador j) {

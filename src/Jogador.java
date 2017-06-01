@@ -15,7 +15,7 @@ public class Jogador{
 		this.saldo = SALDO_INICIAL;
 		this.posicao_tabuleiro = 0;
 		this.preso = false;
-		this.propriedades = new ArrayList<Propriedade>();
+		this.compraveis = new ArrayList<Compravel>();
 		this.cartas = new ArrayList<Carta>();
 	}
 
@@ -64,6 +64,15 @@ public class Jogador{
 	
 	public void sacarDinheiro(int quantia){
 		this.saldo -= quantia;
+	}
+	
+	private boolean temTodosCor(int cor){
+		int total = Propriedade.getTotalCor(cor);
+		int count = 0;
+		for(Compravel c : this.compraveis)
+			if(c.propriedade())
+				if(((Propriedade) c).getCor() == cor) count++;
+		return count == total;
 	}
 
 }

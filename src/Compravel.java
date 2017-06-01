@@ -30,4 +30,12 @@ public abstract class Compravel extends Espaco {
     	return this.hipoteca;
     }
     
+    public boolean propriedade(){
+    	if(this instanceof Propriedade)
+    		return true;
+    	return false;
+    }
+    
+    public abstract int getAluguel();
+   
 }

@@ -6,13 +6,13 @@ public class Main {
 	public static Tabuleiro tabuleiro; 
 	public static int numero_jogadores;
 	
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException, InterruptedException{
 		ArrayList<Jogador> jogadores = new ArrayList<Jogador>();
 		ArrayList<Espaco> espacos = new ArrayList<Espaco>();
 		Jogador jogador;
 		Espaco espaco_atual;
 		int resultado_dados;
-		int[] dados;
+		int[] dados = null;
 		
 		System.out.println("Digite o numero de jogadores: ");
 		numero_jogadores = EntradaTeclado.leInt();
@@ -53,14 +53,15 @@ public class Main {
 						System.out.println("Deseja comprar a localidade? 1 - Sim | 2 - Nao");
 						int op = EntradaTeclado.leInt();
 						if(op == 1){
-							Banco.comprarPropriedade(e_atual, jogador);
+							Banco.comprarCompravel(e_atual, jogador);
 						}							
 					}
 				}
 			}else{ //Espaço de ação
-				Acao.realizarAcao(tabuleiro,jogador,espaço_atual);
+				//Acao.realizarAcao(tabuleiro,jogador,espaço_atual);
 			}
 			
+			/*
 			//OPCOẼ DE JOGO DO JOGADOR
 			int cmd = 1;
 			while(cmd != 0){
@@ -104,7 +105,10 @@ public class Main {
 					//depois
 				}
 				
+				
+				
 			}
+			*/
 			
 		}
 	
