@@ -4,24 +4,40 @@ public class Carta {
 	private boolean sorte;
 	private String descricao; //Ex: "Volte ao ponto de partida e recebeba R$200,00"
 	private int acao; //(0)->Ir a uma determinada posicao do tabuleiro;(1)Pagar ao banco;(2)Receber do banco, etc...
+	private int quantia;
+    private int posicao;
 	
-	public Carta(boolean s, String desc) {
-		this.sorte = s;
-		this.descricao = desc;
+	public Carta(boolean sorte, String descricao, int acao, int quantia, int posicao) {
+        this.sorte = sorte;
+        this.acao = acao;
+        this.quantia = quantia;
+        this.posicao = posicao;
+        this.descricao = descricao;
+    }
+	
+	public Carta(boolean sorte, String descricao, int acao, int quantia_ou_posicao) {
+        this.sorte = sorte;
+        this.acao = acao;
+        if(acao == 0){
+        	this.posicao = quantia_ou_posicao;
+        	this.quantia = 0;
+        }else{
+        	this.quantia = quantia_ou_posicao;
+        	this.posicao = 0;
+        }
+        this.descricao = descricao;
+    }
+	
+	public int getAcao(){
+		return this.acao;
 	}
 	
-	public void realizarAcao (int acao, Jogador j, int quantia, int posicao){
-		switch (acao){
-		case 0:									//Ir a uma determinada posicao do tabuleiro (sorte/revés)
-			j.setPosicaoTabuleiro(posicao);
-		case 1:									//Pagar ao banco (revés)
-			j.sacarDinheiro(quantia);
-		case 2:									//Receber (sorte)
-			j.depositarDinheiro(quantia);		
-		case 3:									//EX: "vá ao ponto de partida e receba 200 reais"
-			j.setPosicaoTabuleiro(posicao);
-			j.depositarDinheiro(quantia);
-		}
+	public int getQuantia(){
+		return this.quantia;
 	}
 
+	public int getPosicao(){
+		return this.posicao;
+	}	
+	
 }

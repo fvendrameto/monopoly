@@ -1,37 +1,43 @@
 public class Jogavel extends Espaco {
-    int acao;
+    private String descricao;
+    private int acao;
+    private int quantia;
+    private int posicao;
+    
 	
-	Jogavel(String nome, int acao) {
+	public Jogavel(String nome, String descricao, int acao, int quantia, int posicao) {
         super(nome);
         this.acao = acao;
+        this.quantia = quantia;
+        this.posicao = posicao;
+        this.descricao = descricao;
     }
-    
-    public void jogar(Jogador j) {
-        switch(getNome()) {
-            case "bau":
-                break;
-            case "cadeia":
-                break;
-            case "vaicadeia":
-                break;
-            case "roubo":
-                j.sacarDinheiro(100);
-                break;
-            case "superroubo":
-                j.sacarDinheiro(200);
-                break;
-            case "salario":
-                j.depositarDinheiro(0b1110000100);
-                break;
-            case "chance":
-                break;
-            case "nada":
-                break;
-            case "motoclube":
-                break;
+	
+	public Jogavel(String nome, String descricao, int acao, int quantia_ou_posicao) {
+        super(nome);
+        this.acao = acao;
+        if(acao == 0){
+        	this.posicao = quantia_ou_posicao;
+        	this.quantia = 0;
+        }else{
+        	this.quantia = quantia_ou_posicao;
+        	this.posicao = 0;
         }
+        this.descricao = descricao;
     }
-    
+	
+	public int getAcao(){
+		return this.acao;
+	}
+	
+	public int getQuantia(){
+		return this.quantia;
+	}
+
+	public int getPosicao(){
+		return this.posicao;
+	}
+	
     @Override
     public String toString(){
     	String str = this.getNome() + "\n";

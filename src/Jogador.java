@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Jogador{
 	private static final int SALDO_INICIAL = 500;
-	private static final int TAMANHO_TABULEIRO = 20;
+	private static final int TAMANHO_TABULEIRO = 10;
 	private String nome;
 	private int saldo;
 	private int posicao_tabuleiro;
@@ -73,6 +73,11 @@ public class Jogador{
 			if(c.propriedade())
 				if(((Propriedade) c).getCor() == cor) count++;
 		return count == total;
+	}
+	
+	@Override
+	public String toString(){
+		return nome + " (" + saldo + ")";
 	}
 
 }

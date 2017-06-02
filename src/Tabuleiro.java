@@ -25,6 +25,11 @@ public class Tabuleiro {
 		} while(!this.temDinheiro[this.indJogador]);
 	}
 	
+	public void setOrdem(){
+		for(int i=0;i<jogadores.size();i++)
+			ordem[i] = i;
+	}
+	
 	public Jogador getJogadorAtual() {
 		proximoIndJogador();
 		return jogadores.get(this.ordem[this.indJogador]);
@@ -37,7 +42,7 @@ public class Tabuleiro {
 			if(this.temDinheiro[i])
 				cont++;
 		
-		if(cont > 2)
+		if(cont >= 2)
 			return true;
 		return false;
 	}
@@ -48,6 +53,10 @@ public class Tabuleiro {
 	
 	public void setFalencia(int pos) {
 		this.temDinheiro[pos] = false;
+	}
+	
+	public ArrayList<Jogador> getJogadores (){
+		return jogadores;
 	}
 	
 }

@@ -14,9 +14,11 @@ public class Main {
 		int resultado_dados;
 		int[] dados = null;
 	
+		espacos = Initializers.initEspacos("espacos.dat");
+		System.out.println(espacos.size());
+		
 		System.out.println("Digite o numero de jogadores: ");
 		numero_jogadores = EntradaTeclado.leInt();
-		System.out.println(numero_jogadores);
 		
 		for(int i=0;i<numero_jogadores;i++){
 			System.out.println("Digite o nome do jogador: ");
@@ -26,12 +28,14 @@ public class Main {
 		
 		tabuleiro = new Tabuleiro(jogadores,espacos);
 		
-		
+		tabuleiro.setOrdem();
 		while(tabuleiro.jogoContinua()){
 			jogador = tabuleiro.getJogadorAtual();
+			System.out.println(jogador+ " é sua vez");
 			System.out.println("Aperte enter para jogar os dados");
 			EntradaTeclado.leString();
 			resultado_dados = Dados.rolar(2,dados);
+			System.out.println("Deu " + resultado_dados);
 			
 			tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro()).removeJogador(jogador);
 			boolean ret = jogador.andarPosicaoTabuleiro(resultado_dados);
@@ -39,7 +43,7 @@ public class Main {
 			espaco_atual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
 			espaco_atual.addJogador(jogador);
 			
-			System.out.println("Voce parou no" + espaco_atual.getNome());
+			System.out.println("Voce parou no: \n" + espaco_atual);
 			//OPCÃO QUANDO PARA NO ESPAÇO
 			if(espaco_atual.compravel()){
 				Compravel e_atual = (Compravel) espaco_atual;
@@ -57,8 +61,8 @@ public class Main {
 						}							
 					}
 				}
-			}else{ //Espaço de ação
-				//Acao.realizarAcao(tabuleiro,jogador,espaço_atual);
+			}else{
+				Acao.realizarAcao(tabuleiro,jogador,(Jogavel)espaco_atual);
 			}
 			
 			/*
