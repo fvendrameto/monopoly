@@ -1,3 +1,15 @@
+/*
+ * CODIGO DAS AÇÕES:
+ * 
+ * 0 - mudar posicao
+ * 1 - pagar ao banco
+ * 2 - receber do banco
+ * 3 - mudar posicao e pagar
+ * 4 - pagar aos jogadores
+ * 5 - receber dos jogadores 
+ * 
+ */
+
 
 public class Acao {
 	

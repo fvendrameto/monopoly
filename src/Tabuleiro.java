@@ -3,13 +3,15 @@ import java.util.ArrayList;
 public class Tabuleiro {
 	private ArrayList<Espaco> espacos;
 	private ArrayList<Jogador> jogadores;
+	private ArrayList<Carta> cartas;
 	private int[] ordem;
 	private boolean[] temDinheiro;
 	private int indJogador;
 	
-	public Tabuleiro(ArrayList<Jogador> j, ArrayList<Espaco> e){
+	public Tabuleiro(ArrayList<Jogador> j, ArrayList<Espaco> e, ArrayList<Carta> c){
 		this.jogadores = j;
 		this.espacos = e;
+		this.cartas = c;
 		
 		this.ordem = new int[this.jogadores.size()];
 		this.temDinheiro = new boolean[this.jogadores.size()];

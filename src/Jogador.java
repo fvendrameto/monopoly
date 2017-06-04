@@ -66,13 +66,17 @@ public class Jogador{
 		this.saldo -= quantia;
 	}
 	
-	private boolean temTodosCor(int cor){
+	public boolean temTodosCor(int cor){
 		int total = Propriedade.getTotalCor(cor);
 		int count = 0;
 		for(Compravel c : this.compraveis)
 			if(c.propriedade())
 				if(((Propriedade) c).getCor() == cor) count++;
 		return count == total;
+	}
+	
+	public ArrayList<Compravel> getCompraveis(){
+		return this.compraveis;
 	}
 	
 	@Override

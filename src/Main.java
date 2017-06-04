@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
@@ -9,12 +10,16 @@ public class Main {
 	public static void main(String[] args) throws IOException, InterruptedException{
 		ArrayList<Jogador> jogadores = new ArrayList<Jogador>();
 		ArrayList<Espaco> espacos = new ArrayList<Espaco>();
+		ArrayList<Carta> cartas = new ArrayList<Carta>();
+		ArrayList<Compravel> compraveis;
+		HashMap<Integer,Compravel> map_compraveis;
 		Jogador jogador;
 		Espaco espaco_atual;
 		int resultado_dados;
 		int[] dados = null;
 	
 		espacos = Initializers.initEspacos("espacos.dat");
+		cartas = Initializers.initCartas("cartas.dat");
 		System.out.println(espacos.size());
 		
 		System.out.println("Digite o numero de jogadores: ");
@@ -26,7 +31,7 @@ public class Main {
 			jogadores.add(new Jogador(nome));
 		}
 		
-		tabuleiro = new Tabuleiro(jogadores,espacos);
+		tabuleiro = new Tabuleiro(jogadores,espacos,cartas);
 		
 		tabuleiro.setOrdem();
 		while(tabuleiro.jogoContinua()){
@@ -65,54 +70,67 @@ public class Main {
 				Acao.realizarAcao(tabuleiro,jogador,(Jogavel)espaco_atual);
 			}
 			
-			/*
-			//OPCOẼ DE JOGO DO JOGADOR
+			
 			int cmd = 1;
 			while(cmd != 0){
 				System.out.println("Opçoes de jogo: 1 - Hipoteca | 2 - Construir casa | 3 - Vender Casa | 4 - Oferta de compra | 0- Sair");
 				if(cmd == 1){
 					int i = 0;
-					for(Compravel p : jogador.getCompraveis()){
-						System.out.println(i++ +  " - " + p.getNome() + " " + p.getPreco());
+					compraveis = jogador.getCompraveis();
+					map_compraveis = new HashMap<Integer,Compravel>();
+					for(Compravel c : compraveis){
+						map_compraveis.put(i, c);
+						System.out.println(i++ +  " - " + c.getNome() + " " + c.getPreco());
 					}
 					System.out.println("\nDigite a desejada: ");
-					int idx_p = EntradaTeclado.leInt();
-					Compravel p_hipoteca = jogador.getPropridadeIndice(idx_p);
-					Banco.hipotecaPropriedade(p_hipoteca, jogador);
+					int n = EntradaTeclado.leInt();
+					Compravel p_hipoteca = map_compraveis.get(n);
+					Banco.hipotecaCompravel(p_hipoteca, jogador);
 				}else if(cmd == 2){
 					int i = 0;
-					for(Compravel p : jogador.getPropriedades()){
-						if(p instanceof propriedade)
-							System.out.println(i +  " - " + p.getNome() + " " + p.getPreco());
-						i++;
+					compraveis = jogador.getCompraveis();
+					map_compraveis = new HashMap<Integer,Compravel>();
+					for(Compravel p : jogador.getCompraveis()){
+						if(p instanceof Propriedade){
+							map_compraveis.put(i, p);
+							System.out.println(i++ +  " - " + p.getNome() + " :" + ((Propriedade)p).getPrecoCasa());
+						}
 					}
 					System.out.println("\nDigite a desejada: ");
-					int idx_p = EntradaTeclado.leInt();
-					Propriedade p_escolhida = jogador.getPropridadeIndice(idx_p);
-					if(jogador.getSaldo() >= p_escolhida.getPrecoCasa() && jogador.temTodas(p_escolhida)){
-						Banco.costruirCasa(p_escolhida, jogador);
+					int n = EntradaTeclado.leInt();
+					Propriedade p_escolhida = (Propriedade) map_compraveis.get(n);
+					if(jogador.getSaldo() >= p_escolhida.getPreco() && jogador.temTodosCor(p_escolhida.getCor())){
+						Banco.comprarCasa(p_escolhida, jogador);
+						System.out.println("Casa comprada");
+					}else{
+						System.out.println("Casa não pode ser comprada");
 					}
-				}else if(cmd == 3){
+				}if(cmd == 3){
 					int i = 0;
-					for(Compravel p : jogador.getPropriedades()){
-						if(p instanceof propriedade)
-							System.out.println(i +  " - " + p.getNome() + " " + p.getPreco());
-						i++;
+					compraveis = jogador.getCompraveis();
+					map_compraveis = new HashMap<Integer,Compravel>();
+					for(Compravel p : jogador.getCompraveis()){
+						if(p instanceof Propriedade){
+							map_compraveis.put(i, p);
+							System.out.println(i++ +  " - " + p.getNome() + " :" + ((Propriedade)p).getPrecoCasa());
+						}
 					}
 					System.out.println("\nDigite a desejada: ");
-					int idx_p = EntradaTeclado.leInt();
-					Propriedade p_escolhida = jogador.getPropridadeIndice(idx_p);
-					if(p_escollhida.getNumeroCasas() > 0){
-						Banco.vendeCasa(p_escolhida, jogador);
+					int n = EntradaTeclado.leInt();
+					Propriedade p_escolhida = (Propriedade) map_compraveis.get(n);
+					if(p_escolhida.getNumeroCasas() > 0){
+						Banco.comprarCasa(p_escolhida, jogador);
+						System.out.println("Casa vendida");
+					}else{
+						System.out.println("Não pode vender casa");
 					}
-				}else if(cmd == 4){
+				}if(cmd == 4){
 					//depois
 				}
 				
 				
 				
 			}
-			*/
 			
 		}
 	

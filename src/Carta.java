@@ -28,6 +28,14 @@ public class Carta {
         this.descricao = descricao;
     }
 	
+	public String getDescricao(){
+		return this.descricao;
+	}
+	
+	public boolean getSorteOuReves(){
+		return this.sorte;
+	}
+	
 	public int getAcao(){
 		return this.acao;
 	}
@@ -38,6 +46,16 @@ public class Carta {
 
 	public int getPosicao(){
 		return this.posicao;
-	}	
+	}
+	
+	@Override
+	public String toString(){
+		String str = "";
+		if(this.sorte) str += "SORTE\n";
+		else str += "REVES\n";
+		str += this.descricao + "\n";
+		str += this.acao + "\n" + this.quantia + "\n" + this.posicao;
+		return str;
+	}
 	
 }
