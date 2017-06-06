@@ -1,10 +1,5 @@
-
 import java.util.LinkedList;
 
-/**
- *
- * @author guimontemovo
- */
 public abstract class Espaco {
     private String nome;
     LinkedList<Jogador> jogadores;
@@ -35,5 +30,6 @@ public abstract class Espaco {
     		return true;
     	return false;
     }
-      
+     
+    
 }

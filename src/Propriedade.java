@@ -3,13 +3,19 @@ public class Propriedade extends Compravel {
     private int n_casas;
     private int[] tabela_precos;
     private int cor;
-    private static int[] quantidade_cor; //PRECISA CRIAR SETTER PARA ISSO
+    private int preco_casa;
+    private static int[] quantidade_cor = new int[10];
     
-    Propriedade(String nome, int preco, int hipoteca,int[] tabela_precos, int cor) {
+    Propriedade(String nome, int preco, int hipoteca,int[] tabela_precos,int preco_casa, int cor) {
         super(nome,preco,hipoteca);
         this.tabela_precos = tabela_precos;
         this.n_casas = 0;
         this.cor = cor;
+        this.preco_casa = preco_casa;
+    }
+    
+    public static void setCorPropriedade(int cor){
+    	quantidade_cor[cor]++;
     }
     
     public int getAluguel() {
@@ -24,12 +30,30 @@ public class Propriedade extends Compravel {
     	return false;
     }
     
+    public int getPrecoCasa(){
+    	return this.preco_casa;
+    }
+    
+    public int getNumeroCasas(){
+    	return this.n_casas;
+    }
+    
     public int getCor(){
     	return this.cor;
     }
      
     public static int getTotalCor(int cor){
     	return quantidade_cor[cor];
+    }
+    
+    @Override
+    public String toString(){
+    	String str = this.getNome() + "\n";
+    	str += this.getPreco() + "\n";
+    	str += this.getValorHipoteca() + "\n";
+    	for(int i=0;i<6;i++) str += this.tabela_precos[i] + " ";
+    	str += "\n" + cor;
+    	return str;
     }
     
 }
