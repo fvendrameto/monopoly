@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Jogador{
 	private static final int SALDO_INICIAL = 500;
-	private static final int TAMANHO_TABULEIRO = 10;
+	private static final int TAMANHO_TABULEIRO = 18;
 	private String nome;
 	private int saldo;
 	private int posicao_tabuleiro;

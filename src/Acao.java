@@ -12,16 +12,32 @@
 
 
 public class Acao {
+
+	private int acao;
+	private int quantia;
+	private int posicao;
+
 	
-	public static void realizarAcao(Tabuleiro tabuleiro, Jogador jogador, Jogavel jogavel){
-		realizarAcao(tabuleiro,jogador,jogavel.getAcao(),jogavel.getQuantia(),jogavel.getPosicao());
+	public Acao(int acao, int quantia, int posicao){
+		this.acao = acao;
+		this.quantia = quantia;
+		this.posicao = posicao;
 	}
 	
-	public static void realizarAcao(Tabuleiro tabuleiro, Jogador jogador, Carta carta){
-		realizarAcao(tabuleiro,jogador,carta.getAcao(),carta.getQuantia(),carta.getPosicao());
+	public int getAcao(){
+		return this.acao;
 	}
 	
-	public static void realizarAcao (Tabuleiro t,  Jogador j, int acao, int quantia, int posicao){
+	public int getQuantia(){
+		return this.quantia;
+	}
+
+	public int getPosicao(){
+		return this.posicao;
+	}
+	
+	
+	public void realizarAcao (Tabuleiro t,  Jogador j){
 		
 		switch (acao){
 		case 0:									//Ir a uma determinada posicao do tabuleiro
@@ -46,15 +62,15 @@ public class Acao {
 		}
 	}
 	
-	public static void mudarPosicao (Jogador j, int posicao){
+	private static void mudarPosicao (Jogador j, int posicao){
 		j.setPosicaoTabuleiro(posicao);
 	}
 	
-	public static void pagar (Jogador j, int quantia){
+	private static void pagar (Jogador j, int quantia){
 		j.sacarDinheiro(quantia);
 	}
 	
-	public static void receber (Jogador j, int quantia){
+	private static void receber (Jogador j, int quantia){
 		j.depositarDinheiro(quantia);
 	}
 }

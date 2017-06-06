@@ -17,7 +17,7 @@ public class Banco {
 		if(compravel.getDono() == jogador){ //caso o jogador seja o dono da compravel
 			compravel.setDono(null); //compravel fica sem nome
 			jogador.removerCompravel(compravel); 
-			jogador.sacarDinheiro(compravel.getValorHipoteca());
+			jogador.depositarDinheiro(compravel.getValorHipoteca());
 		}
 	}
 	
