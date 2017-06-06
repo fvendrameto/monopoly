@@ -3,30 +3,14 @@ public class Carta {
 	
 	private boolean sorte;
 	private String descricao; //Ex: "Volte ao ponto de partida e recebeba R$200,00"
-	private int acao; //(0)->Ir a uma determinada posicao do tabuleiro;(1)Pagar ao banco;(2)Receber do banco, etc...
-	private int quantia;
-    private int posicao;
+	Acao acao;
 	
 	public Carta(boolean sorte, String descricao, int acao, int quantia, int posicao) {
         this.sorte = sorte;
-        this.acao = acao;
-        this.quantia = quantia;
-        this.posicao = posicao;
+        this.acao = new Acao(acao,quantia,posicao);
         this.descricao = descricao;
-    }
-	
-	public Carta(boolean sorte, String descricao, int acao, int quantia_ou_posicao) {
-        this.sorte = sorte;
-        this.acao = acao;
-        if(acao == 0){
-        	this.posicao = quantia_ou_posicao;
-        	this.quantia = 0;
-        }else{
-        	this.quantia = quantia_ou_posicao;
-        	this.posicao = 0;
-        }
-        this.descricao = descricao;
-    }
+        
+	}
 	
 	public String getDescricao(){
 		return this.descricao;
@@ -36,25 +20,17 @@ public class Carta {
 		return this.sorte;
 	}
 	
-	public int getAcao(){
+	public Acao getAcao(){
 		return this.acao;
 	}
-	
-	public int getQuantia(){
-		return this.quantia;
-	}
 
-	public int getPosicao(){
-		return this.posicao;
-	}
-	
 	@Override
 	public String toString(){
 		String str = "";
 		if(this.sorte) str += "SORTE\n";
 		else str += "REVES\n";
 		str += this.descricao + "\n";
-		str += this.acao + "\n" + this.quantia + "\n" + this.posicao;
+		str += this.acao.getAcao() + "\n" + this.acao.getQuantia() + "\n" + this.acao.getPosicao();
 		return str;
 	}
 	

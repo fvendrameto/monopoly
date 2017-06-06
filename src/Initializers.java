@@ -65,9 +65,6 @@ public class Initializers {
     		cartas.add(c);
     	}
     	
-    	for(Carta c : cartas)
-    		System.out.println(c + "\n\n");
-    	
     	scanner.close();
     	return cartas;
     }
