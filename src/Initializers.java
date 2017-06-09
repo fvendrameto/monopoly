@@ -64,10 +64,7 @@ public class Initializers {
     		Carta c = new Carta(sorte == 1,descricao,acao,quantia,posicao);
     		cartas.add(c);
     	}
-    	
-    	for(Carta c : cartas)
-    		System.out.println(c + "\n\n");
-    	
+    	    	
     	scanner.close();
     	return cartas;
     }

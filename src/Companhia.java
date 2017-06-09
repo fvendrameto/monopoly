@@ -12,11 +12,7 @@ public class Companhia extends Compravel {
     
     @Override
     public String toString(){
-    	String str = this.getNome() + "\n";
-    	str += this.getPreco() + "\n";
-    	str += this.getValorHipoteca() + "\n";
-    	str += this.aluguel + "\n"; 
-    	return str;
+    	return this.getNome();
     }
     
 }

@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Jogador{
-	private static final int SALDO_INICIAL = 500;
+	private static final int SALDO_INICIAL = 1500;
 	private static final int TAMANHO_TABULEIRO = 10;
 	private String nome;
 	private int saldo;
@@ -81,7 +81,7 @@ public class Jogador{
 	
 	@Override
 	public String toString(){
-		return nome + " (" + saldo + ")";
+		return nome;
 	}
 
 }

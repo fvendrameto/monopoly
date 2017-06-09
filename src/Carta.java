@@ -51,10 +51,10 @@ public class Carta {
 	@Override
 	public String toString(){
 		String str = "";
-		if(this.sorte) str += "SORTE\n";
-		else str += "REVES\n";
-		str += this.descricao + "\n";
-		str += this.acao + "\n" + this.quantia + "\n" + this.posicao;
+		if(this.sorte) str += "SORTE ";
+		else str += "REVES ";
+		str += this.descricao + " ";
+		str += this.acao + " " + this.quantia + " " + this.posicao;
 		return str;
 	}
 	

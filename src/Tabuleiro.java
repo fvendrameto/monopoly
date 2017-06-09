@@ -6,7 +6,7 @@ public class Tabuleiro {
 	private ArrayList<Carta> cartas;
 	private int[] ordem;
 	private boolean[] temDinheiro;
-	private int indJogador;
+	private int indJogador = -1;
 	
 	public Tabuleiro(ArrayList<Jogador> j, ArrayList<Espaco> e, ArrayList<Carta> c){
 		this.jogadores = j;
@@ -15,21 +15,38 @@ public class Tabuleiro {
 		
 		this.ordem = new int[this.jogadores.size()];
 		this.temDinheiro = new boolean[this.jogadores.size()];
+		
 		for(int i=0; i<this.jogadores.size(); i++) {
-			this.ordem[i] = -1;
+			this.ordem[i] = i;
 			this.temDinheiro[i] = true;
 		}
 	}
 	
+	public int getIndJogador() {
+		return this.indJogador;
+	}
+	
 	private void proximoIndJogador() {
 		do {
-			this.indJogador = ((this.indJogador+1) % this.jogadores.size());
+			this.indJogador++;
+			if(this.indJogador >= this.jogadores.size())
+				this.indJogador = 0;
 		} while(!this.temDinheiro[this.indJogador]);
 	}
 	
-	public void setOrdem(){
-		for(int i=0;i<jogadores.size();i++)
-			ordem[i] = i;
+	public void setOrdem(int[] dados) {
+		int j, max, idx = 0;
+		for(int i=0;i<jogadores.size();i++) {
+			max = Integer.MIN_VALUE;
+			for(j=0; j<jogadores.size(); j++) {
+				if(dados[j] > max) {
+					max = dados[j];
+					idx = j;
+				}
+			}
+			ordem[i] = idx;
+			dados[idx] = -1;
+		}
 	}
 	
 	public Jogador getJogadorAtual() {
@@ -43,10 +60,8 @@ public class Tabuleiro {
 		for(int i=0; i<jogadores.size(); i++)
 			if(this.temDinheiro[i])
 				cont++;
-		
-		if(cont >= 2)
-			return true;
-		return false;
+
+		return cont >= 2;
 	}
 	
 	public Espaco getEspacoPosicao(int posicao) {

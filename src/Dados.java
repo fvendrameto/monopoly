@@ -17,7 +17,9 @@ public class Dados {
 			Thread.sleep(1);
 		}
 		
-		vals = valores;
+		if(vals != null)
+			vals = valores;
+		
 		return getSomaValores(dados);
 	}
 	
