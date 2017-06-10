@@ -1,25 +1,25 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.SwingConstants;
-import javax.swing.JTable;
 import javax.swing.JEditorPane;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.SystemColor;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class PopUp_Compra_Propriedade extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private Propriedade propriedade;
-	private JTable table;
-	private JTable table_1;
-	
+	private boolean comprado;//Retorna "true" caso o cliente clique em SIM, "false" caso contrário.
 	/**
 	 * Main para testar somente. Pode-se retirar depois.
 	 */
@@ -43,11 +43,9 @@ public class PopUp_Compra_Propriedade extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 504, 352);
 		contentPane = new JPanel();
-		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 		
-		this.propriedade = propriedade;
 		int[] tabela = propriedade.getTabela_Precos();
 		
 		JLabel lbNome2 = new JLabel(propriedade.getNome().toUpperCase());
@@ -86,12 +84,25 @@ public class PopUp_Compra_Propriedade extends JFrame {
 		contentPane.add(lb3);
 		
 		JButton btnSim = new JButton("SIM");
+		btnSim.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				comprado = true;
+			}
+		});
 		btnSim.setBounds(135, 279, 89, 23);
 		contentPane.add(btnSim);
 		
 		JButton btnNao = new JButton("N\u00C3O");
+		btnNao.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				comprado = false;
+			}
+		});
 		btnNao.setBounds(234, 279, 89, 23);
 		contentPane.add(btnNao);
+		
+		btnSim.setActionCommand("SIM");
+		btnNao.setActionCommand("NAO");
 		
 		JLabel lblNewLabel_1 = new JLabel("C/ 1 CASA");
 		lblNewLabel_1.setName("lbCasa1");
@@ -178,8 +189,8 @@ public class PopUp_Compra_Propriedade extends JFrame {
 		
 		
 		contentPane.add(editorPane);
-		
 	}
+	
 	private Color getCor (int cor){
 		switch (cor){
 			case 1:

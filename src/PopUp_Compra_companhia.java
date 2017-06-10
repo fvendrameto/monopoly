@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
@@ -9,14 +8,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 public class PopUp_Compra_companhia extends JFrame {
 
 	private JPanel contentPane;
-	private Companhia companhia;
-
 	/**
 	 * Main para testar somente. Pode-se retirar depois.
 	 */
@@ -40,11 +36,8 @@ public class PopUp_Compra_companhia extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 504, 352);
 		contentPane = new JPanel();
-		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
-		
-		this.companhia = companhia;
 		
 		JLabel lbNome2 = new JLabel(companhia.getNome().toUpperCase());
 		lbNome2.setHorizontalAlignment(SwingConstants.CENTER);
