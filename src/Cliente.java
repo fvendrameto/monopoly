@@ -1,5 +1,6 @@
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -29,27 +30,42 @@ public class Cliente {
 		noJogo = b;
 	}
 	
-	public static void main(String[] args) throws UnknownHostException, IOException {
+	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		Socket cliente = new Socket("127.0.0.1", 12345);
 		cliente.setKeepAlive(true);
-		PrintStream saida = new PrintStream(cliente.getOutputStream());
 		Scanner teclado = new Scanner(System.in);
-		Scanner server = new Scanner(cliente.getInputStream());
-
+		ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());
+		ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream());
+		Tabuleiro tabuleiro;
+		
 		while(noJogo) {
-			String s = server.nextLine();
-			System.out.println(server.nextLine());
+			try {
+				String s = entrada.readUTF();
 
-			if(Integer.parseInt(s) == 0) {
-				String t = teclado.nextLine();
-				saida.println(t);
+				if(Integer.parseInt(s) == 0) {
+					System.out.println(entrada.readUTF());
+				}
+				
+				if(Integer.parseInt(s) == 1) {
+					System.out.println(entrada.readUTF());
+					
+					String t = teclado.nextLine();
+					saida.writeUTF(t);
+					saida.flush();
+				}
+				
+				if(Integer.parseInt(s) == 2) {
+					tabuleiro = (Tabuleiro) entrada.readObject();
+				}
+
+			} catch (Exception e) {
+				System.out.println("aqui "+e.getMessage());
+				return;
 			}
 			
-			while(!server.hasNext());
 		}
-		
+
 		teclado.close();
-		server.close();
 		cliente.close();
 	}
 }

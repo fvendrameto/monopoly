@@ -1,7 +1,10 @@
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public abstract class Espaco {
-    private String nome;
+public abstract class Espaco implements Serializable {
+
+	private static final long serialVersionUID = 1859539012678164624L;
+	private String nome;
     LinkedList<Jogador> jogadores;
         
     Espaco(String nome) {

@@ -1,59 +1,69 @@
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class Server extends Thread {
 	private Cliente cliente;
+	private ObjectOutputStream saida;
+	private ObjectInputStream entrada;
 	
 	private static String pergunta; 
 	private static String resposta;
 	private static int op;
+	private static Tabuleiro tabuleiroStatic;
+
 	
 	public Server(Cliente c) {
 		this.cliente = c;
-	}
-	
-	public void send(String s) {
-		PrintStream saida = null;
-		Socket socket = this.cliente.getSocket();
 		
 		try {
-			saida = new PrintStream(socket.getOutputStream());
+			this.saida = new ObjectOutputStream(cliente.getSocket().getOutputStream());
+			this.entrada = new ObjectInputStream(cliente.getSocket().getInputStream());
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
-		
-		saida.println("1");
-		saida.println(s);
+	}
+	
+	public void send(String s) {		
+		try {
+			this.saida.writeUTF("0");
+			this.saida.flush();
+			this.saida.writeUTF(s);
+			this.saida.flush();
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}	
 	}
 	
 	public String sendAndReceive(String s) {
 		String response = null;
-		PrintStream saida = null;
-		Scanner entrada = null;
-		Socket socket = this.cliente.getSocket();
 		
 		try {
-			saida = new PrintStream(socket.getOutputStream());
-		} catch(IOException e) {
+			this.saida.writeUTF("1");
+			this.saida.flush();
+			this.saida.writeUTF(s);
+			this.saida.flush();
+			response = entrada.readUTF();
+		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
-		
-		try {
-			entrada = new Scanner(socket.getInputStream());
-		} catch(Exception e) {
-			System.out.println(e.getMessage());
-		}
-		
-		saida.println("0");
-		saida.println(s);
-		response = entrada.nextLine();
 		
 		return response;
+	}
+	
+	public void sendObject(Object o) {
+		try {
+			this.saida.writeUTF("2");
+			this.saida.flush();
+			this.saida.writeObject(o);
+			this.saida.flush();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	public void run() {
@@ -63,6 +73,10 @@ public class Server extends Thread {
 		
 		if(op == 1) {
 			resposta = sendAndReceive(pergunta);
+		}
+		
+		if(op == 2) {
+			sendObject((Object) tabuleiroStatic);
 		}
 	}
 	
@@ -111,6 +125,10 @@ public class Server extends Thread {
 			pergunta = "Definindo a ordem dos jogadores. Aperte ENTER para rolar os dados.";
 			threads.get(i).run();
 			dados[i] = Dados.rolar(2, null);
+			
+			op = 0;
+			pergunta = jogadores.get(i) + " rolou " + dados[i];
+			threads.get(i).run();
 		}
 		
 		tabuleiro.setOrdem(dados);
@@ -128,7 +146,7 @@ public class Server extends Thread {
 			resultadoDados = Dados.rolar(2, null);
 			
 			op = 0;
-			pergunta = jogador + " rolou " + resultadoDados + " nos dados";
+			pergunta = jogador + " rolou " + resultadoDados;
 			for(int i=0; i<nJogadores; i++) threads.get(i).run();
 			
 			tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro()).removeJogador(jogador);
@@ -139,9 +157,15 @@ public class Server extends Thread {
 			
 			pergunta = "Você parou em " + espacoAtual;
 			threads.get(indJogadorAtual).run();
+			
+			op = 2;
+			tabuleiroStatic = tabuleiro;
+			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			
 			if(espacoAtual.compravel()) {
 				Compravel espacoCompravel = (Compravel) espacoAtual;
 				if(espacoCompravel.temDono()) {
+					op = 0;
 					pergunta = "Esse lugar tem dono, você vai pagar aluguel";
 					threads.get(indJogadorAtual).run();
 					

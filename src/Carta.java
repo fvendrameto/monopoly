@@ -1,6 +1,8 @@
+import java.io.Serializable;
 
-public class Carta {
-	
+public class Carta implements Serializable {
+
+	private static final long serialVersionUID = -4488372956600050772L;
 	private boolean sorte;
 	private String descricao; //Ex: "Volte ao ponto de partida e recebeba R$200,00"
 	private int acao; //(0)->Ir a uma determinada posicao do tabuleiro;(1)Pagar ao banco;(2)Receber do banco, etc...

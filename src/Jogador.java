@@ -1,6 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Jogador{
+public class Jogador implements Serializable {
+
+	private static final long serialVersionUID = -6980492824693699650L;
 	private static final int SALDO_INICIAL = 1500;
 	private static final int TAMANHO_TABULEIRO = 10;
 	private String nome;

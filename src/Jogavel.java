@@ -1,9 +1,16 @@
-public class Jogavel extends Espaco {
-    private String descricao;
+import java.io.Serializable;
+
+public class Jogavel extends Espaco implements Serializable {
+
+	private static final long serialVersionUID = -3031858277739808111L;
+	private String descricao;
     private int acao;
     private int quantia;
     private int posicao;
     
+    public Jogavel() {
+    	super(null);
+    }
 	
 	public Jogavel(String nome, String descricao, int acao, int quantia, int posicao) {
         super(nome);

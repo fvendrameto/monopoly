@@ -1,6 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Tabuleiro {
+public class Tabuleiro implements Serializable {
+
+	private static final long serialVersionUID = -9061517518999832305L;
 	private ArrayList<Espaco> espacos;
 	private ArrayList<Jogador> jogadores;
 	private ArrayList<Carta> cartas;
