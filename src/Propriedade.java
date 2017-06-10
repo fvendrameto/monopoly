@@ -46,6 +46,10 @@ public class Propriedade extends Compravel {
     	return quantidade_cor[cor];
     }
     
+    public int[] getTabela_Precos(){
+    	return this.tabela_precos;
+    }
+    
     @Override
     public String toString(){
     	String str = this.getNome() + "\n";
