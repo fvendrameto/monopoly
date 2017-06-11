@@ -21,7 +21,7 @@ public class MainGUI extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(new GridBagLayout());
 		this.setSize(1100,690);
-		this.setResizable(false);
+		this.setResizable(true);
 		
 		JPanel esquerda = new JPanel();
 		JPanel direita = new JPanel();

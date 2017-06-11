@@ -41,12 +41,13 @@ public class Cliente {
 		while(noJogo) {
 			try {
 				int codigoOp = entrada.readInt();
-
-				if(codigoOp == 0) {
-
+				System.out.println(codigoOp);
+				
+				if(codigoOp == Server.OP.ENVIAR_STR.codOp()) {
+					System.out.println(entrada.readUTF());
 				}
 				
-				if(codigoOp == 1) {
+				if(codigoOp == Server.OP.ENVIAR_E_RECEBER_STR.codOp()) {
 					System.out.println(entrada.readUTF());
 					
 					String t = teclado.nextLine();
@@ -54,33 +55,43 @@ public class Cliente {
 					saida.flush();
 				}
 				
-				if(codigoOp == 2) {
+				if(codigoOp == Server.OP.ENVIAR_GUI.codOp()) {
 					String codigo = entrada.readUTF();
-					String[]mensagem = entrada.readUTF().split("#");
+					//System.out.println("codigo " + codigo);
+					String mensagem = entrada.readUTF();
+					//System.out.println("msg" + mensagem);
 					
-					if(codigo.equals("00")) {
-						//atualizar posicao do jogador no tabuleiro e saldo (pq pode ter passado no inicio)
-					} else if(codigo.equals("01")) {
-						//jogador pagou aluguel, atualizar saldo de quem pagou e de quem recebeu
-					} else if(codigo.equals("02")) {
-						//jogador comprou propriedade, atualizar saldo e suas propriedades
-					} else if(codigo.equals("03")) {
-						//jogador hipotecou propriedade, atualizar saldo e suas propriedades
-					} else if(codigo.equals("04")) {
-						//jogador construiu uma casa, atualizar saldo e casas na propriedade
-					} else if(codigo.equals("05")) {
-						//jogador demoliu uma casa, atualizar saldo e casas na propriedade
-					} else {
-						System.out.println();
+//					if(codigo.equals("00")) {
+//						//atualizar posicao do jogador no tabuleiro e saldo (pq pode ter passado no inicio)
+//					} else if(codigo.equals("01")) {
+//						//jogador pagou aluguel, atualizar saldo de quem pagou e de quem recebeu
+//					} else if(codigo.equals("02")) {
+//						//jogador comprou propriedade, atualizar saldo e suas propriedades
+//					} else if(codigo.equals("03")) {
+//						//jogador hipotecou propriedade, atualizar saldo e suas propriedades
+//					} else if(codigo.equals("04")) {
+//						//jogador construiu uma casa, atualizar saldo e casas na propriedade
+//					} else if(codigo.equals("05")) {
+//						//jogador demoliu uma casa, atualizar saldo e casas na propriedade
+//					} else {
+//						//System.out.println();
+//					}
+				}
+				
+				if(codigoOp == Server.OP.ENVIAR_OBJ.codOp()) {
+					Object obj = entrada.readObject();
+					
+					if(obj instanceof Tabuleiro) {
+						tabuleiro = (Tabuleiro) obj;
+					}
+					
+					if(obj instanceof Compravel) {
+						//do other thing
 					}
 				}
 				
-				if(codigoOp == 3) {
-					tabuleiro = (Tabuleiro) entrada.readObject();
-				}
-				
-				if(codigoOp == 4) {
-					
+				if(codigoOp == Server.OP.ENVIAR_E_RECEBER_OBJ.codOp()) {
+					//Arqui é um arraylist de alguma coisa
 				}
 
 			} catch (Exception e) {

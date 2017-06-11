@@ -180,11 +180,11 @@ public class Server extends Thread {
 			threads.get(i).run();
 		}
 		
-		tabuleiro.setOrdem(dados);
+		//tabuleiro.setOrdem(dados);
 		
 		while(tabuleiro.jogoContinua()) {
 			jogador = tabuleiro.getJogadorAtual();
-			indJogadorAtual = jogadores.indexOf(jogador.getNome());
+			indJogadorAtual = tabuleiro.getIndJogador();
 			op = OP.ENVIAR_STR.codOp();
 			mensagem = "É a vez de " + jogador;
 			for(int i=0; i<nJogadores; i++) threads.get(i).run();
@@ -210,7 +210,7 @@ public class Server extends Thread {
 			op = OP.ENVIAR_GUI.codOp();
 			codigo = "00";
 			mensagem = "" + jogador + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();			
+			for(int i=0; i<nJogadores; i++) threads.get(i).run();
 			
 			if(espacoAtual.compravel()) {
 				Compravel espacoCompravel = (Compravel) espacoAtual;
