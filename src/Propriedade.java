@@ -41,7 +41,11 @@ public class Propriedade extends Compravel {
     public int getCor(){
     	return this.cor;
     }
-     
+    
+    public boolean temCasa() {
+    	return this.n_casas > 0;
+    }
+    
     public static int getTotalCor(int cor){
     	return quantidade_cor[cor];
     }

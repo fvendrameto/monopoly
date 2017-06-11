@@ -30,7 +30,6 @@ public class Cliente {
 		noJogo = b;
 	}
 	
-	@SuppressWarnings({ "unused", "resource" })
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		Socket cliente = new Socket("127.0.0.1", 12345);
 		cliente.setKeepAlive(true);
@@ -41,13 +40,13 @@ public class Cliente {
 		
 		while(noJogo) {
 			try {
-				String codigoOp = entrada.readUTF();
+				int codigoOp = entrada.readInt();
 
-				if(Integer.parseInt(codigoOp) == 0) {
+				if(codigoOp == 0) {
 
 				}
 				
-				if(Integer.parseInt(codigoOp) == 1) {
+				if(codigoOp == 1) {
 					System.out.println(entrada.readUTF());
 					
 					String t = teclado.nextLine();
@@ -55,9 +54,9 @@ public class Cliente {
 					saida.flush();
 				}
 				
-				if(Integer.parseInt(codigoOp) == 2) {
+				if(codigoOp == 2) {
 					String codigo = entrada.readUTF();
-					String mensagem = entrada.readUTF();
+					String[]mensagem = entrada.readUTF().split("#");
 					
 					if(codigo.equals("00")) {
 						//atualizar posicao do jogador no tabuleiro e saldo (pq pode ter passado no inicio)
@@ -76,8 +75,12 @@ public class Cliente {
 					}
 				}
 				
-				if(Integer.parseInt(codigoOp) == 3) {
+				if(codigoOp == 3) {
 					tabuleiro = (Tabuleiro) entrada.readObject();
+				}
+				
+				if(codigoOp == 4) {
+					
 				}
 
 			} catch (Exception e) {
@@ -86,9 +89,8 @@ public class Cliente {
 			}
 			
 		}
-		
-		if(teclado != null)
-			teclado.close();
+
+		teclado.close();
 		cliente.close();
 	}
 }
