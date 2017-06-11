@@ -1,2 +1,6 @@
 /nbproject/private/
 /bin/
+/.idea
+/.settings
+.classpath
+.project
