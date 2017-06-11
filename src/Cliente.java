@@ -30,6 +30,7 @@ public class Cliente {
 		noJogo = b;
 	}
 	
+	@SuppressWarnings({ "unused", "resource" })
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		Socket cliente = new Socket("127.0.0.1", 12345);
 		cliente.setKeepAlive(true);
@@ -40,13 +41,13 @@ public class Cliente {
 		
 		while(noJogo) {
 			try {
-				String s = entrada.readUTF();
+				String codigoOp = entrada.readUTF();
 
-				if(Integer.parseInt(s) == 0) {
-					System.out.println(entrada.readUTF());
+				if(Integer.parseInt(codigoOp) == 0) {
+
 				}
 				
-				if(Integer.parseInt(s) == 1) {
+				if(Integer.parseInt(codigoOp) == 1) {
 					System.out.println(entrada.readUTF());
 					
 					String t = teclado.nextLine();
@@ -54,18 +55,40 @@ public class Cliente {
 					saida.flush();
 				}
 				
-				if(Integer.parseInt(s) == 2) {
+				if(Integer.parseInt(codigoOp) == 2) {
+					String codigo = entrada.readUTF();
+					String mensagem = entrada.readUTF();
+					
+					if(codigo.equals("00")) {
+						//atualizar posicao do jogador no tabuleiro e saldo (pq pode ter passado no inicio)
+					} else if(codigo.equals("01")) {
+						//jogador pagou aluguel, atualizar saldo de quem pagou e de quem recebeu
+					} else if(codigo.equals("02")) {
+						//jogador comprou propriedade, atualizar saldo e suas propriedades
+					} else if(codigo.equals("03")) {
+						//jogador hipotecou propriedade, atualizar saldo e suas propriedades
+					} else if(codigo.equals("04")) {
+						//jogador construiu uma casa, atualizar saldo e casas na propriedade
+					} else if(codigo.equals("05")) {
+						//jogador demoliu uma casa, atualizar saldo e casas na propriedade
+					} else {
+						System.out.println();
+					}
+				}
+				
+				if(Integer.parseInt(codigoOp) == 3) {
 					tabuleiro = (Tabuleiro) entrada.readObject();
 				}
 
 			} catch (Exception e) {
-				System.out.println("aqui "+e.getMessage());
+				System.out.println(e.getMessage());
 				return;
 			}
 			
 		}
-
-		teclado.close();
+		
+		if(teclado != null)
+			teclado.close();
 		cliente.close();
 	}
 }

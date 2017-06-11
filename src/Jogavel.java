@@ -47,8 +47,6 @@ public class Jogavel extends Espaco implements Serializable {
 	
     @Override
     public String toString(){
-    	String str = this.getNome() + "\n";
-    	str += acao;
-    	return str;
+    	return this.getNome();
     }
 }
