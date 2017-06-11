@@ -29,6 +29,10 @@ public class Tabuleiro implements Serializable {
 		return this.indJogador;
 	}
 	
+	public int getNumeroJogadores() {
+		return jogadores.size();
+	}
+	
 	private void proximoIndJogador() {
 		do {
 			this.indJogador++;
