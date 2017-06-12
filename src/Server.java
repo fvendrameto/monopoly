@@ -95,6 +95,8 @@ public class Server extends Thread {
 		try {
 			this.saida.writeInt(OP.ENVIAR_E_RECEBER_OBJ.codOp());
 			this.saida.flush();
+			this.saida.writeUTF(codigo);
+			this.saida.flush();
 			this.saida.writeObject(o);
 			this.saida.flush();
 			return entrada.readObject();
@@ -169,7 +171,7 @@ public class Server extends Thread {
 		objetoEnvio = tabuleiro;
 		for(int i=0; i<nJogadores; i++) threads.get(i).run();
 		
-		for(int i=0; i<nJogadores; i++) {
+		/*for(int i=0; i<nJogadores; i++) {
 			op = OP.ENVIAR_E_RECEBER_STR.codOp();
 			pergunta = "Definindo a ordem dos jogadores. Aperte ENTER para rolar os dados.";
 			threads.get(i).run();
@@ -178,7 +180,7 @@ public class Server extends Thread {
 			op = OP.ENVIAR_STR.codOp();
 			mensagem = jogadores.get(i) + " rolou " + dados[i];
 			threads.get(i).run();
-		}
+		}*/
 		
 		//tabuleiro.setOrdem(dados);
 		
@@ -204,57 +206,53 @@ public class Server extends Thread {
 			espacoAtual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
 			espacoAtual.addJogador(jogador);
 			
-			mensagem = "Você parou em " + espacoAtual;
-			threads.get(indJogadorAtual).run();
+			//mensagem = "Você parou em " + espacoAtual;
+			//threads.get(indJogadorAtual).run();
 			
 			op = OP.ENVIAR_GUI.codOp();
 			codigo = "00";
-			mensagem = "" + jogador + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
+			mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
 			for(int i=0; i<nJogadores; i++) threads.get(i).run();
 			
 			if(espacoAtual.compravel()) {
 				Compravel espacoCompravel = (Compravel) espacoAtual;
-				if(espacoCompravel.temDono()) {
-					op = OP.ENVIAR_STR.codOp();
-					mensagem = "Esse lugar tem dono, você vai pagar aluguel";
-					threads.get(indJogadorAtual).run();
-					
+				if(espacoCompravel.temDono()) { //SE TEM DONO PAGA O ALUGUEL
 					int aluguel = espacoCompravel.getAluguel();
 					jogador.sacarDinheiro(aluguel);
 					espacoCompravel.getDono().depositarDinheiro(aluguel);
 					
-					mensagem = jogador + " pagou aluguel em " + espacoCompravel + " para " + espacoCompravel.getDono();
+					op = OP.ENVIAR_STR.codOp();
+					mensagem = jogador.getNome() + " pagou aluguel em " + espacoCompravel.getNome() + " para " + espacoCompravel.getDono();
 					for(int i=0; i<nJogadores; i++) threads.get(i).run();
 					
 					//atualizar saldo jogador que pagou
 					op = OP.ENVIAR_GUI.codOp();
 					codigo = "01";
-					mensagem = jogador.getSaldo() + "";
+					mensagem = espacoCompravel.getAluguel() + "#" + espacoCompravel.getDono() + "#" + espacoCompravel.getNome();
 					threads.get(indJogadorAtual).run();
 					
 					//atualizar saldo jogador que recebeu
-					mensagem = espacoCompravel.getDono().getSaldo() + "";
+					codigo = "02";
+					mensagem = espacoCompravel.getAluguel() + "#" + jogador.getNome() + "#" + espacoCompravel.getNome();
 					threads.get(jogadores.indexOf(espacoCompravel.getDono())).run();
 				} else { //o espaço n tem dono, entao pode ser comprado
 					if(jogador.getSaldo() >= espacoCompravel.getPreco()) {
-						op = OP.ENVIAR_E_RECEBER_STR.codOp();
-						pergunta = "Deseja comprar a localidade? 1 - Sim | 2 - Nao";
+						op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
+						codigo = "00";
+						objetoEnvio = espacoCompravel;
 						threads.get(indJogadorAtual).run();
+						int ret = (int) objetoRetorno;
 						
-						if(resposta.equals("1")) {
+						if(ret == 0) { //vai comprar
 							Banco.comprarCompravel(espacoCompravel, jogador);
 							
-							op = OP.ENVIAR_OBJ.codOp();
-							objetoEnvio = espacoCompravel;
-							threads.get(indJogadorAtual).run();
-							
 							op = OP.ENVIAR_STR.codOp();
-							mensagem = jogador + " comprou " + espacoCompravel;
+							mensagem = jogador.getNome() + " comprou " + espacoCompravel.getNome();
 							for(int i=0; i<nJogadores; i++) threads.get(i).run();
 							
 							op = OP.ENVIAR_GUI.codOp();
 							codigo = "02";
-							mensagem = jogador + "#" + espacoCompravel;
+							mensagem = jogador.getNome() + "#" + espacoCompravel.getNome();
 							for(int i=0; i<nJogadores; i++) threads.get(i).run();							
 						}
 					}
@@ -264,14 +262,15 @@ public class Server extends Thread {
 			}
 			
 			int cmd = 1;
-			while(cmd != 0) {
-				op = OP.ENVIAR_E_RECEBER_STR.codOp();
-				pergunta = "Opçoes de jogo: 1 - Hipoteca | 2 - Construir casa | 3 - Vender Casa | 0- Sair";
+			while(cmd != 3) {
+				op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
+				objetoEnvio = "";
+				codigo = "01";
 				threads.get(indJogadorAtual).run();
 				cmd = Integer.parseInt(resposta);
 				
 				// hipotecar uma propriedade
-				if(cmd == 1) {
+				if(cmd == 0) {
 					int i = 0;
 					compraveis = jogador.getCompraveis();
 					
@@ -306,7 +305,7 @@ public class Server extends Thread {
 				}
 				
 				// construir casa
-				if(cmd == 2){
+				if(cmd == 1){
 					int i = 0;
 					compraveis = jogador.getCompraveis();
 					ArrayList<Propriedade> propriedades = new ArrayList<>();
@@ -346,7 +345,7 @@ public class Server extends Thread {
 				}
 				
 				// vender casa
-				if(cmd == 3){
+				if(cmd == 2){
 					int i = 0;
 					compraveis = jogador.getCompraveis();
 					ArrayList<Propriedade> propriedades = new ArrayList<>();

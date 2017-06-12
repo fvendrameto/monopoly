@@ -76,7 +76,7 @@ public class BensGUI extends JPanel{
 		
 		gbc.gridy = 0;
 		gbc.weighty = 0.2;
-		titulo.setText("Seus bens");
+		titulo.setText("Seus bens($1500)");
 		add(titulo,gbc);
 		
 		compraveis = new JTable(model);

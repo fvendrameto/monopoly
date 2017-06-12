@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -48,6 +49,8 @@ public class MainGUI extends JFrame {
 		      
 	       
         this.tabuleiroGui = new TabuleiroGUI("images/board.jpg", 690, 690,tabuleiro.getNumeroJogadores());
+        for(int i=0;i<tabuleiro.getNumeroJogadores();i++)
+        	this.tabuleiroGui.putPeao(i,0);
         esquerda.add(tabuleiroGui);
         esquerda.setBackground(new Color(205,230,208));
         
@@ -73,12 +76,31 @@ public class MainGUI extends JFrame {
 	
 	}
 	
+	public static String mostrarDigiteNome(){
+		return JOptionPane.showInputDialog(null,"Digite seu nome:","Bem vindo",JOptionPane.DEFAULT_OPTION);
+	}
+	
+	public int mostarOpcaoComprar(Compravel c){
+		Object[] acoes = {"Sim","Nao"};
+		//ImageIcon carta = new ImageIcon("images/carta-teste.png");
+		ImageIcon carta = null;
+		String texto = "";
+		texto += "Nome: " + c.getNome() + "\n";
+		texto += "Preço: " + c.getPreco() + "\n";
+		texto += "Hipoteca:" + c.getValorHipoteca();
+		
+		return JOptionPane.showOptionDialog(null,texto,"Deseja comprar?",JOptionPane.DEFAULT_OPTION,JOptionPane.DEFAULT_OPTION,carta,acoes,acoes[0]);
+	}
 	
 	/**
 	 * Mostra a janela avisando para rolar os dados
 	 */
 	public void mostrarRolarDados(){
 		JOptionPane.showMessageDialog(null, "Sua vez, clique em OK para rolar os dados");
+	}
+	
+	public void mostrarPagouAluguel(String string){
+		JOptionPane.showMessageDialog(null, string);
 	}
 	
 	
@@ -169,6 +191,10 @@ public class MainGUI extends JFrame {
 	
 	public void posicionaPeao(int peao, int posicao){
 		tabuleiroGui.putPeao(peao, posicao);
+	}
+	
+	public void alterarSaldo(int novo_saldo){
+		bensGui.setDinheiro(novo_saldo);
 	}
 	
 }
