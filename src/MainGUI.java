@@ -124,7 +124,7 @@ public class MainGUI extends JFrame {
 	 * @param titulo Titulo da janela de seleção
 	 * @return Objeto da classe compravel escolhido
 	 */
-	public Compravel escolherCompravel(ArrayList<Compravel> compraveis, String titulo){
+	public Compravel mostrarEscolherCompravel(ArrayList<Compravel> compraveis, String titulo){
 		String pergunta = "Escolha a propriedade";
 		HashMap<String,Compravel> map_compraveis = new HashMap<String,Compravel>();	
 		
@@ -159,8 +159,8 @@ public class MainGUI extends JFrame {
 		
 	
 	
-	public void removeCompravelOutro(String jogador,String propriedade){
-		jogadoresGui.removeCompravelJogador(jogador, propriedade);
+	public void removerCompravelOutro(String jogador,String compravel){
+		jogadoresGui.removeCompravelJogador(jogador, compravel);
 	}
 	
 	
@@ -183,8 +183,8 @@ public class MainGUI extends JFrame {
 	
 	
 	
-	public void alteraCasaPropriedadeJogador(Propriedade propriedade){
-		bensGui.alteraCompravel(propriedade.getNome(),"" + propriedade.getNumeroCasas(),3);
+	public void alteraCasaPropriedadeJogador(String propriedade, int novo_valor){
+		bensGui.alteraCompravel(propriedade,novo_valor + "",3);
 	}
 	
 	

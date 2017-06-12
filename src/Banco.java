@@ -22,10 +22,17 @@ public class Banco {
 	}
 	
 	public static void comprarCasa(Propriedade propriedade, Jogador jogador){
-		if(jogador.getSaldo() > propriedade.getPrecoCasa() ){
-			if(propriedade.adicionarCasa()){
-				jogador.sacarDinheiro(propriedade.getPreco());
-			}
+		if(jogador.getSaldo() > propriedade.getPrecoCasa() && propriedade.getNumeroCasas() < 5){
+			propriedade.adicionarCasa();
+			jogador.sacarDinheiro(propriedade.getPrecoCasa());
 		}
+}
+	
+	public static void venderCasa(Propriedade propriedade, Jogador jogador){
+		if(propriedade.getNumeroCasas() > 0){
+			propriedade.removerCasa();
+			jogador.depositarDinheiro(propriedade.getPrecoCasa()/2);
+		}
+		
 	}
 }

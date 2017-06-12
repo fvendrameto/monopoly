@@ -91,11 +91,11 @@ public class Server extends Thread {
 		}
 	}
 
-	private Object enviarEReceberObj(Object o) {
+	private Object enviarEReceberObj(String cod, Object o) {
 		try {
 			this.saida.writeInt(OP.ENVIAR_E_RECEBER_OBJ.codOp());
 			this.saida.flush();
-			this.saida.writeUTF(codigo);
+			this.saida.writeUTF(cod);
 			this.saida.flush();
 			this.saida.writeObject(o);
 			this.saida.flush();
@@ -124,7 +124,7 @@ public class Server extends Thread {
 		}
 		
 		if(op == 4) {
-			objetoRetorno = enviarEReceberObj(objetoEnvio);
+			objetoRetorno = enviarEReceberObj(codigo, objetoEnvio);
 		}
 	}
 	
@@ -267,95 +267,70 @@ public class Server extends Thread {
 				objetoEnvio = "";
 				codigo = "01";
 				threads.get(indJogadorAtual).run();
-				cmd = Integer.parseInt(resposta);
+				cmd = (int) objetoRetorno;
+				
 				
 				// hipotecar uma propriedade
 				if(cmd == 0) {
-					int i = 0;
 					compraveis = jogador.getCompraveis();
 					
-					op = OP.ENVIAR_STR.codOp();
-					mensagem = "Você escolheu hipoteca. Essas são suas propriedades: ";
-					threads.get(indJogadorAtual).run();
-					
-					for(Compravel c : compraveis) {
-						pergunta = i++ +  " - " + c.getNome() + "#" + c.getPreco();
-						threads.get(indJogadorAtual).run();
-					}
-					
 					op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-					objetoEnvio =  compraveis;
+					objetoEnvio = compraveis;
+					codigo = "02";
 					threads.get(indJogadorAtual).run();
 					Compravel propHipoteca = (Compravel) objetoRetorno;
-
-					Banco.hipotecaCompravel(propHipoteca, jogador);
-
-					op = OP.ENVIAR_OBJ.codOp();
-					objetoEnvio = propHipoteca;
-					threads.get(indJogadorAtual).run();
+		
 					
+					Banco.hipotecaCompravel(propHipoteca, jogador);
+			
 					op = OP.ENVIAR_STR.codOp();
 					mensagem = jogador + " hipotecou " + propHipoteca;
-					for(int j=0; j<nJogadores; j++) threads.get(j).run();
+					for(int i=0; i<nJogadores; i++) threads.get(i).run();
 
 					op = OP.ENVIAR_GUI.codOp();
 					codigo = "03";
 					mensagem = jogador + "#" + propHipoteca;
-					for(int j=0; j<nJogadores; j++) threads.get(j).run();
+					for(int i=0; i<nJogadores; i++) threads.get(i).run();
 				}
 				
 				// construir casa
 				if(cmd == 1){
-					int i = 0;
 					compraveis = jogador.getCompraveis();
-					ArrayList<Propriedade> propriedades = new ArrayList<>();
+					ArrayList<Compravel> propriedades = new ArrayList<>();
 					
 					op = OP.ENVIAR_STR.codOp();
 					for(Compravel p : jogador.getCompraveis()) {
-						if(p instanceof Propriedade && jogador.temTodosCor(((Propriedade) p).getCor())){
-							propriedades.add((Propriedade) p);
-							mensagem = (i++ +  " - " + p.getNome() + " :" + ((Propriedade)p).getPrecoCasa());
-							threads.get(indJogadorAtual).run();
-						}
+						if(p instanceof Propriedade && jogador.temTodosCor(((Propriedade) p).getCor()) && jogador.getSaldo() >= ((Propriedade) p).getPrecoCasa() && ((Propriedade) p).getNumeroCasas() < 5)
+							propriedades.add(p);
 					}
+					
 					
 					op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
 					objetoEnvio = propriedades;
 					threads.get(indJogadorAtual).run();
 					Propriedade propEscolhida = (Propriedade) objetoRetorno;
 					
-					if(jogador.getSaldo() >= propEscolhida.getPrecoCasa() && jogador.temTodosCor(propEscolhida.getCor())) {
-						Banco.comprarCasa(propEscolhida, jogador);
-						op = OP.ENVIAR_STR.codOp();
-						mensagem = "Casa comprada";
-						threads.get(indJogadorAtual).run();
+					Banco.comprarCasa(propEscolhida, jogador);
+					
+					op = OP.ENVIAR_STR.codOp();
+					mensagem = jogador + " construiu um casa em " + propEscolhida;
+					for(int i=0; i<nJogadores; i++) threads.get(i).run();
 						
-						mensagem = jogador + " construiu um casa em " + propEscolhida;
-						for(int j=0; j<nJogadores; j++) threads.get(j).run();
-						
-						op = OP.ENVIAR_GUI.codOp();
-						codigo = "04";
-						mensagem = jogador + "#" + propEscolhida;
-						
-					} else {
-						op = OP.ENVIAR_STR.codOp();
-						mensagem = ("Casa não pode ser comprada");
-						threads.get(indJogadorAtual).run();
-					}
+					op = OP.ENVIAR_GUI.codOp();
+					codigo = "04";
+					mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
+					for(int i=0; i<nJogadores; i++) threads.get(i).run();
 				}
 				
 				// vender casa
 				if(cmd == 2){
-					int i = 0;
 					compraveis = jogador.getCompraveis();
-					ArrayList<Propriedade> propriedades = new ArrayList<>();
+					ArrayList<Compravel> propriedades = new ArrayList<>();
 					
 					op = OP.ENVIAR_STR.codOp();
 					for(Compravel p : jogador.getCompraveis()){
 						if(p instanceof Propriedade && ((Propriedade)p).temCasa()) {
-							propriedades.add((Propriedade)p);
-							mensagem = i++ +  " - " + p.getNome() + " :" + ((Propriedade)p).getPrecoCasa();
-							threads.get(indJogadorAtual).run();
+							propriedades.add(p);
 						}
 					}
 
@@ -364,25 +339,16 @@ public class Server extends Thread {
 					threads.get(indJogadorAtual).run();
 					Propriedade propEscolhida = (Propriedade) objetoRetorno;
 					
-					if(propEscolhida.getNumeroCasas() > 0){
-						Banco.comprarCasa(propEscolhida, jogador);
-						
-						op = OP.ENVIAR_STR.codOp();
-						mensagem = "Casa vendida";
-						threads.get(indJogadorAtual).run();
-						
-						mensagem  = jogador + " vendeu uma casa em " + propEscolhida;
-						for(int j=0; j<nJogadores; j++) threads.get(j).run();
-						
-						op = OP.ENVIAR_GUI.codOp();
-						codigo = "05";
-						mensagem = jogador + "#" + propEscolhida;
-						threads.get(indJogadorAtual).run();
-					} else {
-						op = OP.ENVIAR_STR.codOp();
-						pergunta = "Não pode vender casa";
-						threads.get(indJogadorAtual).run();
-					}
+					Banco.venderCasa(propEscolhida, jogador);	
+					
+					op = OP.ENVIAR_STR.codOp();
+					mensagem  = jogador + " vendeu uma casa em " + propEscolhida;
+					for(int i=0; i<nJogadores; i++) threads.get(i).run();
+					
+					op = OP.ENVIAR_GUI.codOp();
+					codigo = "04";
+					mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
+					for(int i=0; i<nJogadores; i++) threads.get(i).run();
 				}
 			}
 		}

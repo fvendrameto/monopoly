@@ -3,6 +3,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ClienteTeste {
@@ -85,7 +86,7 @@ public class ClienteTeste {
 							saldo = novo_saldo;
 							mainGui.alterarSaldo(saldo);
 						}
-					} else if(codigo.equals("01")) {
+					} else if(codigo.equals("01")) { //pagar aluguel
 						int valor = Integer.parseInt(mensagem[0]);
 						String dono = mensagem[1];
 						String lugar = mensagem[2];
@@ -95,17 +96,20 @@ public class ClienteTeste {
 						
 						mainGui.mostrarPagouAluguel("Você pagou " + valor + " para " + dono + " porque parou em " + lugar);
 						
-					} else if(codigo.equals("02")) {
+					} else if(codigo.equals("02")) { //add compravel no tree jogadores
 						String jogador = mensagem[0];
 						String lugar = mensagem[1];
 						mainGui.addCompravelOutro(jogador, lugar);
-					} else if(codigo.equals("03")) {
-						//jogador hipotecou propriedade, atualizar saldo e suas propriedades
+					} else if(codigo.equals("03")) { //jogador hipotecou propriedade, atualizar saldo e suas propriedades
+						String jogador = mensagem[0];
+						String compravel = mensagem[1];
+						mainGui.removerCompravelOutro(jogador, compravel);
 					} else if(codigo.equals("04")) {
-						//jogador construiu uma casa, atualizar saldo e casas na propriedade
-					} else if(codigo.equals("05")) {
-						//jogador demoliu uma casa, atualizar saldo e casas na propriedade
-					} else {
+						String jogador = mensagem[0];
+						String propriedade = mensagem[1];
+						int nCasas = Integer.parseInt(mensagem[2]);
+						mainGui.alteraCasaPropriedadeOutro(jogador, propriedade, nCasas);
+					}else {
 						//System.out.println();
 					}
 				}
@@ -137,15 +141,47 @@ public class ClienteTeste {
 							mainGui.alterarSaldo(saldo);
 						}
 						saida.writeObject(op);
+						saida.flush();
 					}else if(codigo.equals("01")){ //mostrar opçoes de jogo
 						int op = mainGui.mostrarOpcoesJogo();
 						saida.writeObject(op);
+						saida.flush();
+					}else if(codigo.equals("02")){ //opção de hipoteca
+						System.out.println("cheguei no 2");
+						ArrayList<Compravel> compraveis = (ArrayList<Compravel>) entrada.readObject();
+						Compravel escolhido = mainGui.mostrarEscolherCompravel(compraveis, "Hipoteca");
+						
+						mainGui.removeCompravelJogador(escolhido);
+						saldo += escolhido.getValorHipoteca();
+						mainGui.alterarSaldo(saldo);
+						
+						saida.writeObject(escolhido);
+						saida.flush();
+					}else if(codigo.equals("03")){ //opção de comprar casa
+						ArrayList<Compravel> compraveis = (ArrayList<Compravel>) entrada.readObject();
+						Propriedade escolhido = (Propriedade) mainGui.mostrarEscolherCompravel(compraveis, "Hipoteca");
+						
+						mainGui.alteraCasaPropriedadeJogador(escolhido.getNome(),escolhido.getNumeroCasas() + 1);
+						saldo -= escolhido.getPrecoCasa();
+						mainGui.alterarSaldo(saldo);
+						
+						saida.writeObject(escolhido);
+					}else if(codigo.equals("04")){ //opção de vender casa
+						ArrayList<Compravel> compraveis = (ArrayList<Compravel>) entrada.readObject();
+						Propriedade escolhido = (Propriedade) mainGui.mostrarEscolherCompravel(compraveis, "Hipoteca");
+						
+						mainGui.alteraCasaPropriedadeJogador(escolhido.getNome(),escolhido.getNumeroCasas() - 1);
+						saldo += (escolhido.getPrecoCasa() / 2);
+						mainGui.alterarSaldo(saldo);
+						
+						saida.writeObject(escolhido);
 					}
 					
 				}
 
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				System.out.println("cai aqui");
+				System.out.println(e);
 				return;
 			}
 			

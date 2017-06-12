@@ -22,12 +22,9 @@ public class Propriedade extends Compravel {
         return tabela_precos[n_casas];
     }
     
-    public boolean adicionarCasa(){
-    	if(n_casas <= 5){
+    public void adicionarCasa(){
+    	if(n_casas <= 5)
     		n_casas++;
-    		return true;
-    	}
-    	return false;
     }
     
     public int getPrecoCasa(){
@@ -44,6 +41,10 @@ public class Propriedade extends Compravel {
     
     public boolean temCasa() {
     	return this.n_casas > 0;
+    }
+    
+    public void removerCasa(){
+    	this.n_casas--;
     }
     
     public static int getTotalCor(int cor){
