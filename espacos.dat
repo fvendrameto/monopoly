@@ -5,71 +5,104 @@ Inicio do Tabuleiro
 0
 0
 1
-Leblon
-1000
-500
-10 20 30 40 50 60
-250
 1
-1
-Ipanema
-800
-400
-10 20 30 40 50 60
-200
-1
-2
-Uber
-500
-150
-100
-1
-Gavea
-650
-300
-10 20 30 40 50 60
-150
-2
-1
-Botafogo
-550
-200
-10 20 30 40 50 60
-125
-2
-1
-Lagoa
-750
-400
-10 20 30 40 50 60
-200
-2
-3
-Sorte ou Reves
-Retire uma carta
-7
-0
-0
-1
-Jardim Botanico
-600
-250
-10 20 30 40 50 60
-140
-2
-1
-Tijuca
-450
-120
-10 20 30 40 50 60
-100
-3
-3
-Va para prisão
-Jogador é mandando pra prisão
-0
-0
+Av. 9 de julho
+60
 30
+2 10 30 90 160 250
+50
+0
+Sorte ou Reves
+Retire uma carta
+7
+0
+0
+1
+Av. Brasil
+60
+30
+4 20 60 180 320 450
+50
+0
+Imposto de Renda
+Pague 200
+1
+200
+0
+2
+Banco Itau
+200
+100
+50
+1
+Av. Beira Mar
+100
+50
+6 30 90 270 400 550
+50
+1
+Sorte ou Reves
+Retire uma carta
+7
+0
+0
+1
+Av. Rio Branco
+100
+50
+6 30 90 270 400 550
+50
+1
+1
+Av. do Estado
+120
+60
+8 40 100 300 450 600
+50
+1
+3
+Cadeia
+Entrada para visitantes
+0
+0
+0
+1
+Av. do Contorno
+140
+70
+10 50 150 450 625 750
+100
+2
+2
+TAM Linhas Aereas
+150
+75
+40
+1
+Av. Rebouças
+140
+70
+10 50 150 450 625 750
+100
+2
+1
+Av. Santo Amaro
+160
+80
+12 60 180 500 700 900
+100
+2
+2
+Posto Ipiranga
+200
+100
+50
+1
+Rua da Consolação
+180
+90
+14 70 200 550 700 900
+100
 3
 Sorte ou Reves
 Retire uma carta
@@ -77,60 +110,141 @@ Retire uma carta
 0
 0
 1
-Maracana
-430
-100
-10 20 30 40 50 60
+Av. Morumbi
+180
 90
+14 70 200 550 700 950
+100
 3
 1
-QUALQUER4.1
-430
+Av. Higienópolis
+200
 100
-10 20 30 40 50 60
-90
+16 80 220 600 800 1000
+100
+3
+3
+Férias
+Descanse durante uma rodada
+0
+0
+0
+1
+Av. São João
+220
+110
+18 90 250 700 875 1050
+150
+4
+Sorte ou Reves
+Retire uma carta
+7
+0
+0
+1
+Av. Ipiranga
+220
+110
+18 90 250 700 875 1050
+150
+4
+1
+Rua Brigadeiro Faria Lima
+240
+120
+20 100 300 750 925 1100
+150
 4
 2
-Taxi
-400
+Nivea
 200
+100
+50
+1
+Av. Paulista
+260
+130
+22 110 330 800 975 1150
 150
-1
-QUALQUER4.2
-430
-100
-10 20 30 40 50 60
-90
-4
-1
-QUALQUER4.3
-430
-100
-10 20 30 40 50 60
-90
-4
-1
-QUALQUER5.1
-430
-100
-10 20 30 40 50 60
-90
 5
-QUALQUER5.2
-430
-100
-10 20 30 40 50 60
-90
+1
+Av. Recife
+260
+130
+22 110 330 800 975 1150
+150
 5
-QUALQUER5.3
-430
-100
-10 20 30 40 50 60
-90
+2
+Vivo
+150
+75
+40
+1
+Juscelino Kubitschek
+280
+140
+24
+120 360 850 1025 1200
+150
 5
 3
-Estacionamento
-Nada pra fazer aqui
+Cadeia!
+Você foi preso! Vá para a prisão
+0
+0
+10
+1
+Rua Oscar Freire
+300
+150
+26 130 390 900 1100 1275
+200
 6
+1
+Av. Ibirapuera
+300
+150
+26 130 390 900 1100 1275
+200
+6
+Sorte ou Reves
+Retire uma carta
+7
 0
 0
+1
+Av. Vieira Souto
+320
+160
+28 150 450 1000 1200 1400
+200
+6
+2
+Fiat
+200
+100
+50
+Sorte ou Reves
+Retire uma carta
+7
+0
+0
+1
+Av. Presidente Vargas
+350
+175
+35 175 500 1100 1300 1500
+200
+7
+Restituição do Imposto de Renda
+Receba 200
+2
+200
+0
+1
+Av. Niemeyer
+400
+200
+50 200 600 1400 1700 2000
+200
+7
