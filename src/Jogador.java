@@ -5,7 +5,7 @@ public class Jogador implements Serializable {
 
 	private static final long serialVersionUID = -6980492824693699650L;
 	private static final int SALDO_INICIAL = 1500;
-	private static final int TAMANHO_TABULEIRO = 10;
+	private static final int TAMANHO_TABULEIRO = 40;
 	private String nome;
 	private int saldo;
 	private int posicao_tabuleiro;
@@ -57,8 +57,13 @@ public class Jogador implements Serializable {
 			this.compraveis.add(compravel);
 	}
 	
-	public void removerCompravel(Compravel compravel){
-		this.compraveis.remove(compravel);
+	public void removerCompravel(Compravel c_remover){
+		for(int i=0;i<compraveis.size();i++){
+			if(compraveis.get(i).getNome().equals(c_remover.getNome())){
+				compraveis.remove(i);
+				break;
+			}
+		}
 	}
 	
 	public void depositarDinheiro(int quantia){

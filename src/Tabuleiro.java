@@ -82,5 +82,13 @@ public class Tabuleiro implements Serializable {
 	public ArrayList<Jogador> getJogadores (){
 		return jogadores;
 	}
-	
+
+	public void setDonoCompravel(String nome_compravel, Jogador dono){
+		for(Espaco e : espacos){
+			if(e.compravel() && e.getNome().equals(nome_compravel)){
+				((Compravel) e).setDono(dono);
+			}
+		}
+	}
+
 }

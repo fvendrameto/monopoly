@@ -287,8 +287,8 @@ public class Server extends Thread {
 					threads.get(indJogadorAtual).run();
 					Compravel propHipoteca = (Compravel) objetoRetorno;
 		
-					if(objetoRetorno != null){ //caso
-						Banco.hipotecaCompravel(propHipoteca, jogador);
+					if(propHipoteca != null){ //caso
+						Banco.hipotecaCompravel(propHipoteca,jogador);
 
 						op = OP.ENVIAR_STR.codOp();
 						mensagem = jogador + " hipotecou " + propHipoteca;
@@ -313,10 +313,7 @@ public class Server extends Thread {
 							propriedades.add(p);
 					}
 
-					if(propriedades.size() == 0){
-						System.out.println("sai por aqui");
-						continue;
-					}
+					if(propriedades.size() == 0) continue;
 
 					op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
 					objetoEnvio = propriedades;
