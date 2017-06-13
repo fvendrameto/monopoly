@@ -13,6 +13,7 @@ public class Propriedade extends Compravel implements Serializable {
         this.n_casas = 0;
         this.cor = cor;
         this.preco_casa = preco_casa;
+        quantidade_cor[cor]++;
     }
     
     public static void setCorPropriedade(int cor){
@@ -49,7 +50,8 @@ public class Propriedade extends Compravel implements Serializable {
     }
     
     public static int getTotalCor(int cor){
-    	return quantidade_cor[cor];
+       // System.out.println("n " + cor + "=" + quantidade_cor[cor]);
+        return quantidade_cor[cor];
     }
     
     @Override

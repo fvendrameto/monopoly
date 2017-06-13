@@ -54,7 +54,7 @@ public class JogadoresGUI extends JPanel {
         		Enumeration propriedades = node.children();
         		while(propriedades.hasMoreElements()){
         			DefaultMutableTreeNode it = (DefaultMutableTreeNode)  propriedades.nextElement();
-        			if(it.toString().equals(propriedade)){
+        			if(it.toString().contains(propriedade)){
         				node.remove(it);
         				break;
         			}
@@ -78,7 +78,7 @@ public class JogadoresGUI extends JPanel {
         		Enumeration propriedades = node.children();
         		while(propriedades.hasMoreElements()){
         			DefaultMutableTreeNode it = (DefaultMutableTreeNode)  propriedades.nextElement();
-        			if(it.toString().equals(propriedade)){ //encontrou propriedade buscada
+        			if(it.toString().contains(propriedade)){ //encontrou propriedade buscada
         				node.remove(it);
         				node.add(new DefaultMutableTreeNode(propriedade + "(" + ncasas + ")"));
         				break;

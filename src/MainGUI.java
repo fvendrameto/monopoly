@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class MainGUI extends JFrame {
 	private TabuleiroGUI tabuleiroGui;
@@ -111,6 +108,7 @@ public class MainGUI extends JFrame {
 	 */
 	public int mostrarOpcoesJogo(){
 		Object[] acoes = {"Hipotecar","Comprar Casa","Vender Casa","Encerrar Rodada"};
+
 		String titulo = "Escolha a opção do jogo";
 		String nome_janela = "";
 		return JOptionPane.showOptionDialog(null,titulo,nome_janela,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,acoes,acoes[0]);
@@ -125,20 +123,25 @@ public class MainGUI extends JFrame {
 	 * @return Objeto da classe compravel escolhido
 	 */
 	public Compravel mostrarEscolherCompravel(ArrayList<Compravel> compraveis, String titulo){
-		String pergunta = "Escolha a propriedade";
-		HashMap<String,Compravel> map_compraveis = new HashMap<String,Compravel>();	
-		
-		String[] nomes = new String[compraveis.size()];
-		int i=0;
-		for(Compravel c : compraveis){
-			nomes[i++] = c.getNome();
-			map_compraveis.put(c.getNome(),c);
-		}
+		if(compraveis.size() > 0) {
+			String pergunta = "Escolha a propriedade";
+			HashMap<String, Compravel> map_compraveis = new HashMap<String, Compravel>();
 
-		String compravel = (String) JOptionPane.showInputDialog(null,pergunta,titulo,JOptionPane.QUESTION_MESSAGE,null,nomes,nomes[0]);
-		
-		
-		return map_compraveis.get(compravel);
+			String[] nomes = new String[compraveis.size()];
+			int i = 0;
+			for (Compravel c : compraveis) {
+				nomes[i++] = c.getNome();
+				map_compraveis.put(c.getNome(), c);
+			}
+
+			String compravel = (String) JOptionPane.showInputDialog(null, pergunta, titulo, JOptionPane.QUESTION_MESSAGE, null, nomes, nomes[0]);
+
+
+			return map_compraveis.get(compravel);
+		}else{
+			JOptionPane.showMessageDialog(null, "Você não possui propriedades para isso");
+			return null;
+		}
 	}
 	
 	

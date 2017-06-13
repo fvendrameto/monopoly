@@ -149,32 +149,37 @@ public class ClienteTeste {
 						saida.flush();
 					}else if(codigo.equals("02")){ //opção de hipoteca
 						ArrayList<Compravel> compraveis = (ArrayList<Compravel>) entrada.readObject();
-						System.out.println("tam compraveis " + compraveis.size());
 						Compravel escolhido = mainGui.mostrarEscolherCompravel(compraveis, "Hipoteca");
-						
-						mainGui.removeCompravelJogador(escolhido);
-						saldo += escolhido.getValorHipoteca();
-						mainGui.alterarSaldo(saldo);
-						
+
+						if(escolhido != null){
+							mainGui.removeCompravelJogador(escolhido);
+							saldo += escolhido.getValorHipoteca();
+							mainGui.alterarSaldo(saldo);
+						}
+
 						saida.writeObject(escolhido);
 						saida.flush();
 					}else if(codigo.equals("03")){ //opção de comprar casa
 						ArrayList<Compravel> compraveis = (ArrayList<Compravel>) entrada.readObject();
-						Propriedade escolhido = (Propriedade) mainGui.mostrarEscolherCompravel(compraveis, "Hipoteca");
-						
-						mainGui.alteraCasaPropriedadeJogador(escolhido.getNome(),escolhido.getNumeroCasas() + 1);
-						saldo -= escolhido.getPrecoCasa();
-						mainGui.alterarSaldo(saldo);
-						
+						Propriedade escolhido = (Propriedade) mainGui.mostrarEscolherCompravel(compraveis, "Comprar casa");
+
+						if(escolhido != null){
+							mainGui.alteraCasaPropriedadeJogador(escolhido.getNome(),escolhido.getNumeroCasas() + 1);
+							saldo -= escolhido.getPrecoCasa();
+							mainGui.alterarSaldo(saldo);
+						}
+
 						saida.writeObject(escolhido);
 					}else if(codigo.equals("04")){ //opção de vender casa
 						ArrayList<Compravel> compraveis = (ArrayList<Compravel>) entrada.readObject();
-						Propriedade escolhido = (Propriedade) mainGui.mostrarEscolherCompravel(compraveis, "Hipoteca");
-						
-						mainGui.alteraCasaPropriedadeJogador(escolhido.getNome(),escolhido.getNumeroCasas() - 1);
-						saldo += (escolhido.getPrecoCasa() / 2);
-						mainGui.alterarSaldo(saldo);
-						
+						Propriedade escolhido = (Propriedade) mainGui.mostrarEscolherCompravel(compraveis, "Vender casa");
+
+						if(escolhido != null){
+							mainGui.alteraCasaPropriedadeJogador(escolhido.getNome(),escolhido.getNumeroCasas() - 1);
+							saldo += (escolhido.getPrecoCasa() / 2);
+							mainGui.alterarSaldo(saldo);
+						}
+
 						saida.writeObject(escolhido);
 					}
 					
