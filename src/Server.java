@@ -45,6 +45,7 @@ public class Server extends Thread {
 	
 	private void enviarStr(String s) {
 		try {
+			this.saida.reset();
 			this.saida.writeInt(OP.ENVIAR_STR.codOp());
 			this.saida.flush();
 			this.saida.writeUTF(s);
@@ -69,6 +70,7 @@ public class Server extends Thread {
 	
 	private void enviarGUI(String codigo, String s) {
 		try{
+			this.saida.reset();
 			this.saida.writeInt(OP.ENVIAR_GUI.codOp());
 			this.saida.flush();
 			this.saida.writeUTF(codigo);
@@ -82,6 +84,7 @@ public class Server extends Thread {
 	
 	private void enviarObj(Object o) {
 		try {
+			this.saida.reset();
 			this.saida.writeInt(OP.ENVIAR_OBJ.codOp());
 			this.saida.flush();
 			this.saida.writeObject(o);
@@ -93,6 +96,7 @@ public class Server extends Thread {
 
 	private Object enviarEReceberObj(String cod, Object o) {
 		try {
+			this.saida.reset();
 			this.saida.writeInt(OP.ENVIAR_E_RECEBER_OBJ.codOp());
 			this.saida.flush();
 			this.saida.writeUTF(cod);
