@@ -1,4 +1,6 @@
-public class Companhia extends Compravel {
+import java.io.Serializable;
+
+public class Companhia extends Compravel implements Serializable{
     int aluguel;
     
     Companhia(String nome, int preco, int hipoteca, int aluguel) {

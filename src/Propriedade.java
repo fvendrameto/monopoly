@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class Propriedade extends Compravel {
+public class Propriedade extends Compravel implements Serializable {
     private int n_casas;
     private int[] tabela_precos;
     private int cor;

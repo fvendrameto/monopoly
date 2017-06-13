@@ -132,6 +132,7 @@ public class Server extends Thread {
 		ArrayList<Thread> threads = new ArrayList<>();
 		ArrayList<Jogador> jogadores = new ArrayList<>();
 		ArrayList<Espaco> espacos =  Initializers.initEspacos("espacos.dat");
+		System.out.println(espacos.size());
 		ArrayList<Carta> cartas = Initializers.initCartas("cartas.dat");
 		ArrayList<Compravel> compraveis;
 		Tabuleiro tabuleiro;
@@ -245,7 +246,7 @@ public class Server extends Thread {
 						
 						if(ret == 0) { //vai comprar
 							Banco.comprarCompravel(espacoCompravel, jogador);
-							
+
 							op = OP.ENVIAR_STR.codOp();
 							mensagem = jogador.getNome() + " comprou " + espacoCompravel.getNome();
 							for(int i=0; i<nJogadores; i++) threads.get(i).run();
@@ -273,7 +274,9 @@ public class Server extends Thread {
 				// hipotecar uma propriedade
 				if(cmd == 0) {
 					compraveis = jogador.getCompraveis();
-					
+
+					System.out.println("tam compraveis " + compraveis.size());
+
 					op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
 					objetoEnvio = compraveis;
 					codigo = "02";

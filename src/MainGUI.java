@@ -134,8 +134,7 @@ public class MainGUI extends JFrame {
 			nomes[i++] = c.getNome();
 			map_compraveis.put(c.getNome(),c);
 		}
-			
-		
+
 		String compravel = (String) JOptionPane.showInputDialog(null,pergunta,titulo,JOptionPane.QUESTION_MESSAGE,null,nomes,nomes[0]);
 		
 		

@@ -1,14 +1,10 @@
 
 public class Banco {
 	public static void comprarCompravel(Compravel compravel, Jogador jogador){
-		if(compravel.getDono() == null){ //caso a compravel não tenha dono
-			if(jogador.getSaldo() >= compravel.getPreco()){ //caso o jogador tenha dinheiro
-				jogador.adicionarCompravel(compravel);
-				jogador.sacarDinheiro(compravel.getPreco());
-				compravel.setDono(jogador);
-			}else{
-				System.out.println("Saldo insuficiente para fazer a compra");
-			}
+		if(jogador.getSaldo() >= compravel.getPreco()){ //caso o jogador tenha dinheiro
+			jogador.adicionarCompravel(compravel);
+			jogador.sacarDinheiro(compravel.getPreco());
+			compravel.setDono(jogador);
 		}
 	}
 	

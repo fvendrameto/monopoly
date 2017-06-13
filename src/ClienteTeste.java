@@ -143,12 +143,13 @@ public class ClienteTeste {
 						saida.writeObject(op);
 						saida.flush();
 					}else if(codigo.equals("01")){ //mostrar opçoes de jogo
+						entrada.readObject();
 						int op = mainGui.mostrarOpcoesJogo();
 						saida.writeObject(op);
 						saida.flush();
 					}else if(codigo.equals("02")){ //opção de hipoteca
-						System.out.println("cheguei no 2");
 						ArrayList<Compravel> compraveis = (ArrayList<Compravel>) entrada.readObject();
+						System.out.println("tam compraveis " + compraveis.size());
 						Compravel escolhido = mainGui.mostrarEscolherCompravel(compraveis, "Hipoteca");
 						
 						mainGui.removeCompravelJogador(escolhido);
@@ -180,8 +181,8 @@ public class ClienteTeste {
 				}
 
 			} catch (Exception e) {
-				System.out.println("cai aqui");
 				System.out.println(e);
+				e.printStackTrace();
 				return;
 			}
 			

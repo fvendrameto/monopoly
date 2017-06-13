@@ -1,4 +1,6 @@
-public abstract class Compravel extends Espaco {
+import java.io.Serializable;
+
+public abstract class Compravel extends Espaco implements Serializable {
     private Jogador propietario;
     private int preco;
     private int hipoteca;
