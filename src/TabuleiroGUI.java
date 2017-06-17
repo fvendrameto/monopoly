@@ -6,8 +6,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 /**
- *
- * @author guimontemovo
+ * Responsavel por exibir o tabuleiro e os peões na GUI
  */
 public class TabuleiroGUI extends JPanel {
     private JLayeredPane layers;
@@ -19,11 +18,10 @@ public class TabuleiroGUI extends JPanel {
     private int[] casaPeao;
 
     /**
-     *
-     * @param file
-     * @param width
-     * @param height
-     * @param numJogadores
+     * @param file Arquivo que contem a imagem do tabuleiro
+     * @param width Largura do componente
+     * @param height Altura do componente
+     * @param numJogadores Numero de jogadores na partida
      */
     public TabuleiroGUI(String file, int width, int height, int numJogadores) {
         layers = new JLayeredPane();
@@ -61,9 +59,43 @@ public class TabuleiroGUI extends JPanel {
         this.setVisible(true);
 
     }
-    /**calcula a posicao em pixels de um espaco no tabuleiro
-     *
-     * @param pos
+    /**
+     * Posiciona um peão em uma determinada posição do tabuleiro
+     * @param index Indice do peão
+     * @param pos Posição que o peão deve ser posicionado
+     */
+    public void putPeao(int index, int pos){
+        String file;
+
+        switch (index%5) {
+            case 0:
+                file = "images/peao-vermelho.png";
+                break;
+            case 1:
+                file = "images/peao-azul.png";
+                break;
+            case 2:
+                file = "images/peao-amarelo.png";
+                break;
+            case 3:
+                file = "images/peao-azul.png";
+                break;
+            case 4:
+                file = "images/peao-rosa.png";
+                break;
+            default:
+                file = "images/peao-vermelho.png";
+                break;
+        }
+
+
+
+        putPeao(index, pos, file);
+    }
+
+
+    /** Calcula a posicao em pixels de um espaco no tabuleiro
+     * @param pos Número da posição
      * @return Dimensao calculada
      */
     private Dimension getPos(int pos){
@@ -104,6 +136,26 @@ public class TabuleiroGUI extends JPanel {
     }
 
 
+    private void putPeao(int index, int pos, String file){
+        int desloc;
+
+        int posAntiga = casaPeao[index];
+
+
+        desloc = nPeoesCasa[pos];
+
+        nPeoesCasa[posAntiga]--;
+
+        nPeoesCasa[pos]++;
+
+        casaPeao[index] = pos;
+
+        putPeao(index, pos, 4*desloc, 4*desloc, file);
+
+
+
+    }
+
     private void putPeao(int index, int pos, int x, int y, String file){
         Dimension d = getPos(pos);
         JPanel peao = null;
@@ -129,62 +181,5 @@ public class TabuleiroGUI extends JPanel {
         } catch (Exception e){
             System.out.println("Nao foi possivel colocar o peao, erro: "+e);
         }
-    }
-
-
-
-    /**
-     *
-     * @param index
-     * @param pos
-     * @param file
-     */
-    private void putPeao(int index, int pos, String file){
-        int desloc;
-
-        int posAntiga = casaPeao[index];
-
-
-        desloc = nPeoesCasa[pos];
-
-        nPeoesCasa[posAntiga]--;
-
-        nPeoesCasa[pos]++;
-
-        casaPeao[index] = pos;
-
-        putPeao(index, pos, 4*desloc, 4*desloc, file);
-
-
-
-    }
-
-    public void putPeao(int index, int pos){
-        String file;
-
-        switch (index%5) {
-            case 0:
-                file = "images/peao-vermelho.png";
-                break;
-            case 1:
-                file = "images/peao-azul.png";
-                break;
-            case 2:
-                file = "images/peao-amarelo.png";
-                break;
-            case 3:
-                file = "images/peao-azul.png";
-                break;
-            case 4:
-                file = "images/peao-rosa.png";
-                break;
-            default:
-                file = "images/peao-vermelho.png";
-                break;
-        }
-
-
-
-        putPeao(index, pos, file);
     }
 }

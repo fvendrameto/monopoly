@@ -24,15 +24,17 @@ public class Tabuleiro implements Serializable {
 			this.temDinheiro[i] = true;
 		}
 	}
-	
-	public int getIndJogador() {
-		return this.indJogador;
-	}
-	
+
+	/**
+	 * @return Numero de jogadores na partida
+	 */
 	public int getNumeroJogadores() {
 		return jogadores.size();
 	}
-	
+
+	/**
+	 * Avança para o proximo jogador
+	 */
 	private void proximoIndJogador() {
 		do {
 			this.indJogador++;
@@ -40,27 +42,25 @@ public class Tabuleiro implements Serializable {
 				this.indJogador = 0;
 		} while(!this.temDinheiro[this.indJogador]);
 	}
-	
-	public void setOrdem(int[] dados) {
-		int j, max, idx = 0;
-		for(int i=0;i<jogadores.size();i++) {
-			max = Integer.MIN_VALUE;
-			for(j=0; j<jogadores.size(); j++) {
-				if(dados[j] > max) {
-					max = dados[j];
-					idx = j;
-				}
-			}
-			ordem[i] = idx;
-			dados[idx] = -1;
-		}
+
+	/**
+	 * @return Indice do jogador atual
+	 */
+	public int getIndJogador(){
+		return this.indJogador;
 	}
-	
+
+	/**
+	 * @return Jogador atual
+	 */
 	public Jogador getJogadorAtual() {
 		proximoIndJogador();
 		return jogadores.get(this.ordem[this.indJogador]);
 	}
-	
+
+	/**
+	 * @return Boolean indicando se ainda a jogadores(em condições) o suficiente para o jogo continuar
+	 */
 	public boolean jogoContinua() {
 		int cont = 0;
 		
@@ -70,25 +70,30 @@ public class Tabuleiro implements Serializable {
 
 		return cont >= 2;
 	}
-	
+
+	/**
+	 * Retorna espaço que se encontra em uma determinada posição do tabuleiro
+	 * @param posicao Posição solicitada
+	 * @return Espaço da posição solicitada
+	 */
 	public Espaco getEspacoPosicao(int posicao) {
 		return this.espacos.get(posicao);
 	}
-	
+
+	/**
+	 * Marca o jogador como falido, isto é, GAME OVER
+	 * @param pos Indice do jogador
+	 */
 	public void setFalencia(int pos) {
 		this.temDinheiro[pos] = false;
 	}
-	
+
+	/**
+	 * @return Todos os jogadores da partida
+	 */
 	public ArrayList<Jogador> getJogadores (){
 		return jogadores;
 	}
 
-	public void setDonoCompravel(String nome_compravel, Jogador dono){
-		for(Espaco e : espacos){
-			if(e.compravel() && e.getNome().equals(nome_compravel)){
-				((Compravel) e).setDono(dono);
-			}
-		}
-	}
 
 }

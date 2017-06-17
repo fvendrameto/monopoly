@@ -1,5 +1,8 @@
 import java.io.Serializable;
 
+/**
+ * Classe que representa as companhias do jogo
+ */
 public class Companhia extends Compravel implements Serializable{
     int aluguel;
     
@@ -7,7 +10,11 @@ public class Companhia extends Compravel implements Serializable{
         super(nome,preco,hipoteca);
         this.aluguel = aluguel;
     }
-    
+
+    /**
+     *
+     * @return Valor do aluguel do espaço
+     */
     public int getAluguel() {
         return aluguel;
     }

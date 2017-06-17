@@ -3,7 +3,16 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Classe responsavel por inicializar os componentes de jogo a partir de arquivos formatados
+ */
 public class Initializers {
+	/**
+	 * Inicializa os espaços do jogo
+	 * @param filename Nome do arquivo com os dados
+	 * @return Espaços do tabuleiro devidamente inicializados
+	 * @throws FileNotFoundException
+	 */
     public static ArrayList<Espaco> initEspacos(String filename) throws FileNotFoundException{
 		File file = new File(filename);
 		Scanner scanner = new Scanner(file);
@@ -23,7 +32,6 @@ public class Initializers {
 				}
 				int preco_casa = scanner.nextInt();
 				int cor = scanner.nextInt();
-				Propriedade.setCorPropriedade(cor);
 				Propriedade p = new Propriedade(nome,preco,hipoteca,tabela_precos,preco_casa,cor);
 				espacos.add(p);
 			}else if(tipo == 2){ //companhia
@@ -48,7 +56,13 @@ public class Initializers {
 		
 		return espacos;
 	}
-    
+
+	/**
+	 * Inicializa as cartas do jogo
+	 * @param filename Nome do arquivo com os dados
+	 * @return Cartas do tabuleiro devidamente inicializados
+	 * @throws FileNotFoundException
+	 */
     public static ArrayList<Carta> initCartas(String filename) throws FileNotFoundException{
     	File file = new File(filename);
     	Scanner scanner = new Scanner(file);

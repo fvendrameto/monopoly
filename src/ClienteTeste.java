@@ -47,7 +47,6 @@ public class ClienteTeste {
 				System.out.println(codigoOp);
 				
 				if(codigoOp == Server.OP.ENVIAR_STR.codOp()) { //MENSAGENS QUE VÃO PARA O LOG
-					System.out.println("aqui");
 					String str = entrada.readUTF();
 					mainGui.addTextoLog(str + "\n");
 				}
@@ -79,8 +78,7 @@ public class ClienteTeste {
 						int jogador = Integer.parseInt(mensagem[0]);
 						int posicao = Integer.parseInt(mensagem[1]);
 						int novo_saldo = Integer.parseInt(mensagem[2]);
-						
-						System.out.println("POSICIONAREI " + jogador + "na " + posicao);
+
 						mainGui.posicionaPeao(jogador, posicao);
 						if(saldo != Integer.parseInt(mensagem[2])){
 							saldo = novo_saldo;
@@ -94,7 +92,7 @@ public class ClienteTeste {
 						saldo -= valor;
 						mainGui.alterarSaldo(saldo);
 						
-						mainGui.mostrarPagouAluguel("Você pagou " + valor + " para " + dono + " porque parou em " + lugar);
+						mainGui.mostrarAvisoEspaco("Você pagou " + valor + " para " + dono + " porque parou em " + lugar);
 						
 					} else if(codigo.equals("02")) { //add compravel no tree jogadores
 						String jogador = mensagem[0];
@@ -104,13 +102,31 @@ public class ClienteTeste {
 						String jogador = mensagem[0];
 						String compravel = mensagem[1];
 						mainGui.removerCompravelOutro(jogador, compravel);
-					} else if(codigo.equals("04")) {
+					} else if(codigo.equals("04")) { //casa foi adicionada
 						String jogador = mensagem[0];
 						String propriedade = mensagem[1];
 						int nCasas = Integer.parseInt(mensagem[2]);
 						mainGui.alteraCasaPropriedadeOutro(jogador, propriedade, nCasas);
-					}else {
-						//System.out.println();
+					}else if(codigo.equals("05")){ //acão que altera o saldo
+						int novo_saldo = Integer.parseInt(mensagem[0]);
+						String str = mensagem[1];
+
+						if(saldo != novo_saldo){
+							saldo = novo_saldo;
+							mainGui.alterarSaldo(saldo);
+						}
+
+						mainGui.mostrarAvisoEspaco(str);
+					}else if(codigo.equals("06")){ //acão que altera o saldo
+						int novo_saldo = Integer.parseInt(mensagem[0]);
+						String str = mensagem[1];
+
+						if(saldo != novo_saldo){
+							saldo = novo_saldo;
+							mainGui.alterarSaldo(saldo);
+						}
+
+						mainGui.mostrarAvisoEspaco(str);
 					}
 				}
 				

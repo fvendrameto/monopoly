@@ -1,10 +1,19 @@
-
+/**
+ * Classe que representa os dados do jogo
+ */
 public class Dados {
 
 	public Dados() {
 
 	}
-	
+
+	/**
+	 * Realiza o sorteio dos dados
+	 * @param nDados Numero de dados que devem ser rolados
+	 * @param vals Array que contera os valores sorteados em cada dado
+	 * @return Soma dos valores dos dados lançados
+	 * @throws InterruptedException
+	 */
 	public static int rolar(int nDados, int[] vals) throws InterruptedException {
 		Dado[] dados = new Dado[nDados];
 		int[] valores = new int[nDados];
@@ -22,7 +31,7 @@ public class Dados {
 		
 		return getSomaValores(dados);
 	}
-	
+
 	private static int getSomaValores(Dado[] dados) {
 		int soma = 0;
 		

@@ -8,6 +8,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
+/**
+ * Responsavel pelo log de jogo exibido na GUI
+ */
 public class LogGUI extends JPanel{
 	private JTextArea area_texto;
 	private JLabel titulo;
@@ -36,8 +39,10 @@ public class LogGUI extends JPanel{
 		gbc.fill = GridBagConstraints.BOTH;
 		add(scroll,gbc);
 	}
-		
-	
+
+	/**
+	 * @param str String que será inserido no log de jogo
+	 */
 	public void addTexto(String str){
 		area_texto.append(str);
 	}

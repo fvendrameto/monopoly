@@ -8,6 +8,9 @@ import java.util.Scanner;
 
 import javax.swing.*;
 
+/**
+ * Suporta todos os componentes da GUI criados separamente o os exibi para o jogador
+ */
 public class MainGUI extends JFrame {
 	private TabuleiroGUI tabuleiroGui;
 	private JogadoresGUI jogadoresGui;
@@ -72,11 +75,20 @@ public class MainGUI extends JFrame {
         direita.add(bensGui);
 	
 	}
-	
+
+	/**
+	 * Exibe caixa de dialogo pedindo nome
+	 * @return Nome digitado pelo jogador
+	 */
 	public static String mostrarDigiteNome(){
 		return JOptionPane.showInputDialog(null,"Digite seu nome:","Bem vindo",JOptionPane.DEFAULT_OPTION);
 	}
-	
+
+	/**
+	 * Exibe caixa de dialogo dando a opção de compra pro jogador
+	 * @param c Compravel que será exibido
+	 * @return Opção do usuario (0 = Sim | 1 = Não)
+	 */
 	public int mostarOpcaoComprar(Compravel c){
 		Object[] acoes = {"Sim","Nao"};
 		//ImageIcon carta = new ImageIcon("images/carta-teste.png");
@@ -88,18 +100,22 @@ public class MainGUI extends JFrame {
 		
 		return JOptionPane.showOptionDialog(null,texto,"Deseja comprar?",JOptionPane.DEFAULT_OPTION,JOptionPane.DEFAULT_OPTION,carta,acoes,acoes[0]);
 	}
-	
+
 	/**
 	 * Mostra a janela avisando para rolar os dados
 	 */
 	public void mostrarRolarDados(){
 		JOptionPane.showMessageDialog(null, "Sua vez, clique em OK para rolar os dados");
 	}
-	
-	public void mostrarPagouAluguel(String string){
+
+	/**
+	 * Mostra aviso referente ao espaço que o jogador se encontra
+	 * @param string String que sera exibida
+	 */
+	public void mostrarAvisoEspaco(String string){
 		JOptionPane.showMessageDialog(null, string);
 	}
-	
+
 	
 	
 	/**
@@ -152,49 +168,76 @@ public class MainGUI extends JFrame {
 	public void addTextoLog(String string){
 		logGui.addTexto(string);
 	}
-	
-	
-	
-	public void addCompravelOutro(String jogador,String propriedade){
-		jogadoresGui.addCompravelJogador(jogador, propriedade);
+
+
+	/**
+	 * Adiciona compravel a jogador no componente que exibe todos os jogadores
+	 * @param jogador Nome do jogador que tera compravel adicionado
+	 * @param compravel Nome do compravel que será adicionado
+	 */
+	public void addCompravelOutro(String jogador,String compravel){
+		jogadoresGui.addCompravelJogador(jogador, compravel);
 	}
-		
-	
-	
+
+	/**
+	 * Remove compravel de jogador no componente que exibe todos os jogadores
+	 * @param jogador Nome do jogador que tera compravel removido
+	 * @param compravel Nome do compravel que será adicionado
+	 */
 	public void removerCompravelOutro(String jogador,String compravel){
 		jogadoresGui.removeCompravelJogador(jogador, compravel);
 	}
-	
-	
-	
+
+	/**
+	 * Atualiza numero de casas de propriedade de jogador no componente que exibe todos os jogadores
+	 * @param jogador Nome do jogador que tera numero de casas alterado
+	 * @param propriedade Nome da propriedade que será atualizada
+	 * @param ncasas Novo numero de casas da propriedade
+	 */
 	public void alteraCasaPropriedadeOutro(String jogador, String propriedade, int ncasas){
 		jogadoresGui.alterarPropriedadeJogador(jogador, propriedade, ncasas);
 	}
-	
-	
-	
+
+	/**
+	 * Adiciona compravel aos bens do jogador
+	 * @param compravel compravel que será adicionado
+	 */
 	public void addCompravelJogador(Compravel compravel){
 		bensGui.addCompravel(compravel);
 	}
-	
-	
-	
+
+
+	/**
+	 * Remove compravel dos bens do jogador
+	 * @param compravel Compravel que será removido
+	 */
 	public void removeCompravelJogador(Compravel compravel){
 		bensGui.removeCompravel(compravel.getNome());
 	}
-	
-	
-	
+
+
+	/**
+	 * Altera numero de casas de propriedade nos bens do jogador
+	 * @param propriedade Nome do compravel que será adicionado
+	 */
 	public void alteraCasaPropriedadeJogador(String propriedade, int novo_valor){
 		bensGui.alteraCompravel(propriedade,novo_valor + "",3);
 	}
-	
-	
-	
+
+
+	/**
+	 * Reposiciona um peão no tabuleiro
+	 * @param peao Indice do jogador que sera reposicionado
+	 * @param posicao Nova posição do peão
+	 */
 	public void posicionaPeao(int peao, int posicao){
 		tabuleiroGui.putPeao(peao, posicao);
 	}
-	
+
+	/**
+	 * Altera o saldo exibido na GUI
+	 * @param novo_saldo Novo valor de saldo
+	 */
 	public void alterarSaldo(int novo_saldo){
 		bensGui.setDinheiro(novo_saldo);
 	}

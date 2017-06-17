@@ -9,8 +9,7 @@ import javax.swing.JPanel;
 
 
 /**
- * Jpanel com um background
- * @author guimontemovo
+ * Classe que extende JPanel adicionando uma imagem de fundo
  */
 public class Background extends JPanel {
 
@@ -19,9 +18,9 @@ public class Background extends JPanel {
     
     /**
      * 
-     * @param fileName
-     * @param width
-     * @param height
+     * @param fileName Arquivo quem contem a imagem
+     * @param width Largura da imagem
+     * @param height Altura da imagem
      * @param x posiçao relativa a esquerda
      * @param y posicao relativa a direita
      * @throws IOException 
