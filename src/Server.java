@@ -211,9 +211,6 @@ public class Server extends Thread {
 			espacoAtual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
 			espacoAtual.addJogador(jogador);
 			
-			//mensagem = "Você parou em " + espacoAtual;
-			//threads.get(indJogadorAtual).run();
-			
 			op = OP.ENVIAR_GUI.codOp();
 			codigo = "00";
 			mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
@@ -263,7 +260,95 @@ public class Server extends Thread {
 					}
 				}
 			} else {
-				Acao.realizarAcao(tabuleiro,jogador,(Jogavel)espacoAtual);
+				Jogavel espacoJogavel = (Jogavel) espacoAtual;
+				Acao.realizarAcao(tabuleiro,jogador,espacoJogavel);
+				int acao = espacoJogavel.getAcao();
+				int posicao = espacoJogavel.getPosicao();
+				int quantia = espacoJogavel.getQuantia();
+				switch(acao){
+					case 0: //mudar posiçao
+						//avisa no log
+						op = OP.ENVIAR_STR.codOp();
+						mensagem = jogador.getNome() + " teve posição alterada...";
+						for(int i=0; i<nJogadores; i++) threads.get(i).run();
+
+						//muda a posição nos tabuleiros
+						op = OP.ENVIAR_GUI.codOp();
+						codigo = "00";
+						mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
+						for(int i=0; i<nJogadores; i++) threads.get(i).run();
+
+						break;
+					case 1: //pagar ao banco
+					case 2: //receber do banco
+						//avisa no log
+						op = OP.ENVIAR_STR.codOp();
+						if(acao == 1) mensagem = jogador.getNome() + " pagou ao banco";
+						else mensagem = jogador.getNome() + " recebeu ao banco";
+						for(int i=0; i<nJogadores; i++) threads.get(i).run();
+
+						//atualiza gui do jogador
+						op = OP.ENVIAR_GUI.codOp();
+						codigo = "05";
+						if(acao == 1) mensagem = jogador.getSaldo() + "Você pagou " + quantia ;
+						else mensagem = jogador.getSaldo() + "#" + "Você recebeu " + quantia ;
+						threads.get(indJogadorAtual).run();
+
+						break;
+					case 3: //mudar posição e pagar
+						//avisa no log
+						op = OP.ENVIAR_STR.codOp();
+						mensagem = jogador.getNome() + " pagou ao banco e mudou de posição";
+						for(int i=0; i<nJogadores; i++) threads.get(i).run();
+
+						//muda a posição nos tabuleiros
+						op = OP.ENVIAR_GUI.codOp();
+						codigo = "00";
+						mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
+						for(int i=0; i<nJogadores; i++) threads.get(i).run();
+
+						//atualiza saldo gui do jogador e avisa
+						op = OP.ENVIAR_GUI.codOp();
+						codigo = "05";
+						mensagem = jogador.getSaldo() + "#" + "Você pagou " + quantia + "e foi para " + tabuleiro.getEspacoPosicao(posicao).getNome() ;
+						threads.get(indJogadorAtual).run();
+
+						break;
+					case 4: //pagar aos jogadores
+						//avisa no log
+						op = OP.ENVIAR_STR.codOp();
+						mensagem = jogador.getNome() + " pagou " + quantia + " para todos os jogadores";
+						for(int i=0; i<nJogadores; i++) threads.get(i).run();
+
+						//atualiza saldo gui do jogador e avisa
+						op = OP.ENVIAR_GUI.codOp();
+						codigo = "05";
+						for(int i=0;i<nJogadores;i++){
+							mensagem = jogadores.get(i).getSaldo() + "#";
+							if(i != indJogadorAtual) mensagem +="Você recebeu " + quantia + "de" + jogador.getNome();
+							else mensagem += "Você pagou " + quantia + " para todos os jogadores";
+							threads.get(i).run();
+						}
+
+						break;
+					case 5: //receber dos jogadores
+						//avisa no log
+						op = OP.ENVIAR_STR.codOp();
+						mensagem = jogador.getNome() + " recebeu " + quantia + " de todos os jogadores";
+						for(int i=0; i<nJogadores; i++) threads.get(i).run();
+
+						//atualiza saldo gui do jogador e avisa
+						op = OP.ENVIAR_GUI.codOp();
+						codigo = "05";
+						for(int i=0;i<nJogadores;i++){
+							mensagem = jogadores.get(i).getSaldo() + "#";
+							if(i != indJogadorAtual) mensagem +="Você pagou " + quantia + " para " + jogador.getNome();
+							else mensagem += "Você recebeu " + quantia + " de todos os jogadores";
+							threads.get(i).run();
+						}
+
+						break;
+				}
 			}
 			
 			int cmd = 1;

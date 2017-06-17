@@ -88,18 +88,22 @@ public class MainGUI extends JFrame {
 		
 		return JOptionPane.showOptionDialog(null,texto,"Deseja comprar?",JOptionPane.DEFAULT_OPTION,JOptionPane.DEFAULT_OPTION,carta,acoes,acoes[0]);
 	}
-	
+
 	/**
 	 * Mostra a janela avisando para rolar os dados
 	 */
 	public void mostrarRolarDados(){
 		JOptionPane.showMessageDialog(null, "Sua vez, clique em OK para rolar os dados");
 	}
-	
-	public void mostrarPagouAluguel(String string){
+
+	/**
+	 * Mostra aviso referente ao espaço que o jogador se encontra
+	 * @param String que sera exibida
+	 */
+	public void mostrarAvisoEspaco(String string){
 		JOptionPane.showMessageDialog(null, string);
 	}
-	
+
 	
 	
 	/**
