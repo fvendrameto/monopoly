@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * Possui as informações responsaveis pelas ações de cartas e espaços do jogo
  */
-public class Acao {
+public class Acao implements Serializable {
 	private int codigo;
 	private int quantia;
 	private int posicao;

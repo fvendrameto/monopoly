@@ -46,6 +46,13 @@ public class Tabuleiro implements Serializable {
 	/**
 	 * @return Indice do jogador atual
 	 */
+	public int getIndJogador(){
+		return this.indJogador;
+	}
+
+	/**
+	 * @return Jogador atual
+	 */
 	public Jogador getJogadorAtual() {
 		proximoIndJogador();
 		return jogadores.get(this.ordem[this.indJogador]);
