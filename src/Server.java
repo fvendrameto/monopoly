@@ -261,10 +261,10 @@ public class Server extends Thread {
 				}
 			} else {
 				Jogavel espacoJogavel = (Jogavel) espacoAtual;
-				Acao.realizarAcao(tabuleiro,jogador,espacoJogavel);
-				int acao = espacoJogavel.getAcao();
-				int posicao = espacoJogavel.getPosicao();
-				int quantia = espacoJogavel.getQuantia();
+				espacoJogavel.getAcao().realizarAcao(tabuleiro,jogador);
+				int acao = espacoJogavel.getAcao().getCodigo();
+				int posicao = espacoJogavel.getAcao().getPosicao();
+				int quantia = espacoJogavel.getAcao().getQuantia();
 				switch(acao){
 					case 0: //mudar posiçao
 						//avisa no log

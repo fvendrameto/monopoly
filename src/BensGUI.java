@@ -10,14 +10,25 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * Componente da GUI que exibe os bens do jogador
+ */
 public class BensGUI extends JPanel{	
 	private JTable compraveis;
 	private JLabel titulo;
-	
+
+	/**
+	 * Atualiza o valor do dinheiro do jogador que aparece na GUI
+	 * @param valor Valor que será exibido
+	 */
 	public void setDinheiro(int valor){
 		this.titulo.setText("Seus bens(R$" + valor + ")");
 	}
-	
+
+	/**
+	 * Adiciona um compravel a listagem da GUI
+	 * @param compravel Compravel que será adicionado
+	 */
 	public void addCompravel(Compravel compravel){
 		DefaultTableModel model = (DefaultTableModel) compraveis.getModel();
 		Object[] nova_linha = new Object[4];
@@ -34,7 +45,11 @@ public class BensGUI extends JPanel{
 		
 		model.addRow(nova_linha);
 	}
-	
+
+	/**
+	 * Adiciona um compravel a listagem da GUI
+	 * @param nome_compravel Nome do compravel que será removido
+	 */
 	public void removeCompravel(String nome_compravel){
 		DefaultTableModel model = (DefaultTableModel) compraveis.getModel();
 		for(int i=0;i<model.getRowCount();i++){
@@ -44,7 +59,14 @@ public class BensGUI extends JPanel{
 			}
 		}
 	}
-	
+
+
+	/**
+	 * Altera um determinado campo na tabela de compraveis
+	 * @param nome_compravel Nome do compravel que deve ser alterado
+	 * @param novo_valor Valor que deve ser incluido no campo
+	 * @param campo Indice do campo que deve ser alterado
+	 */
 	public void alteraCompravel(String nome_compravel, String novo_valor,int campo){
 		DefaultTableModel model = (DefaultTableModel) compraveis.getModel();
 		for(int i=0;i<model.getRowCount();i++){
