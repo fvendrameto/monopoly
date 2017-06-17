@@ -31,7 +31,7 @@ Pague 200
 200
 -1
 2
-Banco Itau
+Companhia Portuária
 200
 100
 50
@@ -76,7 +76,7 @@ Av. do Contorno
 100
 2
 2
-TAM Linhas Aereas
+Companhia Aérea
 150
 75
 40
@@ -95,7 +95,7 @@ Av. Santo Amaro
 100
 2
 2
-Posto Ipiranga
+Companhia Ferroviária
 200
 100
 50
@@ -160,7 +160,7 @@ Rua Brigadeiro Faria Lima
 150
 4
 2
-Nivea
+Companhia de Água e Esgoto
 200
 100
 50
@@ -179,16 +179,15 @@ Av. Recife
 150
 5
 2
-Vivo
+Companhia de Luz e Força
 150
 75
 40
 1
-Juscelino Kubitschek
+Av. Juscelino Kubitschek
 280
 140
-24
-120 360 850 1025 1200
+24 120 360 850 1025 1200
 150
 5
 3
@@ -225,7 +224,7 @@ Av. Vieira Souto
 200
 6
 2
-Fiat
+Companhia Petrolífera
 200
 100
 50
