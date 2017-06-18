@@ -1,8 +1,6 @@
 package monopoly_principal;
 
-import monopoly_gui.*;
 import monopoly_elements.*;
-import jdk.nashorn.internal.scripts.JO;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,19 +8,10 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Server extends Thread {
+public class Server {
 	private Cliente cliente;
 	private ObjectOutputStream saida;
 	private ObjectInputStream entrada;
-	
-	private static Object objetoEnvio;
-	private static Object objetoRetorno;
-	private static String pergunta; 
-	private static String resposta;
-	private static String mensagem;
-	private static String codigo;
-	private static int op;
-//	private static Tabuleiro tabuleiroStatic;
 
 	private enum OP {
 		ENVIAR_STR(0), ENVIAR_E_RECEBER_STR(1), ENVIAR_GUI(2), ENVIAR_OBJ(3), ENVIAR_E_RECEBER_OBJ(4);
@@ -115,183 +104,147 @@ public class Server extends Thread {
 		}
 	}
 	
-	public void run() {
-		if(op == 0) {
-			enviarStr(mensagem);
-		}
-		
-		if(op == 1) {
-			resposta = enviarEReceberStr(pergunta);
-		}
-		
-		if(op == 2) {
-			enviarGUI(codigo, mensagem);
-		}
-		
-		if(op == 3) {
-			enviarObj(objetoEnvio);
-		}
-		
-		if(op == 4) {
-			objetoRetorno = enviarEReceberObj(codigo, objetoEnvio);
-		}
-	}
+//	public void run() {
+//		if(op == 0) {
+//			enviarStr(mensagem);
+//		}
+//
+//		if(op == 1) {
+//			resposta = enviarEReceberStr(pergunta);
+//		}
+//
+//		if(op == 2) {
+//			enviarGUI(codigo, mensagem);
+//		}
+//
+//		if(op == 3) {
+//			enviarObj(objetoEnvio);
+//		}
+//
+//		if(op == 4) {
+//			objetoRetorno = enviarEReceberObj(codigo, objetoEnvio);
+//		}
+//	}
 	
-	private static void pagarAluguel(Compravel espacoCompravel, Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
+	private static void pagarAluguel(Compravel espacoCompravel, Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int dados) {
 		int aluguel = espacoCompravel.getAluguel();
+		if(espacoCompravel instanceof Companhia) aluguel *= dados;
 		jogador.sacarDinheiro(aluguel);
 		espacoCompravel.getDono().depositarDinheiro(aluguel);
 		
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = jogador.getNome() + " pagou aluguel em " + espacoCompravel.getNome() + " para " + espacoCompravel.getDono();
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		String mensagem = jogador.getNome() + " pagou aluguel em " + espacoCompravel.getNome() + " para " + espacoCompravel.getDono();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//atualizar saldo jogador que pagou
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "01";
 		mensagem = espacoCompravel.getAluguel() + "#" + espacoCompravel.getDono() + "#" + espacoCompravel.getNome();
-		threads.get(indJogadorAtual).run();
+		clientes.get(indJogadorAtual).enviarGUI("01", mensagem);
 		
 		//atualizar saldo jogador que recebeu
-		codigo = "02";
 		mensagem = espacoCompravel.getAluguel() + "#" + jogador.getNome() + "#" + espacoCompravel.getNome();
-		threads.get(jogadores.indexOf(espacoCompravel.getDono())).run();
-		
+		clientes.get(jogadores.indexOf(espacoCompravel.getDono())).enviarGUI("02", mensagem);
 	}
 	
-	private static void comprarPropriedade(Compravel espacoCompravel, Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
-		op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-		codigo = "00";
-		objetoEnvio = espacoCompravel;
-		threads.get(indJogadorAtual).run();
-		int ret = (int) objetoRetorno;
+	private static void comprarPropriedade(Compravel espacoCompravel, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
+		int ret  = (int) clientes.get(indJogadorAtual).enviarEReceberObj("00", espacoCompravel);
 		
 		if(ret == 0) { //vai comprar
 			Banco.comprarCompravel(espacoCompravel, jogador);
 			
-			op = OP.ENVIAR_STR.codOp();
-			mensagem = jogador.getNome() + " comprou " + espacoCompravel.getNome();
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			String mensagem = jogador.getNome() + " comprou " + espacoCompravel.getNome();
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 			
-			op = OP.ENVIAR_GUI.codOp();
-			codigo = "02";
 			mensagem = jogador.getNome() + "#" + espacoCompravel.getNome();
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("02", mensagem);
 		}
 	}
 	
-	private static void moverJogador(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual, int posicao) {
+	private static void moverJogador(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int posicao) {
 		//avisa no log
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = jogador.getNome() + " teve posição alterada...";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		String mensagem = jogador.getNome() + " teve posição alterada...";
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//muda a posição nos tabuleiros
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "00";
 		mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
 	}
 	
-	private static void pagarOuReceber(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual, int acao, int quantia) {
+	private static void pagarOuReceber(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int acao, int quantia) {
 		//avisa no log
-		op = OP.ENVIAR_STR.codOp();
+		String mensagem;
 		if(acao == 1) mensagem = jogador.getNome() + " pagou ao banco";
 		else mensagem = jogador.getNome() + " recebeu do banco";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//atualiza gui do jogador
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "05";
 		if(acao == 1) mensagem = jogador.getSaldo() + "Você pagou " + quantia ;
 		else mensagem = jogador.getSaldo() + "#" + "Você recebeu " + quantia ;
-		threads.get(indJogadorAtual).run();
+		clientes.get(indJogadorAtual).enviarGUI("05", mensagem);
 	}
 	
-	private static void moverEPagar(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual, int posicao, int quantia, String nome) {
+	private static void moverEPagar(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int posicao, int quantia, String nome) {
 		//avisa no log
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = jogador.getNome() + " pagou ao banco e mudou de posição";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		String mensagem = jogador.getNome() + " pagou ao banco e mudou de posição";
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//muda a posição nos tabuleiros
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "00";
 		mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
 		
 		//atualiza saldo gui do jogador e avisa
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "05";
 		mensagem = jogador.getSaldo() + "#" + "Você pagou " + quantia + "e foi para " + nome;
-		threads.get(indJogadorAtual).run();
+		clientes.get(indJogadorAtual).enviarGUI("05", mensagem);
 		
 	}
 	
-	private static void pagarJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual, int quantia) {
+	private static void pagarJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int quantia) {
 		//avisa no log
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = jogador.getNome() + " pagou " + quantia + " para todos os jogadores";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		String mensagem = jogador.getNome() + " pagou " + quantia + " para todos os jogadores";
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
-		//atualiza saldo gui do jogador e avisaJogador jogador, ArrayList<Jogador> jogadores, ArrayList<Thread> threads, int nJogadores
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "05";
+		//atualiza saldo gui do jogador e avisaJogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores
 		for(int i=0;i<nJogadores;i++){
 			mensagem = jogadores.get(i).getSaldo() + "#";
 			if(i != indJogadorAtual) mensagem +="Você recebeu " + quantia + "de" + jogador.getNome();
 			else mensagem += "Você pagou " + quantia + " para todos os jogadores";
-			threads.get(i).run();
+			clientes.get(i).enviarGUI("05", mensagem);
 		}
 	}
 	
-	private static void receberJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual, int quantia) {
+	private static void receberJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int quantia) {
 		//avisa no log
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = jogador.getNome() + " recebeu " + quantia + " de todos os jogadores";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		String mensagem = jogador.getNome() + " recebeu " + quantia + " de todos os jogadores";
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//atualiza saldo gui do jogador e avisa
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "05";
 		for(int i=0;i<nJogadores;i++){
 			mensagem = jogadores.get(i).getSaldo() + "#";
 			if(i != indJogadorAtual) mensagem +="Você pagou " + quantia + " para " + jogador.getNome();
 			else mensagem += "Você recebeu " + quantia + " de todos os jogadores";
-			threads.get(i).run();
+			clientes.get(i).enviarGUI("05", mensagem);
 		}
 	}
 	
-	private static void hipotecar(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
+	private static void hipotecar(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		ArrayList<Compravel> compraveis = jogador.getCompraveis();
 		
 		if(compraveis.size() == 0) return;
 		
-		op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-		objetoEnvio = compraveis;
-		codigo = "02";
-		threads.get(indJogadorAtual).run();
-		Compravel propHipoteca = (Compravel) objetoRetorno;
+		Compravel propHipoteca = (Compravel) clientes.get(indJogadorAtual).enviarEReceberObj("02", compraveis);
 		
 		if(propHipoteca != null){ //caso
 			Banco.hipotecaCompravel(propHipoteca,jogador);
 			
-			op = OP.ENVIAR_STR.codOp();
-			mensagem = jogador + " hipotecou " + propHipoteca;
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			String mensagem = jogador + " hipotecou " + propHipoteca;
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 			
-			op = OP.ENVIAR_GUI.codOp();
-			codigo = "03";
 			mensagem = jogador + "#" + propHipoteca;
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("03", mensagem);
 		}
 	}
 	
-	private static void construirCasa(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
-		System.out.println("Opção de comprar casa escolhida...");
+	private static void construirCasa(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		ArrayList<Compravel> propriedades = new ArrayList<>();
 		
-		op = OP.ENVIAR_STR.codOp();
 		for(Compravel p : jogador.getCompraveis()) {
 			if (p.propriedade() && jogador.temTodosCor(((Propriedade) p).getCor()) && jogador.getSaldo() >= ((Propriedade) p).getPrecoCasa() && ((Propriedade) p).getNumeroCasas() < 5)
 				propriedades.add(p);
@@ -299,30 +252,23 @@ public class Server extends Thread {
 		
 		if(propriedades.size() == 0) return;
 		
-		op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-		objetoEnvio = propriedades;
-		threads.get(indJogadorAtual).run();
-		Propriedade propEscolhida = (Propriedade) objetoRetorno;
+		Propriedade propEscolhida = (Propriedade) clientes.get(indJogadorAtual).enviarEReceberObj("03", propriedades);
 		
 		if(propEscolhida != null){
 			Banco.comprarCasa(propEscolhida, jogador);
 			
-			op = OP.ENVIAR_STR.codOp();
-			mensagem = jogador + " construiu um casa em " + propEscolhida;
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			String mensagem = jogador + " construiu um casa em " + propEscolhida;
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 			
-			op = OP.ENVIAR_GUI.codOp();
-			codigo = "04";
 			mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("04", mensagem);
 		}
 		
 	}
 	
-	private static void venderCasa(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
+	private static void venderCasa(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		ArrayList<Compravel> propriedades = new ArrayList<>();
 		
-		op = OP.ENVIAR_STR.codOp();
 		for(Compravel p : jogador.getCompraveis()){
 			if(p instanceof Propriedade && ((Propriedade)p).temCasa()) {
 				propriedades.add(p);
@@ -331,55 +277,43 @@ public class Server extends Thread {
 		
 		if(propriedades.size() == 0) return;
 		
-		op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-		objetoEnvio = propriedades;
-		threads.get(indJogadorAtual).run();
-		Propriedade propEscolhida = (Propriedade) objetoRetorno;
+		Propriedade propEscolhida = (Propriedade) clientes.get(indJogadorAtual).enviarEReceberObj("04", propriedades);
 		
-		if(objetoRetorno != null){
+		if(propEscolhida != null){
 			Banco.venderCasa(propEscolhida, jogador);
 			
-			op = OP.ENVIAR_STR.codOp();
-			mensagem  = jogador + " vendeu uma casa em " + propEscolhida;
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			String mensagem  = jogador + " vendeu uma casa em " + propEscolhida;
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 			
-			op = OP.ENVIAR_GUI.codOp();
-			codigo = "04";
 			mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("04", mensagem);
 		}
 	}
 	
-	private static Espaco comecarRodada(Tabuleiro tabuleiro, Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = "É a vez de " + jogador;
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+	private static Espaco comecarRodada(Tabuleiro tabuleiro, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int resultadoDados) {
+		String mensagem = "É a vez de " + jogador;
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
-		op = OP.ENVIAR_E_RECEBER_STR.codOp();
-		pergunta = "Aperte ENTER para rolar os dados";
-		threads.get(indJogadorAtual).run();
-		int resultadoDados = Dados.rolar(2, null);
+		clientes.get(indJogadorAtual).enviarEReceberStr(mensagem);
+		resultadoDados = Dados.rolar(2, null);
 		
-		op = OP.ENVIAR_STR.codOp();
 		mensagem = jogador + " rolou " + resultadoDados;
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
-		System.out.println(jogador.getPosicaoTabuleiro() + "");
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+		
 		tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro()).removeJogador(jogador);
 		boolean passouInicio = jogador.andarPosicaoTabuleiro(resultadoDados);
 		if(passouInicio) jogador.depositarDinheiro(200); //se jogador passou pelo inicio recebe dinheiro
 		Espaco espacoAtual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
 		espacoAtual.addJogador(jogador);
 		
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "00";
 		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
 		
 		return espacoAtual;
 	}
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
-		ArrayList<Thread> threads = new ArrayList<>();
+		ArrayList<Server> clientes = new ArrayList<>();
 		ArrayList<Jogador> jogadores = new ArrayList<>();
 		ArrayList<Espaco> espacos =  Initializers.initEspacos("espacos.dat");
 		ArrayList<Carta> cartas = Initializers.initCartas("cartas.dat");
@@ -389,9 +323,11 @@ public class Server extends Thread {
 		Espaco espacoAtual;
 		ServerSocket servidor = new ServerSocket(12345);
 		Scanner teclado = new Scanner(System.in);
+		
 		int indJogadorAtual;
 		int nJogadores;
 		int jogadoresConectados = 0;
+		int resultadoDados = 0;
 		
 		System.out.println("Digite o número de jogadores: ");
 		nJogadores = teclado.nextInt();
@@ -399,34 +335,29 @@ public class Server extends Thread {
 		while(jogadoresConectados < nJogadores) {
 			Cliente cliente = new Cliente(servidor.accept());
 			Server s = new Server(cliente);
-			threads.add(new Thread(s));
+			clientes.add(s);
 			jogadoresConectados++;
 		}
 		
 		System.out.println("Todos conectados");
 		
 		for(int i=0; i<nJogadores; i++) {
-			op = OP.ENVIAR_E_RECEBER_STR.codOp();
-			pergunta = "Digite seu nome: ";
-			threads.get(i).run();
-			jogadores.add(new Jogador(resposta));
-			threads.get(i).setName(resposta);
+			String nome = clientes.get(i).enviarEReceberStr("Digite seu nome: ");
+			jogadores.add(new Jogador(nome));
 		}
 		
 		tabuleiro = new Tabuleiro(jogadores, espacos, cartas);
-		op = OP.ENVIAR_OBJ.codOp();
-		objetoEnvio = tabuleiro;
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarObj(tabuleiro);
 		
 		/*for(int i=0; i<nJogadores; i++) {
 			op = OP.ENVIAR_E_RECEBER_STR.codOp();
 			pergunta = "Definindo a ordem dos jogadores. Aperte ENTER para rolar os dados.";
-			threads.get(i).run();
+			clientes.get(i).run();
 			dados[i] = Dados.rolar(2, null);
 			
 			op = OP.ENVIAR_STR.codOp();
 			mensagem = jogadores.get(i) + " rolou " + dados[i];
-			threads.get(i).run();
+			clientes.get(i).run();
 		}*/
 		
 		//tabuleiro.setOrdem(dados);
@@ -434,15 +365,15 @@ public class Server extends Thread {
 		while(tabuleiro.jogoContinua()) {
 			jogador = tabuleiro.getJogadorAtual();
 			indJogadorAtual = tabuleiro.getIndJogador();
-			espacoAtual = comecarRodada(tabuleiro, jogador, threads, nJogadores, indJogadorAtual);
+			espacoAtual = comecarRodada(tabuleiro, jogador, clientes, nJogadores, indJogadorAtual, resultadoDados);
 
 			if(espacoAtual.compravel()) {
 				Compravel espacoCompravel = (Compravel) espacoAtual;
 				if(espacoCompravel.temDono() && espacoCompravel.getDono() != jogador) { //SE TEM DONO PAGA O ALUGUEL
-					pagarAluguel(espacoCompravel, jogador, jogadores, threads, nJogadores, indJogadorAtual);
+					pagarAluguel(espacoCompravel, jogador, jogadores, clientes, nJogadores, indJogadorAtual, resultadoDados);
 				} else if(!espacoCompravel.temDono()){ //o espaço n tem dono, entao pode ser comprado
 					if(jogador.getSaldo() >= espacoCompravel.getPreco()) {
-						comprarPropriedade(espacoCompravel, jogador, threads, nJogadores, indJogadorAtual);
+						comprarPropriedade(espacoCompravel, jogador, clientes, nJogadores, indJogadorAtual);
 					}
 				}
 			} else {
@@ -453,54 +384,47 @@ public class Server extends Thread {
 				int quantia = espacoJogavel.getAcao().getQuantia();
 				switch(acao){
 					case 0: //mudar posiçao
-						moverJogador(jogador, threads, nJogadores, indJogadorAtual, posicao);
+						moverJogador(jogador, clientes, nJogadores, indJogadorAtual, posicao);
 						break;
 					case 1: //pagar ao banco
 					case 2: //receber do banco
-						pagarOuReceber(jogador, threads, nJogadores, indJogadorAtual, quantia, acao);
+						pagarOuReceber(jogador, clientes, nJogadores, indJogadorAtual, quantia, acao);
 						break;
 					case 3: //mudar posição e pagar
-						moverEPagar(jogador, threads, nJogadores, indJogadorAtual, posicao, quantia,tabuleiro.getEspacoPosicao(posicao).getNome());
+						moverEPagar(jogador, clientes, nJogadores, indJogadorAtual, posicao, quantia,tabuleiro.getEspacoPosicao(posicao).getNome());
 						break;
 					case 4: //pagar aos jogadores
-						pagarJogadores(jogador, jogadores, threads, nJogadores, indJogadorAtual, quantia);
+						pagarJogadores(jogador, jogadores, clientes, nJogadores, indJogadorAtual, quantia);
 						break;
 					case 5: //receber dos jogadores
-						receberJogadores(jogador, jogadores, threads, nJogadores, indJogadorAtual, quantia);
+						receberJogadores(jogador, jogadores, clientes, nJogadores, indJogadorAtual, quantia);
 						break;
 				}
 			}
 			
 			int cmd = 1;
 			while(cmd != 3) {
-				op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-				objetoEnvio = "";
-				codigo = "01";
-				threads.get(indJogadorAtual).run();
-				cmd = (int) objetoRetorno;
-				
+				cmd = (int) clientes.get(indJogadorAtual).enviarEReceberObj("01", "");
 				
 				// hipotecar uma propriedade
 				if(cmd == 0) {
-					hipotecar(jogador, threads, nJogadores, indJogadorAtual);
+					hipotecar(jogador, clientes, nJogadores, indJogadorAtual);
 				}
 				
 				// construir casa
 				if(cmd == 1){
-					construirCasa(jogador, threads, nJogadores, indJogadorAtual);
+					construirCasa(jogador, clientes, nJogadores, indJogadorAtual);
 				}
 
 				// vender casa
 				if(cmd == 2){
-					venderCasa(jogador, threads, nJogadores, indJogadorAtual);
+					venderCasa(jogador, clientes, nJogadores, indJogadorAtual);
 				}
 			}
 		}
 
 		servidor.close();
 		teclado.close();
-		for(int i=0; i<nJogadores; i++)
-				threads.get(i).join();
 	}
 
 }
