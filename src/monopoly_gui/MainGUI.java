@@ -223,8 +223,9 @@ public class MainGUI extends JFrame {
 	 * Altera numero de casas de propriedade nos bens do jogador
 	 * @param propriedade Nome do compravel que será adicionado
 	 */
-	public void alteraCasaPropriedadeJogador(String propriedade, int novo_valor){
-		bensGui.alteraCompravel(propriedade,novo_valor + "",3);
+	public void alteraCasaPropriedadeJogador(String propriedade,int nCasas, int novoAluguel) {
+		bensGui.alteraCompravel(propriedade, nCasas + "", 3);
+		bensGui.alteraCompravel(propriedade,novoAluguel + "",2);
 	}
 
 

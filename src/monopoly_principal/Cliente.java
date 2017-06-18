@@ -172,7 +172,8 @@ public class Cliente{
 				Propriedade escolhido = (Propriedade) mainGui.mostrarEscolherCompravel(compraveis, "Comprar casa");
 
 				if(escolhido != null){
-					mainGui.alteraCasaPropriedadeJogador(escolhido.getNome(),escolhido.getNumeroCasas() + 1);
+					int nCasas = escolhido.getNumeroCasas() + 1;
+					mainGui.alteraCasaPropriedadeJogador(escolhido.getNome(),nCasas,escolhido.getAluguel(nCasas));
 					saldo -= escolhido.getPrecoCasa();
 					mainGui.alterarSaldo(saldo);
 				}
@@ -183,7 +184,8 @@ public class Cliente{
 				Propriedade escolhido = (Propriedade) mainGui.mostrarEscolherCompravel(compraveis, "Vender casa");
 
 				if(escolhido != null){
-					mainGui.alteraCasaPropriedadeJogador(escolhido.getNome(),escolhido.getNumeroCasas() - 1);
+					int nCasas = escolhido.getNumeroCasas() - 1;
+					mainGui.alteraCasaPropriedadeJogador(escolhido.getNome(),nCasas,escolhido.getAluguel(nCasas));
 					saldo += (escolhido.getPrecoCasa() / 2);
 					mainGui.alterarSaldo(saldo);
 				}

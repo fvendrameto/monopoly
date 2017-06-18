@@ -28,6 +28,9 @@ public class Propriedade extends Compravel implements Serializable {
         return tabela_precos[n_casas];
     }
 
+    public int getAluguel(int index){
+        return tabela_precos[index];
+    }
     /**
      * Adiciona uma casa na propriedade
      */

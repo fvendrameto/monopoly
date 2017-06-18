@@ -38,7 +38,7 @@ public class BensGUI extends JPanel{
 		
 		nova_linha[0] = compravel.getNome();
 		nova_linha[1] = compravel.getValorHipoteca();
-		nova_linha[2] = "30";//compravel.getAluguel();
+		nova_linha[2] = compravel.getAluguel();
 		if(compravel.propriedade()){
 			int casas = ((Propriedade) compravel).getNumeroCasas();
 			nova_linha[3] = "" + casas;
