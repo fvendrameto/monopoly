@@ -44,9 +44,10 @@ public class Initializers {
 			}else{ //jogavel
 				String nome = scanner.nextLine();
 				String descricao = scanner.nextLine();
-				int acao = scanner.nextInt(); 
+				int acao = scanner.nextInt();
 				int quantia = scanner.nextInt();
 				int posicao = scanner.nextInt();
+				System.out.println(nome + "\n" + acao + "\n" + quantia + "\n" + posicao);
 				Jogavel j = new Jogavel(nome,descricao,acao,quantia,posicao);
 				espacos.add(j);
 			}

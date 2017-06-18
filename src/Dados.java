@@ -14,7 +14,7 @@ public class Dados {
 	 * @return Soma dos valores dos dados lançados
 	 * @throws InterruptedException
 	 */
-	public static int rolar(int nDados, int[] vals) throws InterruptedException {
+	public static int rolar(int nDados, int[] vals) {
 		Dado[] dados = new Dado[nDados];
 		int[] valores = new int[nDados];
 		
@@ -23,7 +23,11 @@ public class Dados {
 			dados[i].rolar();
 			valores[i] = dados[i].getValor();
 			
-			Thread.sleep(1);
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		if(vals != null)
