@@ -8,11 +8,17 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Classe do servidor, gerencia os clientes e roda o jogo
+ */
 public class Server {
 	private Cliente cliente;
 	private ObjectOutputStream saida;
 	private ObjectInputStream entrada;
-
+	
+	/**
+	 * Enum para definição das operações de comunicação servidor-cliente, torna o código mais legível
+	 */
 	private enum OP {
 		ENVIAR_STR(0), ENVIAR_E_RECEBER_STR(1), ENVIAR_GUI(2), ENVIAR_OBJ(3), ENVIAR_E_RECEBER_OBJ(4);
 		
@@ -26,8 +32,13 @@ public class Server {
 		}
 	}
 	
-	private Server(Cliente c) {
-		this.cliente = c;
+	/**
+	 * Construtor do Servidor, recebe e atribui o cliente conectado e também atribui
+	 * as Streams de entrada e saída do servidor com esse cliente.
+	 * @param cliente Objeto cliente, que contém o socket de conexão com o servidor
+	 */
+	private Server(Cliente cliente) {
+		this.cliente = cliente;
 		
 		try {
 			this.saida = new ObjectOutputStream(cliente.getSocket().getOutputStream());
@@ -37,23 +48,32 @@ public class Server {
 		}
 	}
 	
-	private void enviarStr(String s) {
+	/**
+	 * Método para envio de uma string para o cliente
+	 * @param string String a ser enviada
+	 */
+	private void enviarStr(String string) {
 		try {
 			this.saida.reset();
 			this.saida.writeInt(OP.ENVIAR_STR.codOp());
 			this.saida.flush();
-			this.saida.writeUTF(s);
+			this.saida.writeUTF(string);
 			this.saida.flush();
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}	
 	}
 	
-	private String enviarEReceberStr(String s) {
+	/**
+	 * Método para enviar uma string para o cliente e receber outra string como resposta.
+	 * @param string String a ser enviada
+	 * @return Uma string, enviada pelo cliente como resposta, ou null caso ocorra uma execeção
+	 */
+	private String enviarEReceberStr(String string) {
 		try {
 			this.saida.writeInt(OP.ENVIAR_E_RECEBER_STR.codOp());
 			this.saida.flush();
-			this.saida.writeUTF(s);
+			this.saida.writeUTF(string);
 			this.saida.flush();
 			return entrada.readUTF();
 		} catch (IOException e) {
@@ -62,20 +82,29 @@ public class Server {
 		}
 	}
 	
-	private void enviarGUI(String codigo, String s) {
+	/**
+	 * Método para envio de mensagens para atualização da interface gráfica
+ 	 * @param codigo String que diz ao cliente o que será alterado
+	 * @param mensagem Valor atualizado dos parâmetros que serão alterados no cliente
+	 */
+	private void enviarGUI(String codigo, String mensagem) {
 		try{
 			this.saida.reset();
 			this.saida.writeInt(OP.ENVIAR_GUI.codOp());
 			this.saida.flush();
 			this.saida.writeUTF(codigo);
 			this.saida.flush();
-			this.saida.writeUTF(s);
+			this.saida.writeUTF(mensagem);
 			this.saida.flush();
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 	
+	/**
+	 * Método para envio de objetos para o cliente
+	 * @param o Objeto genérico
+	 */
 	private void enviarObj(Object o) {
 		try {
 			this.saida.reset();
@@ -87,13 +116,19 @@ public class Server {
 			System.out.println(e.getMessage());
 		}
 	}
-
-	private Object enviarEReceberObj(String cod, Object o) {
+	
+	/**
+	 * Método para enviar um objeto para o cliente e receber outro como resposta
+	 * @param codigo String que diz ao cliente o que ele está recebendo
+	 * @param o Objeto que será enviado ao cliente
+	 * @return Um objeto, que foi enviado pelo cliente como resposta
+	 */
+	private Object enviarEReceberObj(String codigo, Object o) {
 		try {
 			this.saida.reset();
 			this.saida.writeInt(OP.ENVIAR_E_RECEBER_OBJ.codOp());
 			this.saida.flush();
-			this.saida.writeUTF(cod);
+			this.saida.writeUTF(codigo);
 			this.saida.flush();
 			this.saida.writeObject(o);
 			this.saida.flush();
@@ -104,28 +139,16 @@ public class Server {
 		}
 	}
 	
-//	public void run() {
-//		if(op == 0) {
-//			enviarStr(mensagem);
-//		}
-//
-//		if(op == 1) {
-//			resposta = enviarEReceberStr(pergunta);
-//		}
-//
-//		if(op == 2) {
-//			enviarGUI(codigo, mensagem);
-//		}
-//
-//		if(op == 3) {
-//			enviarObj(objetoEnvio);
-//		}
-//
-//		if(op == 4) {
-//			objetoRetorno = enviarEReceberObj(codigo, objetoEnvio);
-//		}
-//	}
-	
+	/**
+	 * Método estático, usado na main, para pagar aluguel por parar na propriedade de outro jogador
+	 * @param espacoCompravel Espaço em que o jogador atual parou
+	 * @param jogador Jogador atual
+	 * @param jogadores Lista com todos os jogadores que estão no jogo
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param dados Valor dos dados, usado espacoCompravel seja uma companhia
+	 */
 	private static void pagarAluguel(Compravel espacoCompravel, Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int dados) {
 		int aluguel = espacoCompravel.getAluguel();
 		if(espacoCompravel instanceof Companhia) aluguel *= dados;
@@ -144,6 +167,14 @@ public class Server {
 		clientes.get(jogadores.indexOf(espacoCompravel.getDono())).enviarGUI("02", mensagem);
 	}
 	
+	/**
+	 * Método estático, usado na main, para o jogador atual comprar o espaço em que ele parou
+	 * @param espacoCompravel Espaco em que o jogador parou
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 */
 	private static void comprarPropriedade(Compravel espacoCompravel, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		int ret  = (int) clientes.get(indJogadorAtual).enviarEReceberObj("00", espacoCompravel);
 		
@@ -158,6 +189,15 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Método estático para mover o jogador no tabuleiro, caso ele tenha parado em um espaço que
+	 * executa essa ação
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param posicao Posição do tabuleiro para a qual o jogador deve ir
+	 */
 	private static void moverJogador(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int posicao) {
 		//avisa no log
 		String mensagem = jogador.getNome() + " teve posição alterada...";
@@ -168,6 +208,16 @@ public class Server {
 		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
 	}
 	
+	/**
+	 * Método estático que faz o jogador atual pagar ou receber um valor, se cair em um espaço
+	 * que executa alguma dessas ações
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param acao Código númerico da ação a ser executada
+	 * @param quantia Valor a ser recebido ou pago
+	 */
 	private static void pagarOuReceber(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int acao, int quantia) {
 		//avisa no log
 		String mensagem;
@@ -181,6 +231,15 @@ public class Server {
 		clientes.get(indJogadorAtual).enviarGUI("05", mensagem);
 	}
 	
+	/**
+	 * Método estático usado para mover o jogador atual e fazer ele receber um valor,  @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param posicao Posição do tabuleiro para a qual o jogador deve ir
+	 * @param quantia Valor a ser recebido ou pago
+	 * @param nome Nome do espaço ao qual o jogador foi movido
+	 */
 	private static void moverEPagar(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int posicao, int quantia, String nome) {
 		//avisa no log
 		String mensagem = jogador.getNome() + " pagou ao banco e mudou de posição";
@@ -196,6 +255,16 @@ public class Server {
 		
 	}
 	
+	/**
+	 * Método estático que faz o jogador atual pagar um valor a todos os outros jogadores, caso ele
+	 * caia em espaço que executa essa ação
+	 * @param jogador Jogador atual
+	 * @param jogadores Lista com todos os jogadores que estão no jogo
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param quantia Valor a ser pago para os outros jogadores
+	 */
 	private static void pagarJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int quantia) {
 		//avisa no log
 		String mensagem = jogador.getNome() + " pagou " + quantia + " para todos os jogadores";
@@ -210,6 +279,16 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Método estático que faz o jogador atual receber um valor de todos os outros jogadores, caso ele
+	 * caia em espaço que executa essa ação
+	 * @param jogador Jogador atual
+	 * @param jogadores Lista com todos os jogadores que estão no jogo
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param quantia Valor a ser pago recebido de cada um dos outros jogadores
+	 */
 	private static void receberJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int quantia) {
 		//avisa no log
 		String mensagem = jogador.getNome() + " recebeu " + quantia + " de todos os jogadores";
@@ -224,6 +303,13 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Método estático para o jogador atual hipotecar uma de suas propriedades
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 */
 	private static void hipotecar(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		ArrayList<Compravel> compraveis = jogador.getCompraveis();
 		
@@ -242,6 +328,13 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Método estático para o jogador atual construir uma casa em uma de suas propriedades
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 */
 	private static void construirCasa(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		ArrayList<Compravel> propriedades = new ArrayList<>();
 		
@@ -266,6 +359,13 @@ public class Server {
 		
 	}
 	
+	/**
+	 * Método estático para o jogador atual vender uma casa de uma de suas propriedades
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 */
 	private static void venderCasa(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		ArrayList<Compravel> propriedades = new ArrayList<>();
 		
@@ -290,10 +390,22 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Método estático que começa uma rodada, fazendo a rolagem dos dados e movendo o jogador no
+	 * tabuleiro de acordo com a rolagem, retornando para a main o espaço em que ele parou
+	 * @param tabuleiro Tabuleiro de jogo
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param resultadoDados Valor que foi rolado dos dados, para que possa ser usado posteriormente na main
+	 * @return O espaço em que o jogador atual parou
+	 */
 	private static Espaco comecarRodada(Tabuleiro tabuleiro, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int resultadoDados) {
 		String mensagem = "É a vez de " + jogador;
 		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
+		mensagem = "Aperte ENTER para rolar os dados";
 		clientes.get(indJogadorAtual).enviarEReceberStr(mensagem);
 		resultadoDados = Dados.rolar(2, null);
 		
@@ -312,7 +424,12 @@ public class Server {
 		return espacoAtual;
 	}
 	
-	public static void main(String[] args) throws IOException, InterruptedException {
+	/**
+	 * Método principal, que inicializa o tabuleiro, abre as conexões dos clientes e roda o jogo
+	 * @param args
+	 * @throws IOException Caso a abertura de algum arquivo lance uma exceceção
+	 */
+	public static void main(String[] args) throws IOException {
 		ArrayList<Server> clientes = new ArrayList<>();
 		ArrayList<Jogador> jogadores = new ArrayList<>();
 		ArrayList<Espaco> espacos =  Initializers.initEspacos("espacos.dat");
