@@ -369,10 +369,13 @@ public class Server extends Thread {
 		if(passouInicio) jogador.depositarDinheiro(200); //se jogador passou pelo inicio recebe dinheiro
 		Espaco espacoAtual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
 		espacoAtual.addJogador(jogador);
-		
+
+
 		op = OP.ENVIAR_GUI.codOp();
 		codigo = "00";
 		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
+		threads.get(indJogadorAtual).run();
+		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + "-1";
 		for(int i=0; i<nJogadores; i++) threads.get(i).run();
 		
 		return espacoAtual;
@@ -418,19 +421,7 @@ public class Server extends Thread {
 		objetoEnvio = tabuleiro;
 		for(int i=0; i<nJogadores; i++) threads.get(i).run();
 		
-		/*for(int i=0; i<nJogadores; i++) {
-			op = OP.ENVIAR_E_RECEBER_STR.codOp();
-			pergunta = "Definindo a ordem dos jogadores. Aperte ENTER para rolar os dados.";
-			threads.get(i).run();
-			dados[i] = Dados.rolar(2, null);
-			
-			op = OP.ENVIAR_STR.codOp();
-			mensagem = jogadores.get(i) + " rolou " + dados[i];
-			threads.get(i).run();
-		}*/
-		
-		//tabuleiro.setOrdem(dados);
-		
+
 		while(tabuleiro.jogoContinua()) {
 			jogador = tabuleiro.getJogadorAtual();
 			indJogadorAtual = tabuleiro.getIndJogador();

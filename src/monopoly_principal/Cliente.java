@@ -82,7 +82,7 @@ public class Cliente{
 				int novo_saldo = Integer.parseInt(mensagem[2]);
 
 				mainGui.posicionaPeao(jogador, posicao);
-				if(saldo != Integer.parseInt(mensagem[2])){
+				if(saldo != novo_saldo && novo_saldo != -1){ //novo salvo == -1 significa que esse jogador não deve atualizar o saldo
 					saldo = novo_saldo;
 					mainGui.alterarSaldo(saldo);
 				}
