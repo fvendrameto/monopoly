@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8332e6ea-09ae-4929-9e4c-68966081ae68" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_elements/Initializers.java" afterPath="$PROJECT_DIR$/src/monopoly_elements/Initializers.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_principal/Cliente.java" afterPath="$PROJECT_DIR$/src/monopoly_principal/Cliente.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_principal/Server.java" afterPath="$PROJECT_DIR$/src/monopoly_principal/Server.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -23,8 +18,8 @@
       <file leaf-file-name="Server.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
-              <caret line="483" column="44" lean-forward="true" selection-start-line="483" selection-start-column="44" selection-end-line="483" selection-end-column="44" />
+            <state relative-caret-position="-24">
+              <caret line="421" column="82" lean-forward="false" selection-start-line="421" selection-start-column="82" selection-end-line="421" selection-end-column="82" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -706,12 +701,12 @@
       <updated>1497212794880</updated>
       <workItem from="1497212800753" duration="4980000" />
       <workItem from="1497297282313" duration="6382000" />
-      <workItem from="1497802980914" duration="8658000" />
+      <workItem from="1497802980914" duration="8713000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="21551000" />
+    <option name="totallyTimeSpent" value="21606000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1366" height="741" extended-state="0" />
@@ -1032,8 +1027,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="483" column="44" lean-forward="true" selection-start-line="483" selection-start-column="44" selection-end-line="483" selection-end-column="44" />
+        <state relative-caret-position="-24">
+          <caret line="421" column="82" lean-forward="false" selection-start-line="421" selection-start-column="82" selection-end-line="421" selection-end-column="82" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

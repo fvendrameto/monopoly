@@ -417,20 +417,9 @@ public class Server {
 		if(passouInicio) jogador.depositarDinheiro(200); //se jogador passou pelo inicio recebe dinheiro
 		Espaco espacoAtual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
 		espacoAtual.addJogador(jogador);
-<<<<<<< HEAD
-
-
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "00";
-		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
-		threads.get(indJogadorAtual).run();
-		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + "-1";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
-=======
 		
 		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
 		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
->>>>>>> Fernando
 		
 		return espacoAtual;
 	}
