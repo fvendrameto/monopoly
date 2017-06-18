@@ -1,8 +1,6 @@
 package monopoly_principal;
 
-import monopoly_gui.*;
 import monopoly_elements.*;
-import jdk.nashorn.internal.scripts.JO;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,20 +8,17 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Server extends Thread {
+/**
+ * Classe do servidor, gerencia os clientes e roda o jogo
+ */
+public class Server {
 	private Cliente cliente;
 	private ObjectOutputStream saida;
 	private ObjectInputStream entrada;
 	
-	private static Object objetoEnvio;
-	private static Object objetoRetorno;
-	private static String pergunta; 
-	private static String resposta;
-	private static String mensagem;
-	private static String codigo;
-	private static int op;
-//	private static Tabuleiro tabuleiroStatic;
-
+	/**
+	 * Enum para definição das operações de comunicação servidor-cliente, torna o código mais legível
+	 */
 	private enum OP {
 		ENVIAR_STR(0), ENVIAR_E_RECEBER_STR(1), ENVIAR_GUI(2), ENVIAR_OBJ(3), ENVIAR_E_RECEBER_OBJ(4);
 		
@@ -37,8 +32,13 @@ public class Server extends Thread {
 		}
 	}
 	
-	private Server(Cliente c) {
-		this.cliente = c;
+	/**
+	 * Construtor do Servidor, recebe e atribui o cliente conectado e também atribui
+	 * as Streams de entrada e saída do servidor com esse cliente.
+	 * @param cliente Objeto cliente, que contém o socket de conexão com o servidor
+	 */
+	private Server(Cliente cliente) {
+		this.cliente = cliente;
 		
 		try {
 			this.saida = new ObjectOutputStream(cliente.getSocket().getOutputStream());
@@ -48,23 +48,32 @@ public class Server extends Thread {
 		}
 	}
 	
-	private void enviarStr(String s) {
+	/**
+	 * Método para envio de uma string para o cliente
+	 * @param string String a ser enviada
+	 */
+	private void enviarStr(String string) {
 		try {
 			this.saida.reset();
 			this.saida.writeInt(OP.ENVIAR_STR.codOp());
 			this.saida.flush();
-			this.saida.writeUTF(s);
+			this.saida.writeUTF(string);
 			this.saida.flush();
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}	
 	}
 	
-	private String enviarEReceberStr(String s) {
+	/**
+	 * Método para enviar uma string para o cliente e receber outra string como resposta.
+	 * @param string String a ser enviada
+	 * @return Uma string, enviada pelo cliente como resposta, ou null caso ocorra uma execeção
+	 */
+	private String enviarEReceberStr(String string) {
 		try {
 			this.saida.writeInt(OP.ENVIAR_E_RECEBER_STR.codOp());
 			this.saida.flush();
-			this.saida.writeUTF(s);
+			this.saida.writeUTF(string);
 			this.saida.flush();
 			return entrada.readUTF();
 		} catch (IOException e) {
@@ -73,20 +82,29 @@ public class Server extends Thread {
 		}
 	}
 	
-	private void enviarGUI(String codigo, String s) {
+	/**
+	 * Método para envio de mensagens para atualização da interface gráfica
+ 	 * @param codigo String que diz ao cliente o que será alterado
+	 * @param mensagem Valor atualizado dos parâmetros que serão alterados no cliente
+	 */
+	private void enviarGUI(String codigo, String mensagem) {
 		try{
 			this.saida.reset();
 			this.saida.writeInt(OP.ENVIAR_GUI.codOp());
 			this.saida.flush();
 			this.saida.writeUTF(codigo);
 			this.saida.flush();
-			this.saida.writeUTF(s);
+			this.saida.writeUTF(mensagem);
 			this.saida.flush();
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 	
+	/**
+	 * Método para envio de objetos para o cliente
+	 * @param o Objeto genérico
+	 */
 	private void enviarObj(Object o) {
 		try {
 			this.saida.reset();
@@ -98,13 +116,19 @@ public class Server extends Thread {
 			System.out.println(e.getMessage());
 		}
 	}
-
-	private Object enviarEReceberObj(String cod, Object o) {
+	
+	/**
+	 * Método para enviar um objeto para o cliente e receber outro como resposta
+	 * @param codigo String que diz ao cliente o que ele está recebendo
+	 * @param o Objeto que será enviado ao cliente
+	 * @return Um objeto, que foi enviado pelo cliente como resposta
+	 */
+	private Object enviarEReceberObj(String codigo, Object o) {
 		try {
 			this.saida.reset();
 			this.saida.writeInt(OP.ENVIAR_E_RECEBER_OBJ.codOp());
 			this.saida.flush();
-			this.saida.writeUTF(cod);
+			this.saida.writeUTF(codigo);
 			this.saida.flush();
 			this.saida.writeObject(o);
 			this.saida.flush();
@@ -115,183 +139,205 @@ public class Server extends Thread {
 		}
 	}
 	
-	public void run() {
-		if(op == 0) {
-			enviarStr(mensagem);
-		}
-		
-		if(op == 1) {
-			resposta = enviarEReceberStr(pergunta);
-		}
-		
-		if(op == 2) {
-			enviarGUI(codigo, mensagem);
-		}
-		
-		if(op == 3) {
-			enviarObj(objetoEnvio);
-		}
-		
-		if(op == 4) {
-			objetoRetorno = enviarEReceberObj(codigo, objetoEnvio);
-		}
-	}
-	
-	private static void pagarAluguel(Compravel espacoCompravel, Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
+	/**
+	 * Método estático, usado na main, para pagar aluguel por parar na propriedade de outro jogador
+	 * @param espacoCompravel Espaço em que o jogador atual parou
+	 * @param jogador Jogador atual
+	 * @param jogadores Lista com todos os jogadores que estão no jogo
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param dados Valor dos dados, usado espacoCompravel seja uma companhia
+	 */
+	private static void pagarAluguel(Compravel espacoCompravel, Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int dados) {
 		int aluguel = espacoCompravel.getAluguel();
+		if(espacoCompravel instanceof Companhia) aluguel *= dados;
 		jogador.sacarDinheiro(aluguel);
 		espacoCompravel.getDono().depositarDinheiro(aluguel);
 		
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = jogador.getNome() + " pagou aluguel em " + espacoCompravel.getNome() + " para " + espacoCompravel.getDono();
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		String mensagem = jogador.getNome() + " pagou aluguel em " + espacoCompravel.getNome() + " para " + espacoCompravel.getDono();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//atualizar saldo jogador que pagou
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "01";
 		mensagem = espacoCompravel.getAluguel() + "#" + espacoCompravel.getDono() + "#" + espacoCompravel.getNome();
-		threads.get(indJogadorAtual).run();
+		clientes.get(indJogadorAtual).enviarGUI("01", mensagem);
 		
 		//atualizar saldo jogador que recebeu
-		codigo = "02";
 		mensagem = espacoCompravel.getAluguel() + "#" + jogador.getNome() + "#" + espacoCompravel.getNome();
-		threads.get(jogadores.indexOf(espacoCompravel.getDono())).run();
-		
+		clientes.get(jogadores.indexOf(espacoCompravel.getDono())).enviarGUI("02", mensagem);
 	}
 	
-	private static void comprarPropriedade(Compravel espacoCompravel, Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
-		op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-		codigo = "00";
-		objetoEnvio = espacoCompravel;
-		threads.get(indJogadorAtual).run();
-		int ret = (int) objetoRetorno;
+	/**
+	 * Método estático, usado na main, para o jogador atual comprar o espaço em que ele parou
+	 * @param espacoCompravel Espaco em que o jogador parou
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 */
+	private static void comprarPropriedade(Compravel espacoCompravel, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
+		int ret  = (int) clientes.get(indJogadorAtual).enviarEReceberObj("00", espacoCompravel);
 		
 		if(ret == 0) { //vai comprar
 			Banco.comprarCompravel(espacoCompravel, jogador);
 			
-			op = OP.ENVIAR_STR.codOp();
-			mensagem = jogador.getNome() + " comprou " + espacoCompravel.getNome();
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			String mensagem = jogador.getNome() + " comprou " + espacoCompravel.getNome();
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 			
-			op = OP.ENVIAR_GUI.codOp();
-			codigo = "02";
 			mensagem = jogador.getNome() + "#" + espacoCompravel.getNome();
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("02", mensagem);
 		}
 	}
 	
-	private static void moverJogador(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual, int posicao) {
+	/**
+	 * Método estático para mover o jogador no tabuleiro, caso ele tenha parado em um espaço que
+	 * executa essa ação
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param posicao Posição do tabuleiro para a qual o jogador deve ir
+	 */
+	private static void moverJogador(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int posicao) {
 		//avisa no log
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = jogador.getNome() + " teve posição alterada...";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		String mensagem = jogador.getNome() + " teve posição alterada...";
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//muda a posição nos tabuleiros
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "00";
 		mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
 	}
 	
-	private static void pagarOuReceber(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual, int acao, int quantia) {
+	/**
+	 * Método estático que faz o jogador atual pagar ou receber um valor, se cair em um espaço
+	 * que executa alguma dessas ações
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param acao Código númerico da ação a ser executada
+	 * @param quantia Valor a ser recebido ou pago
+	 */
+	private static void pagarOuReceber(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int acao, int quantia) {
 		//avisa no log
-		op = OP.ENVIAR_STR.codOp();
+		String mensagem;
 		if(acao == 1) mensagem = jogador.getNome() + " pagou ao banco";
 		else mensagem = jogador.getNome() + " recebeu do banco";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//atualiza gui do jogador
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "05";
 		if(acao == 1) mensagem = jogador.getSaldo() + "Você pagou " + quantia ;
 		else mensagem = jogador.getSaldo() + "#" + "Você recebeu " + quantia ;
-		threads.get(indJogadorAtual).run();
+		clientes.get(indJogadorAtual).enviarGUI("05", mensagem);
 	}
 	
-	private static void moverEPagar(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual, int posicao, int quantia, String nome) {
+	/**
+	 * Método estático usado para mover o jogador atual e fazer ele receber um valor,  @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param posicao Posição do tabuleiro para a qual o jogador deve ir
+	 * @param quantia Valor a ser recebido ou pago
+	 * @param nome Nome do espaço ao qual o jogador foi movido
+	 */
+	private static void moverEPagar(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int posicao, int quantia, String nome) {
 		//avisa no log
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = jogador.getNome() + " pagou ao banco e mudou de posição";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		String mensagem = jogador.getNome() + " pagou ao banco e mudou de posição";
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//muda a posição nos tabuleiros
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "00";
 		mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
 		
 		//atualiza saldo gui do jogador e avisa
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "05";
 		mensagem = jogador.getSaldo() + "#" + "Você pagou " + quantia + "e foi para " + nome;
-		threads.get(indJogadorAtual).run();
+		clientes.get(indJogadorAtual).enviarGUI("05", mensagem);
 		
 	}
 	
-	private static void pagarJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual, int quantia) {
+	/**
+	 * Método estático que faz o jogador atual pagar um valor a todos os outros jogadores, caso ele
+	 * caia em espaço que executa essa ação
+	 * @param jogador Jogador atual
+	 * @param jogadores Lista com todos os jogadores que estão no jogo
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param quantia Valor a ser pago para os outros jogadores
+	 */
+	private static void pagarJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int quantia) {
 		//avisa no log
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = jogador.getNome() + " pagou " + quantia + " para todos os jogadores";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		String mensagem = jogador.getNome() + " pagou " + quantia + " para todos os jogadores";
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
-		//atualiza saldo gui do jogador e avisaJogador jogador, ArrayList<Jogador> jogadores, ArrayList<Thread> threads, int nJogadores
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "05";
+		//atualiza saldo gui do jogador e avisaJogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores
 		for(int i=0;i<nJogadores;i++){
 			mensagem = jogadores.get(i).getSaldo() + "#";
 			if(i != indJogadorAtual) mensagem +="Você recebeu " + quantia + "de" + jogador.getNome();
 			else mensagem += "Você pagou " + quantia + " para todos os jogadores";
-			threads.get(i).run();
+			clientes.get(i).enviarGUI("05", mensagem);
 		}
 	}
 	
-	private static void receberJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual, int quantia) {
+	/**
+	 * Método estático que faz o jogador atual receber um valor de todos os outros jogadores, caso ele
+	 * caia em espaço que executa essa ação
+	 * @param jogador Jogador atual
+	 * @param jogadores Lista com todos os jogadores que estão no jogo
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param quantia Valor a ser pago recebido de cada um dos outros jogadores
+	 */
+	private static void receberJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int quantia) {
 		//avisa no log
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = jogador.getNome() + " recebeu " + quantia + " de todos os jogadores";
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+		String mensagem = jogador.getNome() + " recebeu " + quantia + " de todos os jogadores";
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//atualiza saldo gui do jogador e avisa
-		op = OP.ENVIAR_GUI.codOp();
-		codigo = "05";
 		for(int i=0;i<nJogadores;i++){
 			mensagem = jogadores.get(i).getSaldo() + "#";
 			if(i != indJogadorAtual) mensagem +="Você pagou " + quantia + " para " + jogador.getNome();
 			else mensagem += "Você recebeu " + quantia + " de todos os jogadores";
-			threads.get(i).run();
+			clientes.get(i).enviarGUI("05", mensagem);
 		}
 	}
 	
-	private static void hipotecar(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
+	/**
+	 * Método estático para o jogador atual hipotecar uma de suas propriedades
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 */
+	private static void hipotecar(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		ArrayList<Compravel> compraveis = jogador.getCompraveis();
 		
 		if(compraveis.size() == 0) return;
 		
-		op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-		objetoEnvio = compraveis;
-		codigo = "02";
-		threads.get(indJogadorAtual).run();
-		Compravel propHipoteca = (Compravel) objetoRetorno;
+		Compravel propHipoteca = (Compravel) clientes.get(indJogadorAtual).enviarEReceberObj("02", compraveis);
 		
 		if(propHipoteca != null){ //caso
 			Banco.hipotecaCompravel(propHipoteca,jogador);
 			
-			op = OP.ENVIAR_STR.codOp();
-			mensagem = jogador + " hipotecou " + propHipoteca;
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			String mensagem = jogador + " hipotecou " + propHipoteca;
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 			
-			op = OP.ENVIAR_GUI.codOp();
-			codigo = "03";
 			mensagem = jogador + "#" + propHipoteca;
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("03", mensagem);
 		}
 	}
 	
-	private static void construirCasa(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
-		System.out.println("Opção de comprar casa escolhida...");
+	/**
+	 * Método estático para o jogador atual construir uma casa em uma de suas propriedades
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 */
+	private static void construirCasa(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		ArrayList<Compravel> propriedades = new ArrayList<>();
 		
-		op = OP.ENVIAR_STR.codOp();
 		for(Compravel p : jogador.getCompraveis()) {
 			if (p.propriedade() && jogador.temTodosCor(((Propriedade) p).getCor()) && jogador.getSaldo() >= ((Propriedade) p).getPrecoCasa() && ((Propriedade) p).getNumeroCasas() < 5)
 				propriedades.add(p);
@@ -299,30 +345,30 @@ public class Server extends Thread {
 		
 		if(propriedades.size() == 0) return;
 		
-		op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-		objetoEnvio = propriedades;
-		threads.get(indJogadorAtual).run();
-		Propriedade propEscolhida = (Propriedade) objetoRetorno;
+		Propriedade propEscolhida = (Propriedade) clientes.get(indJogadorAtual).enviarEReceberObj("03", propriedades);
 		
 		if(propEscolhida != null){
 			Banco.comprarCasa(propEscolhida, jogador);
 			
-			op = OP.ENVIAR_STR.codOp();
-			mensagem = jogador + " construiu um casa em " + propEscolhida;
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			String mensagem = jogador + " construiu um casa em " + propEscolhida;
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 			
-			op = OP.ENVIAR_GUI.codOp();
-			codigo = "04";
 			mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("04", mensagem);
 		}
 		
 	}
 	
-	private static void venderCasa(Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
+	/**
+	 * Método estático para o jogador atual vender uma casa de uma de suas propriedades
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 */
+	private static void venderCasa(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		ArrayList<Compravel> propriedades = new ArrayList<>();
 		
-		op = OP.ENVIAR_STR.codOp();
 		for(Compravel p : jogador.getCompraveis()){
 			if(p instanceof Propriedade && ((Propriedade)p).temCasa()) {
 				propriedades.add(p);
@@ -331,44 +377,47 @@ public class Server extends Thread {
 		
 		if(propriedades.size() == 0) return;
 		
-		op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-		objetoEnvio = propriedades;
-		threads.get(indJogadorAtual).run();
-		Propriedade propEscolhida = (Propriedade) objetoRetorno;
+		Propriedade propEscolhida = (Propriedade) clientes.get(indJogadorAtual).enviarEReceberObj("04", propriedades);
 		
-		if(objetoRetorno != null){
+		if(propEscolhida != null){
 			Banco.venderCasa(propEscolhida, jogador);
 			
-			op = OP.ENVIAR_STR.codOp();
-			mensagem  = jogador + " vendeu uma casa em " + propEscolhida;
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			String mensagem  = jogador + " vendeu uma casa em " + propEscolhida;
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 			
-			op = OP.ENVIAR_GUI.codOp();
-			codigo = "04";
 			mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
-			for(int i=0; i<nJogadores; i++) threads.get(i).run();
+			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("04", mensagem);
 		}
 	}
 	
-	private static Espaco comecarRodada(Tabuleiro tabuleiro, Jogador jogador, ArrayList<Thread> threads, int nJogadores, int indJogadorAtual) {
-		op = OP.ENVIAR_STR.codOp();
-		mensagem = "É a vez de " + jogador;
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+	/**
+	 * Método estático que começa uma rodada, fazendo a rolagem dos dados e movendo o jogador no
+	 * tabuleiro de acordo com a rolagem, retornando para a main o espaço em que ele parou
+	 * @param tabuleiro Tabuleiro de jogo
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param resultadoDados Valor que foi rolado dos dados, para que possa ser usado posteriormente na main
+	 * @return O espaço em que o jogador atual parou
+	 */
+	private static Espaco comecarRodada(Tabuleiro tabuleiro, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int resultadoDados) {
+		String mensagem = "É a vez de " + jogador;
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
-		op = OP.ENVIAR_E_RECEBER_STR.codOp();
-		pergunta = "Aperte ENTER para rolar os dados";
-		threads.get(indJogadorAtual).run();
-		int resultadoDados = Dados.rolar(2, null);
+		mensagem = "Aperte ENTER para rolar os dados";
+		clientes.get(indJogadorAtual).enviarEReceberStr(mensagem);
+		resultadoDados = Dados.rolar(2, null);
 		
-		op = OP.ENVIAR_STR.codOp();
 		mensagem = jogador + " rolou " + resultadoDados;
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
-		System.out.println(jogador.getPosicaoTabuleiro() + "");
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+		
 		tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro()).removeJogador(jogador);
 		boolean passouInicio = jogador.andarPosicaoTabuleiro(resultadoDados);
 		if(passouInicio) jogador.depositarDinheiro(200); //se jogador passou pelo inicio recebe dinheiro
 		Espaco espacoAtual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
 		espacoAtual.addJogador(jogador);
+<<<<<<< HEAD
 
 
 		op = OP.ENVIAR_GUI.codOp();
@@ -377,12 +426,22 @@ public class Server extends Thread {
 		threads.get(indJogadorAtual).run();
 		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + "-1";
 		for(int i=0; i<nJogadores; i++) threads.get(i).run();
+=======
+		
+		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
+>>>>>>> Fernando
 		
 		return espacoAtual;
 	}
 	
-	public static void main(String[] args) throws IOException, InterruptedException {
-		ArrayList<Thread> threads = new ArrayList<>();
+	/**
+	 * Método principal, que inicializa o tabuleiro, abre as conexões dos clientes e roda o jogo
+	 * @param args
+	 * @throws IOException Caso a abertura de algum arquivo lance uma exceceção
+	 */
+	public static void main(String[] args) throws IOException {
+		ArrayList<Server> clientes = new ArrayList<>();
 		ArrayList<Jogador> jogadores = new ArrayList<>();
 		ArrayList<Espaco> espacos =  Initializers.initEspacos("espacos.dat");
 		ArrayList<Carta> cartas = Initializers.initCartas("cartas.dat");
@@ -392,9 +451,11 @@ public class Server extends Thread {
 		Espaco espacoAtual;
 		ServerSocket servidor = new ServerSocket(12345);
 		Scanner teclado = new Scanner(System.in);
+		
 		int indJogadorAtual;
 		int nJogadores;
 		int jogadoresConectados = 0;
+		int resultadoDados = 0;
 		
 		System.out.println("Digite o número de jogadores: ");
 		nJogadores = teclado.nextInt();
@@ -402,38 +463,45 @@ public class Server extends Thread {
 		while(jogadoresConectados < nJogadores) {
 			Cliente cliente = new Cliente(servidor.accept());
 			Server s = new Server(cliente);
-			threads.add(new Thread(s));
+			clientes.add(s);
 			jogadoresConectados++;
 		}
 		
 		System.out.println("Todos conectados");
 		
 		for(int i=0; i<nJogadores; i++) {
-			op = OP.ENVIAR_E_RECEBER_STR.codOp();
-			pergunta = "Digite seu nome: ";
-			threads.get(i).run();
-			jogadores.add(new Jogador(resposta));
-			threads.get(i).setName(resposta);
+			String nome = clientes.get(i).enviarEReceberStr("Digite seu nome: ");
+			jogadores.add(new Jogador(nome));
 		}
 		
 		tabuleiro = new Tabuleiro(jogadores, espacos, cartas);
-		op = OP.ENVIAR_OBJ.codOp();
-		objetoEnvio = tabuleiro;
-		for(int i=0; i<nJogadores; i++) threads.get(i).run();
-		
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarObj(tabuleiro);
 
+		/*for(int i=0; i<nJogadores; i++) {
+			op = OP.ENVIAR_E_RECEBER_STR.codOp();
+			pergunta = "Definindo a ordem dos jogadores. Aperte ENTER para rolar os dados.";
+			clientes.get(i).run();
+			dados[i] = Dados.rolar(2, null);
+			
+			op = OP.ENVIAR_STR.codOp();
+			mensagem = jogadores.get(i) + " rolou " + dados[i];
+			clientes.get(i).run();
+		}*/
+		
+		//tabuleiro.setOrdem(dados);
+		
 		while(tabuleiro.jogoContinua()) {
 			jogador = tabuleiro.getJogadorAtual();
 			indJogadorAtual = tabuleiro.getIndJogador();
-			espacoAtual = comecarRodada(tabuleiro, jogador, threads, nJogadores, indJogadorAtual);
+			espacoAtual = comecarRodada(tabuleiro, jogador, clientes, nJogadores, indJogadorAtual, resultadoDados);
 
 			if(espacoAtual.compravel()) {
 				Compravel espacoCompravel = (Compravel) espacoAtual;
 				if(espacoCompravel.temDono() && espacoCompravel.getDono() != jogador) { //SE TEM DONO PAGA O ALUGUEL
-					pagarAluguel(espacoCompravel, jogador, jogadores, threads, nJogadores, indJogadorAtual);
+					pagarAluguel(espacoCompravel, jogador, jogadores, clientes, nJogadores, indJogadorAtual, resultadoDados);
 				} else if(!espacoCompravel.temDono()){ //o espaço n tem dono, entao pode ser comprado
 					if(jogador.getSaldo() >= espacoCompravel.getPreco()) {
-						comprarPropriedade(espacoCompravel, jogador, threads, nJogadores, indJogadorAtual);
+						comprarPropriedade(espacoCompravel, jogador, clientes, nJogadores, indJogadorAtual);
 					}
 				}
 			} else {
@@ -444,54 +512,47 @@ public class Server extends Thread {
 				int quantia = espacoJogavel.getAcao().getQuantia();
 				switch(acao){
 					case 0: //mudar posiçao
-						moverJogador(jogador, threads, nJogadores, indJogadorAtual, posicao);
+						moverJogador(jogador, clientes, nJogadores, indJogadorAtual, posicao);
 						break;
 					case 1: //pagar ao banco
 					case 2: //receber do banco
-						pagarOuReceber(jogador, threads, nJogadores, indJogadorAtual, quantia, acao);
+						pagarOuReceber(jogador, clientes, nJogadores, indJogadorAtual, quantia, acao);
 						break;
 					case 3: //mudar posição e pagar
-						moverEPagar(jogador, threads, nJogadores, indJogadorAtual, posicao, quantia,tabuleiro.getEspacoPosicao(posicao).getNome());
+						moverEPagar(jogador, clientes, nJogadores, indJogadorAtual, posicao, quantia,tabuleiro.getEspacoPosicao(posicao).getNome());
 						break;
 					case 4: //pagar aos jogadores
-						pagarJogadores(jogador, jogadores, threads, nJogadores, indJogadorAtual, quantia);
+						pagarJogadores(jogador, jogadores, clientes, nJogadores, indJogadorAtual, quantia);
 						break;
 					case 5: //receber dos jogadores
-						receberJogadores(jogador, jogadores, threads, nJogadores, indJogadorAtual, quantia);
+						receberJogadores(jogador, jogadores, clientes, nJogadores, indJogadorAtual, quantia);
 						break;
 				}
 			}
 			
 			int cmd = 1;
 			while(cmd != 3) {
-				op = OP.ENVIAR_E_RECEBER_OBJ.codOp();
-				objetoEnvio = "";
-				codigo = "01";
-				threads.get(indJogadorAtual).run();
-				cmd = (int) objetoRetorno;
-				
+				cmd = (int) clientes.get(indJogadorAtual).enviarEReceberObj("01", "");
 				
 				// hipotecar uma propriedade
 				if(cmd == 0) {
-					hipotecar(jogador, threads, nJogadores, indJogadorAtual);
+					hipotecar(jogador, clientes, nJogadores, indJogadorAtual);
 				}
 				
 				// construir casa
 				if(cmd == 1){
-					construirCasa(jogador, threads, nJogadores, indJogadorAtual);
+					construirCasa(jogador, clientes, nJogadores, indJogadorAtual);
 				}
 
 				// vender casa
 				if(cmd == 2){
-					venderCasa(jogador, threads, nJogadores, indJogadorAtual);
+					venderCasa(jogador, clientes, nJogadores, indJogadorAtual);
 				}
 			}
 		}
 
 		servidor.close();
 		teclado.close();
-		for(int i=0; i<nJogadores; i++)
-				threads.get(i).join();
 	}
 
 }

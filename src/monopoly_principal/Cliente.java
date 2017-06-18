@@ -6,16 +6,21 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Classe do cliente, armazena seu socket e outras informações
+ */
 public class Cliente{
 	private Socket sock;
 	private String nome;
 	private static boolean noJogo = true;
 	private static MainGUI mainGui;
-
+	
+	/**
+	 * Enum para definição das operações de comunicação cliente-servidor, torna o código mais legível
+	 */
 	private enum OP {
 		RECEBER_STR(0), RECEBER_E_ENVIAR_STR(1), RECEBER_GUI(2), RECEBER_OBJ(3), RECEBER_E_ENVIAR_OBJ(4);
 
@@ -28,28 +33,51 @@ public class Cliente{
 			return this.val;
 		}
 	}
-
-	public Cliente(Socket sock) throws IOException {
+	
+	/**
+	 * Construtor do cliente, atribui o socket de conexão com o servidor
+	 * @param sock
+	 */
+	public Cliente(Socket sock) {
 		this.sock = sock;
 	}
-
-	public void setNome(String n) {
-		this.nome = n;
+	
+	/**
+	 * Atribui um nome ao cliente
+	 * @param nome Nome do jogador
+	 */
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
-
+	
+	/**
+	 * @return O nome do jogador
+	 */
 	public String getNome() {
 		return this.nome;
 	}
-
+	
+	/**
+	 * @return O socket de conexão com o servidor
+	 */
 	public Socket getSocket() {
 		return this.sock;
 	}
-
+	
+	/**
+	 * Altera o valor de noJogo
+	 * @param b Novo valor do boolean noJogo
+	 */
 	public static void setNoJogo(boolean b) {
 		noJogo = b;
 	}
-
-	private static void enviarEReceberStr(ObjectInputStream entrada, ObjectOutputStream saida) {
+	
+	/**
+	 * Lê uma string do servidor e envia outra como resposta
+	 * @param entrada Stream de entrada de dados
+	 * @param saida Stream de saída de dados
+	 */
+	private static void receberEEnviarStr(ObjectInputStream entrada, ObjectOutputStream saida) {
 		try {
 			String t = "";
 			System.out.println("aqui2");
@@ -68,7 +96,11 @@ public class Cliente{
 			e.printStackTrace();
 		}
 	}
-
+	/**
+	 * Lê uma string do servidor e a interpreta para atualizar a interface
+	 * @param entrada Stream de entrada de dados
+	 * @param saldo Saldo atualizado do jogador
+	 */
 	private static void receberGUI(ObjectInputStream entrada, int saldo) {
 		try {
 
@@ -134,7 +166,13 @@ public class Cliente{
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * Lê um objeto do servidor e envia outro como resposta
+	 * @param entrada Stream de entrada de dados
+	 * @param saida Stream de saída de dados
+	 * @param saldo Saldo atualizado do jogador
+	 */
 	private static void receberEEnviarObj(ObjectInputStream entrada, ObjectOutputStream saida, int saldo) {
 		try {
 
@@ -196,8 +234,14 @@ public class Cliente{
 			e.printStackTrace();
 		}
 	}
-
-	public static void main(String[] args) throws ClassNotFoundException, IOException {
+	
+	/**
+	 * Método principal do cliente, lê e interpreta os códigos de ações que o servidor manda e
+	 * executa elas
+	 * @param args
+	 * @throws IOException Caso ocorra erro na conexão com o servidor
+	 */
+	public static void main(String[] args) throws IOException {
 		Socket cliente = new Socket("127.0.0.1", 12345);
 		cliente.setKeepAlive(true);
 		Scanner teclado = new Scanner(System.in);
@@ -217,7 +261,7 @@ public class Cliente{
 				}
 
 				if(codigoOp == OP.RECEBER_E_ENVIAR_STR.codOp()) {
-					enviarEReceberStr(entrada, saida);
+					receberEEnviarStr(entrada, saida);
 				}
 
 				if(codigoOp == OP.RECEBER_GUI.codOp()) {
@@ -248,5 +292,7 @@ public class Cliente{
 
 		teclado.close();
 		cliente.close();
+		entrada.close();
+		saida.close();
 	}
 }
