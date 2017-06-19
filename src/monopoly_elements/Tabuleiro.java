@@ -84,10 +84,20 @@ public class Tabuleiro implements Serializable {
 
 	/**
 	 * Marca o jogador como falido, isto é, GAME OVER
-	 * @param pos Indice do jogador
+	 * @param jogador Jogador que foi à falência
 	 */
-	public void setFalencia(int pos) {
-		this.temDinheiro[pos] = false;
+	public void setFalencia(Jogador jogador) {
+		this.temDinheiro[jogadores.indexOf(jogador)] = false;
+		for(int i=0; i<jogador.getCompraveis().size(); i++) {
+			Compravel compravel = jogador.getCompraveis().get(i);
+			if(compravel.propriedade()) {
+				Propriedade propriedade = (Propriedade) compravel;
+				while (propriedade.temCasa()) {
+					Banco.venderCasa(propriedade, jogador);
+				}
+			}
+			Banco.hipotecaCompravel(compravel, jogador);
+		}
 	}
 
 	/**

@@ -80,16 +80,17 @@ public class Cliente{
 	private static void receberEEnviarStr(ObjectInputStream entrada, ObjectOutputStream saida) {
 		try {
 			String t = "";
-			System.out.println("aqui2");
 			String cmd = entrada.readUTF();
-			System.out.println(cmd);
 
 			if (cmd.equals("Digite seu nome: ")) {
 				t = MainGUI.mostrarDigiteNome(); //aqui ainda é usado o metodo estatico porque o obj ainda nao foi estanciado
 			} else if (cmd.contains("Aperte ENTER para rolar os dados")) {
 				mainGui.mostrarRolarDados();
+			} else if(cmd.equals("Você não tem dinheiro para pagar e faliu!")) {
+				mainGui.mostrarFalencia();
+				setNoJogo(false);
 			}
-
+			
 			saida.writeUTF(t);
 			saida.flush();
 		} catch (IOException e) {

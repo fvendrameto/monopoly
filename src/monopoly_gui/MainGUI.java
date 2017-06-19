@@ -110,7 +110,14 @@ public class MainGUI extends JFrame {
 	public void mostrarRolarDados(){
 		JOptionPane.showMessageDialog(null, "Sua vez, clique em OK para rolar os dados");
 	}
-
+	
+	/**
+	 * Mostra a janela avisando para rolar os dados
+	 */
+	public void mostrarFalencia(){
+		JOptionPane.showMessageDialog(null, "Você não tem dinheiro para pagar e foi à falência!");
+	}
+	
 	/**
 	 * Mostra aviso referente ao espaço que o jogador se encontra
 	 * @param string String que sera exibida
