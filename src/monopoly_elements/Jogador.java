@@ -14,6 +14,7 @@ public class Jogador implements Serializable {
 	private String nome;
 	private int saldo;
 	private int posicao_tabuleiro;
+	private int turnosPreso = 0;
 	private boolean preso;
 	private ArrayList<Compravel> compraveis;
 
@@ -42,10 +43,20 @@ public class Jogador implements Serializable {
 	/**
 	 * @return Boolean indicando se jogador está preso
 	 */
-	public boolean naPrisao(){
+	public boolean naPrisao() {
+		if (this.preso == true && this.turnosPreso < 3) {
+			this.turnosPreso++;
+		} else {
+			this.turnosPreso = 0;
+			this.preso = false;
+		}
 		return this.preso == true;
 	}
-
+	
+	public void setPreso(boolean b) {
+		this.preso = b;
+	}
+	
 	/**
 	 * @return Posição do tabuleiro que o jogador se encontra
 	 */

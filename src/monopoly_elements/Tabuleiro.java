@@ -42,7 +42,7 @@ public class Tabuleiro implements Serializable {
 			this.indJogador++;
 			if(this.indJogador >= this.jogadores.size())
 				this.indJogador = 0;
-		} while(!this.temDinheiro[this.indJogador]);
+		} while(!this.temDinheiro[this.indJogador] && this.jogadores.get(indJogador).naPrisao());
 	}
 
 	/**
