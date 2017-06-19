@@ -88,6 +88,62 @@ public class MainGUI extends JFrame {
 	}
 
 	/**
+	 * Exibe uma janela com uma mensagem de erro
+	 * @param msg Mensagem que deve ser exibida
+	 */
+	public static void mostrarMensagemErro(String msg){
+		JOptionPane.showMessageDialog(null,msg,"Erro",JOptionPane.WARNING_MESSAGE);
+	}
+
+	/**
+	 * Mostra janela de dialogo pedindo para digitar IP
+	 * @return IP inserido pelo usuario
+	 */
+	public static String mostrarDigiteIp(){
+		String ip = "";
+		boolean run = true;
+		while(run){
+			ip = JOptionPane.showInputDialog(null,"Digite o IP:","Iniciando...",JOptionPane.DEFAULT_OPTION);
+			if(ip == null) return null;
+			if(ip.matches("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}")) run = false;
+			else mostrarMensagemErro("IP inválido");
+		}
+		return ip;
+	}
+
+	/**
+	 * Mostra janela de dialogo pedindo o numero de jogadores
+	 * @return Numero de jogadores digitados
+	 */
+	public static int mostrarDigiteNumeroJogadores(){
+		String num = "";
+		boolean run = true;
+		while(run){
+			num = JOptionPane.showInputDialog(null,"Digite numero de jogadores:","Iniciando...",JOptionPane.DEFAULT_OPTION);
+			if(num == null) return 0;
+			if(num.matches("[0-9]+") && Integer.parseInt(num) >= 2) run = false;
+			else mostrarMensagemErro("Número inválido");
+		}
+		return Integer.parseInt(num);
+	}
+
+	/**
+	 * Mostra janela de dialogo pedindo para usuário inserir porta
+	 * @return Porta inserida pelo usuario
+	 */
+	public static int mostrarDigitePorta(){
+		String porta = "";
+		boolean run = true;
+		while(run){
+			porta = JOptionPane.showInputDialog(null,"Digite a porta:","Iniciando...",JOptionPane.DEFAULT_OPTION);
+			if(porta == null) return -1;
+			if(porta.matches("[0-9]+")) run = false;
+			else mostrarMensagemErro("Porta inválida");
+		}
+		return Integer.parseInt(porta);
+	}
+
+	/**
 	 * Exibe caixa de dialogo dando a opção de compra pro jogador
 	 * @param c Compravel que será exibido
 	 * @return Opção do usuario (0 = Sim | 1 = Não)
@@ -125,8 +181,6 @@ public class MainGUI extends JFrame {
 	public void mostrarAvisoEspaco(String string){
 		JOptionPane.showMessageDialog(null, string);
 	}
-
-	
 	
 	/**
 	 * Exibe as opções de jogo para o jogador
