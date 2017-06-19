@@ -90,7 +90,6 @@ public class Cliente{
 				mainGui.mostrarRolarDados();
 			} else if(cmd.equals("Você não tem dinheiro para pagar e faliu!")) {
 				mainGui.mostrarFalencia();
-				setNoJogo(false);
 			}
 			
 			saida.writeUTF(t);
@@ -154,7 +153,7 @@ public class Cliente{
 				}
 
 				mainGui.mostrarAvisoEspaco(str);
-			}else if(codigo.equals("06")){ //acão que altera o saldo
+			}if(codigo.equals("06")){ //acão que altera o saldo
 				int novo_saldo = Integer.parseInt(mensagem[0]);
 				String str = mensagem[1];
 
@@ -164,6 +163,14 @@ public class Cliente{
 				}
 
 				mainGui.mostrarAvisoEspaco(str);
+			}if(codigo.equals("07")){ //falir um jogador
+				String jogador = mensagem[0];
+				mainGui.setFalencia(jogador);
+			}if(codigo.equals("08")){ //jogador ganhou o jogo
+				String ganhador = mensagem[0];
+				mainGui.anunciarGanhador(ganhador);
+				setNoJogo(false);
+				mainGui.setVisible(false);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

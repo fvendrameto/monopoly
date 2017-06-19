@@ -88,6 +88,15 @@ public class MainGUI extends JFrame {
 	}
 
 	/**
+	 * Exibe caixa de dialogo informando o ganhador da partida
+	 * @param ganhador Nome do ganhador que será anunciano
+	 */
+	public static void anunciarGanhador(String ganhador){
+		String str = "Fim da partida! Parabéns " + ganhador + "!";
+		JOptionPane.showMessageDialog(null,str);
+	}
+
+	/**
 	 * Exibe uma janela com uma mensagem de erro
 	 * @param msg Mensagem que deve ser exibida
 	 */
@@ -187,11 +196,18 @@ public class MainGUI extends JFrame {
 	 * @return Inteiro equivalente a posição escolhida
 	 */
 	public int mostrarOpcoesJogo(){
-		Object[] acoes = {"Hipotecar","Comprar Casa","Vender Casa","Encerrar Rodada"};
+		Object[] acoes = {"Hipotecar","Comprar Casa","Vender Casa","Encerrar Rodada","Sair do Jogo"};
 
 		String titulo = "Escolha a opção do jogo";
 		String nome_janela = "";
-		return JOptionPane.showOptionDialog(null,titulo,nome_janela,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,acoes,acoes[0]);
+		int ret =  JOptionPane.showOptionDialog(null,titulo,nome_janela,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,acoes,acoes[0]);
+		if(ret == 4){ //pediu para sair do jogo
+			Object[] opcoes = {"Sim","Nao"};
+			int conf = JOptionPane.showConfirmDialog(null,"Deseja mesmo sair?", "Confirmação", JOptionPane.YES_NO_OPTION);
+			if(conf == 0) return 4; //jogador realmente quer sair
+			else return -1;
+		}
+		return ret;
 	}
 	
 	
@@ -306,5 +322,8 @@ public class MainGUI extends JFrame {
 	public void alterarSaldo(int novo_saldo){
 		bensGui.setDinheiro(novo_saldo);
 	}
-	
+
+	public void setFalencia(String jogador){
+		jogadoresGui.setFalenciaJogador(jogador);
+	}
 }

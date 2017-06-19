@@ -8,6 +8,7 @@ import sun.applet.Main;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -361,7 +362,25 @@ public class Server {
 			mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
 			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("04", mensagem);
 		}
-		
+	}
+
+	private static void informarFalencia(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual){
+		String str_log = jogador + " faliu";
+		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarStr(str_log);
+
+		String mensagem = jogador + "#";
+		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarGUI("07",mensagem);
+
+		clientes.get(indJogadorAtual).enviarEReceberStr("Você não tem dinheiro para pagar e faliu!");
+	}
+
+	private static void informarGanhador(Jogador ganhador, ArrayList<Server> clientes, int nJogadores, int indGanhador){
+		String str_log = ganhador + "ganhou o jogo!";
+		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarStr(str_log);
+
+		String mensagem = ganhador + "#";
+		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarGUI("08",mensagem);
+
 	}
 	
 	/**
@@ -551,8 +570,18 @@ public class Server {
 				if(cmd == 2){
 					venderCasa(jogador, clientes, nJogadores, indJogadorAtual);
 				}
+				//sair do partida
+				if(cmd == 4){
+					tabuleiro.setFalencia(jogador);
+					informarFalencia(jogador,clientes,nJogadores, indJogadorAtual);
+					break;
+				}
 			}
 		}
+
+		int indGanhador = tabuleiro.getIndiceGanhador();
+		Jogador ganhador = tabuleiro.getJogadores().get(indGanhador);
+		informarGanhador(ganhador,clientes,nJogadores,indGanhador);
 
 		servidor.close();
 		teclado.close();

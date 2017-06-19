@@ -108,4 +108,20 @@ public class Tabuleiro implements Serializable {
 	}
 
 
+	/**
+	 * Ao fim do jogo a função retorna quem venceu
+	 * @return Jogador que ganhou a partida
+	 */
+	public int getIndiceGanhador(){
+		int ganhador = -1;
+
+		if(jogoContinua()) return -1; //se jogo continua não tem um vencedor
+
+		for(int i=0;i<jogadores.size();i++)
+			if(temDinheiro[i])
+				ganhador = i;
+
+		return ganhador;
+	}
+
 }
