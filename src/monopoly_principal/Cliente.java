@@ -2,6 +2,8 @@ package monopoly_principal;
 
 import monopoly_gui.*;
 import monopoly_elements.*;
+import sun.applet.Main;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -243,7 +245,22 @@ public class Cliente{
 	 * @throws IOException Caso ocorra erro na conexão com o servidor
 	 */
 	public static void main(String[] args) throws IOException {
-		Socket cliente = new Socket("127.0.0.1", 12345);
+		Socket cliente = null;
+
+		boolean run = true;
+		while(run){
+			String ip = MainGUI.mostrarDigiteIp();
+			if(ip == null) System.exit(0);
+			int porta = MainGUI.mostrarDigitePorta();
+			if(porta == -1) System.exit(0);
+			try{
+				cliente = new Socket(ip, porta);
+				run = false;
+			}catch(Exception e){
+				MainGUI.mostrarMensagemErro("Não foi possível conectar com host");
+			}
+		}
+
 		cliente.setKeepAlive(true);
 		Scanner teclado = new Scanner(System.in);
 		ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());

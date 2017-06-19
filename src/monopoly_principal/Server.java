@@ -1,6 +1,10 @@
 package monopoly_principal;
 
+import monopoly_gui.*;
+import jdk.nashorn.internal.scripts.JO;
 import monopoly_elements.*;
+import sun.applet.Main;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -178,7 +182,7 @@ public class Server {
 	 */
 	private static void comprarPropriedade(Compravel espacoCompravel, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
 		int ret  = (int) clientes.get(indJogadorAtual).enviarEReceberObj("00", espacoCompravel);
-		
+
 		if(ret == 0) { //vai comprar
 			Banco.comprarCompravel(espacoCompravel, jogador);
 			
@@ -439,17 +443,34 @@ public class Server {
 		Tabuleiro tabuleiro;
 		Jogador jogador;
 		Espaco espacoAtual;
-		InetAddress addr  = InetAddress.getByName("127.0.0.1");
-		ServerSocket servidor = new ServerSocket(12345,50, addr);
+
+		InetAddress addr = null;
+		ServerSocket servidor = null;
+
+		boolean run = true;
+		while(run){
+			String ip = MainGUI.mostrarDigiteIp();
+			if(ip == null) System.exit(0);
+			int porta = MainGUI.mostrarDigitePorta();
+			if(porta == -1) System.exit(0);
+			try{
+				addr = InetAddress.getByName(ip);
+				servidor = new ServerSocket(porta,50, addr);
+				run = false;
+			}catch(Exception e){
+				MainGUI.mostrarMensagemErro("Não foi possível conectar com host");
+			}
+		}
+
 		Scanner teclado = new Scanner(System.in);
-		
+
 		int indJogadorAtual;
 		int nJogadores;
 		int jogadoresConectados = 0;
 		int resultadoDados = 0;
-		
-		System.out.println("Digite o número de jogadores: ");
-		nJogadores = teclado.nextInt();
+
+		nJogadores = MainGUI.mostrarDigiteNumeroJogadores();
+		if(nJogadores == 0) System.exit(0);
 		
 		while(jogadoresConectados < nJogadores) {
 			Cliente cliente = new Cliente(servidor.accept());
