@@ -4,6 +4,7 @@ import monopoly_elements.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -438,7 +439,8 @@ public class Server {
 		Tabuleiro tabuleiro;
 		Jogador jogador;
 		Espaco espacoAtual;
-		ServerSocket servidor = new ServerSocket(12345);
+		InetAddress addr  = InetAddress.getByName("127.0.0.1");
+		ServerSocket servidor = new ServerSocket(12345,50, addr);
 		Scanner teclado = new Scanner(System.in);
 		
 		int indJogadorAtual;
@@ -465,19 +467,6 @@ public class Server {
 		
 		tabuleiro = new Tabuleiro(jogadores, espacos, cartas);
 		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarObj(tabuleiro);
-
-		/*for(int i=0; i<nJogadores; i++) {
-			op = OP.ENVIAR_E_RECEBER_STR.codOp();
-			pergunta = "Definindo a ordem dos jogadores. Aperte ENTER para rolar os dados.";
-			clientes.get(i).run();
-			dados[i] = Dados.rolar(2, null);
-			
-			op = OP.ENVIAR_STR.codOp();
-			mensagem = jogadores.get(i) + " rolou " + dados[i];
-			clientes.get(i).run();
-		}*/
-		
-		//tabuleiro.setOrdem(dados);
 		
 		while(tabuleiro.jogoContinua()) {
 			jogador = tabuleiro.getJogadorAtual();
