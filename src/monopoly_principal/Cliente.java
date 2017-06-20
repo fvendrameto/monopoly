@@ -147,7 +147,7 @@ public class Cliente{
 				int novo_saldo = Integer.parseInt(mensagem[0]);
 				String str = mensagem[1];
 
-				if(saldo != novo_saldo){
+				if(saldo != novo_saldo && novo_saldo != -1){
 					saldo = novo_saldo;
 					mainGui.alterarSaldo(saldo);
 				}
@@ -157,7 +157,7 @@ public class Cliente{
 				int novo_saldo = Integer.parseInt(mensagem[0]);
 				String str = mensagem[1];
 
-				if(saldo != novo_saldo){
+				if(saldo != novo_saldo && novo_saldo != -1){
 					saldo = novo_saldo;
 					mainGui.alterarSaldo(saldo);
 				}

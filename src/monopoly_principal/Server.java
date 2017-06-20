@@ -14,6 +14,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.function.BiPredicate;
 
 /**
  * Classe do servidor, gerencia os clientes e roda o jogo
@@ -229,7 +230,7 @@ public class Server {
 		for(Server c : clientes) c.enviarStr(mensagem);
 		
 		//muda a posição nos tabuleiros
-		mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
+		mensagem = indJogadorAtual + "#" + posicao + "#" + -1;
 		for(Server c : clientes) c.enviarGUI("00", mensagem);
 	}
 	
@@ -269,9 +270,9 @@ public class Server {
 		//avisa no log
 		String mensagem = jogador.getNome() + " pagou ao banco e mudou de posição";
 		for(Server c : clientes) c.enviarStr(mensagem);
-		
-		//muda a posição nos tabuleiros
-		mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
+
+		//muda posição no tabuleiro de todos
+		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + -1;
 		for(Server c : clientes) c.enviarGUI("00", mensagem);
 
 		//atualiza saldo gui do jogador e avisa
@@ -455,8 +456,13 @@ public class Server {
 		Espaco espacoAtual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
 		espacoAtual.addJogador(jogador);
 
-		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
+		if(!(jogador instanceof Bot)){
+			mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
+			clientes.get(indJogadorAtual).enviarGUI("00", mensagem);
+		}
+		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + -1;
 		for(Server c : clientes) c.enviarGUI("00", mensagem);
+
 
 		return espacoAtual;
 	}
