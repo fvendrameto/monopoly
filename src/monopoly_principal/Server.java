@@ -157,7 +157,6 @@ public class Server {
 	 */
 	private static void pagarAluguel(Compravel espacoCompravel, Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int indJogadorAtual, int dados) {
 		int aluguel = espacoCompravel.getAluguel();
-		System.out.println(dados);
 		if(espacoCompravel instanceof Companhia) aluguel *= dados;
 		jogador.sacarDinheiro(aluguel);
 		espacoCompravel.getDono().depositarDinheiro(aluguel);
@@ -167,7 +166,7 @@ public class Server {
 		
 		//atualizar saldo jogador que pagou
 		if(!(jogador instanceof Bot)){
-			mensagem = espacoCompravel.getAluguel() + "#" + espacoCompravel.getDono() + "#" + espacoCompravel.getNome();
+			mensagem = aluguel + "#" + espacoCompravel.getDono() + "#" + espacoCompravel.getNome();
 			clientes.get(indJogadorAtual).enviarGUI("01", mensagem);
 		}
 
@@ -325,8 +324,8 @@ public class Server {
 		for(Server c : clientes) c.enviarStr(mensagem);
 		
 		//atualiza saldo gui do jogador e avisa
-		for(int i=0;i<nJogadores;i++){
-			if(!(jogadores.get(i) instanceof Bot)){
+		for(int i=0;i<nJogadores;i++) {
+			if(!(jogadores.get(i) instanceof Bot && jogadores.get(i).getSaldo() != 0)){
 				mensagem = jogadores.get(i).getSaldo() + "#";
 				if(i != indJogadorAtual) mensagem +="Você pagou " + quantia + " para " + jogador.getNome();
 				else mensagem += "Você recebeu " + quantia + " de todos os jogadores";
@@ -444,7 +443,6 @@ public class Server {
 			mensagem = "Aperte ENTER para rolar os dados";
 			clientes.get(indJogadorAtual).enviarEReceberStr(mensagem);
 		}
-		resultadoDados = Dados.rolar(2, null);
 
 		mensagem = jogador + " rolou " + resultadoDados;
 		for(Server c : clientes) c.enviarStr(mensagem);
@@ -582,6 +580,7 @@ public class Server {
 		while(tabuleiro.jogoContinua()) {
 			jogador = tabuleiro.getJogadorAtual();
 			indJogadorAtual = tabuleiro.getIndJogador();
+			resultadoDados = Dados.rolar(2, null);
 			espacoAtual = comecarRodada(tabuleiro, jogador, clientes, indJogadorAtual, resultadoDados);
 
 			if(espacoAtual.compravel()) {
@@ -592,7 +591,6 @@ public class Server {
 						informarFalencia(jogador,clientes,indJogadorAtual);
 						continue;
 					}
-					System.out.println(resultadoDados);
 					pagarAluguel(espacoCompravel, jogador, jogadores, clientes, indJogadorAtual, resultadoDados);
 				} else if(!espacoCompravel.temDono()){ //o espaço n tem dono, entao pode ser comprado
 					if(jogador.getSaldo() >= espacoCompravel.getPreco()) {
@@ -638,6 +636,11 @@ public class Server {
 				}
 			}
 			
+			if(jogador.getSaldo() < 0) {
+				tabuleiro.setFalencia(jogador);
+				informarFalencia(jogador, clientes, indJogadorAtual);
+			}
+			
 			int cmd = 1;
 			while(cmd != 3) {
 				if(jogador instanceof Bot) cmd = ((Bot) jogador).escolherOpcaoJogo();
@@ -658,9 +661,9 @@ public class Server {
 					venderCasa(jogador, clientes,indJogadorAtual);
 				}
 				//sair do partida
-				if(cmd == 4){
+				if(cmd == 4) {
 					tabuleiro.setFalencia(jogador);
-					informarFalencia(jogador,clientes, indJogadorAtual);
+					informarFalencia(jogador, clientes, indJogadorAtual);
 					break;
 				}
 			}

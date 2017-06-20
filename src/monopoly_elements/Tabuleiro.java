@@ -87,6 +87,7 @@ public class Tabuleiro implements Serializable {
 	 */
 	public void setFalencia(Jogador jogador) {
 		this.temDinheiro[jogadores.indexOf(jogador)] = false;
+		jogador.setSaldo(0);
 		for(int i=0; i<jogador.getCompraveis().size(); i++) {
 			Compravel compravel = jogador.getCompraveis().get(i);
 			if(compravel.propriedade()) {
@@ -96,6 +97,7 @@ public class Tabuleiro implements Serializable {
 				}
 			}
 			Banco.hipotecaCompravel(compravel, jogador);
+			compravel.getDono();
 		}
 	}
 

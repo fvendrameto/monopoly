@@ -43,9 +43,9 @@ public class Bot extends Jogador{
      * @return o comprável selecionado para hipotecar.
      */
     public Compravel escolherOpcaoHipoteca (ArrayList<Compravel> compraveis) {
-        ArrayList<Compravel> companhias = new ArrayList<Compravel>();
-        ArrayList<Compravel> propSemTodosDaCor = new ArrayList<Compravel>();
-        ArrayList<Compravel> propTemTodosDaCor = new ArrayList<Compravel>();
+        ArrayList<Compravel> companhias = new ArrayList<>();
+        ArrayList<Compravel> propSemTodosDaCor = new ArrayList<>();
+        ArrayList<Compravel> propTemTodosDaCor = new ArrayList<>();
 
         for (Compravel c : compraveis){
             if (c instanceof Companhia)
@@ -58,17 +58,17 @@ public class Bot extends Jogador{
         if (propSemTodosDaCor.size()>0){
             Dado dado = new Dado(propSemTodosDaCor.size());
             dado.rolar();
-            return propSemTodosDaCor.get(dado.getValor());
+            return propSemTodosDaCor.get(dado.getValor()-1);
         }
         else if (companhias.size()>0){
             Dado dado = new Dado(companhias.size());
             dado.rolar();
-            return companhias.get(dado.getValor());
+            return companhias.get(dado.getValor()-1);
         }
         else if (propTemTodosDaCor.size() > 0){
             Dado dado = new Dado(propTemTodosDaCor.size());
             dado.rolar();
-            return propTemTodosDaCor.get(dado.getValor());
+            return propTemTodosDaCor.get(dado.getValor()-1);
         }
         return null;
 
@@ -82,7 +82,7 @@ public class Bot extends Jogador{
     public Propriedade escolherOpcaoComprarCasa (ArrayList<Compravel> propriedades){
         Dado dado = new Dado (propriedades.size());
         dado.rolar();
-        return (Propriedade) propriedades.get(dado.getValor());
+        return (Propriedade) propriedades.get(dado.getValor()-1);
     }
 
     /**
