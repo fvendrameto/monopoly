@@ -38,11 +38,10 @@ public class Tabuleiro implements Serializable {
 	 * Avança para o proximo jogador
 	 */
 	private void proximoIndJogador() {
-		do {
-			this.indJogador++;
-			if(this.indJogador >= this.jogadores.size())
-				this.indJogador = 0;
-		} while(!this.temDinheiro[this.indJogador] && this.jogadores.get(indJogador).naPrisao());
+		indJogador = (indJogador + 1) % getNumeroJogadores();
+		while(!temDinheiro[this.indJogador] || jogadores.get(indJogador).naPrisao()){
+			indJogador = (indJogador + 1) % getNumeroJogadores();
+		}
 	}
 
 	/**
@@ -88,6 +87,7 @@ public class Tabuleiro implements Serializable {
 	 */
 	public void setFalencia(Jogador jogador) {
 		this.temDinheiro[jogadores.indexOf(jogador)] = false;
+		jogador.setSaldo(0);
 		for(int i=0; i<jogador.getCompraveis().size(); i++) {
 			Compravel compravel = jogador.getCompraveis().get(i);
 			if(compravel.propriedade()) {
@@ -97,6 +97,7 @@ public class Tabuleiro implements Serializable {
 				}
 			}
 			Banco.hipotecaCompravel(compravel, jogador);
+			compravel.getDono();
 		}
 	}
 
@@ -107,5 +108,21 @@ public class Tabuleiro implements Serializable {
 		return jogadores;
 	}
 
+
+	/**
+	 * Ao fim do jogo a função retorna quem venceu
+	 * @return Jogador que ganhou a partida
+	 */
+	public int getIndiceGanhador(){
+		int ganhador = -1;
+
+		if(jogoContinua()) return -1; //se jogo continua não tem um vencedor
+
+		for(int i=0;i<jogadores.size();i++)
+			if(temDinheiro[i])
+				ganhador = i;
+
+		return ganhador;
+	}
 
 }

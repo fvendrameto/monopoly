@@ -158,6 +158,14 @@ public class TabuleiroGUI extends JPanel {
 
     }
 
+    /**
+     * Dado um indice de um peão esse peão é romovido do tabuleiro
+     * @param index Indice do peão que deve ser removido
+     */
+    public void removePeao(int index){
+        layers.remove(layers.getIndexOf(panels.get(index)));
+    }
+
     private void putPeao(int index, int pos, int x, int y, String file){
         Dimension d = getPos(pos);
         JPanel peao = null;

@@ -146,4 +146,26 @@ public class JogadoresGUI extends JPanel {
         model.reload(root);
 	}
 
+	public void setFalenciaJogador(String jogador){
+		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+
+		Enumeration children = root.children();
+		while(children.hasMoreElements()){
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) children.nextElement();
+			if(node.toString().equals(jogador)){
+				Enumeration propriedades = node.children();
+				while(propriedades.hasMoreElements()){
+					DefaultMutableTreeNode it = (DefaultMutableTreeNode)  propriedades.nextElement();
+					node.remove(it);
+				}
+				root.remove(node);
+				root.add(new DefaultMutableTreeNode(jogador+"(FALIDO)"));
+				break;
+			}
+		}
+
+		model.reload(root);
+	}
+
 }

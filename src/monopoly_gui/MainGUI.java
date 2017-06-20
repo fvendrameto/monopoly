@@ -22,7 +22,7 @@ public class MainGUI extends JFrame {
 	
 	
 	public MainGUI(Tabuleiro tabuleiro){
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setLayout(new GridBagLayout());
 		this.setSize(1100,690);
 		this.setResizable(true);
@@ -80,11 +80,28 @@ public class MainGUI extends JFrame {
 	}
 
 	/**
+	 * Exibe uma caixa de dialogo com a descrição de uma carta retirada pelo jogador
+	 * @param descricao Descrição da carta retirada pelo jogador
+	 */
+	public static void mostrarRetirouCarta(String descricao){
+		JOptionPane.showMessageDialog(null,descricao);
+	}
+
+	/**
 	 * Exibe caixa de dialogo pedindo nome
 	 * @return Nome digitado pelo jogador
 	 */
 	public static String mostrarDigiteNome(){
 		return JOptionPane.showInputDialog(null,"Digite seu nome:","Bem vindo",JOptionPane.DEFAULT_OPTION);
+	}
+
+	/**
+	 * Exibe caixa de dialogo informando o ganhador da partida
+	 * @param ganhador Nome do ganhador que será anunciano
+	 */
+	public static void anunciarGanhador(String ganhador){
+		String str = "Fim da partida! Parabéns " + ganhador + "!";
+		JOptionPane.showMessageDialog(null,str);
 	}
 
 	/**
@@ -119,9 +136,32 @@ public class MainGUI extends JFrame {
 		String num = "";
 		boolean run = true;
 		while(run){
-			num = JOptionPane.showInputDialog(null,"Digite numero de jogadores:","Iniciando...",JOptionPane.DEFAULT_OPTION);
+			num = JOptionPane.showInputDialog(null,"Digite numero de jogadores:(Min = 1 | Máx = 6)","Iniciando...",JOptionPane.DEFAULT_OPTION);
 			if(num == null) return 0;
-			if(num.matches("[0-9]+") && Integer.parseInt(num) >= 2) run = false;
+			if(num.matches("[0-9]+") && Integer.parseInt(num) >= 1 && Integer.parseInt(num) <= 6) run = false;
+			else mostrarMensagemErro("Número inválido");
+		}
+		return Integer.parseInt(num);
+	}
+
+	/**
+	 * Exibe janela de dialogo pedindo o numero de bots
+	 * @param numeroMinimo Número minimo que pode ser inserido
+	 * @param numeroMaximo Número máximo que pode ser inserido
+	 * @return
+	 */
+	public static int mostrarDigiteNumeroBots(int numeroMinimo,int numeroMaximo){
+		String num = "";
+		String texto;
+
+		if(numeroMinimo > 0) texto = "Digite o numero de bots(Min = "+numeroMinimo+" | Máx = "+numeroMaximo+")";
+		else texto = "Digite o numero de bots(Min = 0 | Máx = "+numeroMaximo+")";
+
+		boolean run = true;
+		while(run){
+			num = JOptionPane.showInputDialog(null,texto,"Iniciando...",JOptionPane.DEFAULT_OPTION);
+			if(num == null) return 0;
+			if(num.matches("[0-9]+") && Integer.parseInt(num) >= numeroMinimo && Integer.parseInt(num) <= numeroMaximo) run = false;
 			else mostrarMensagemErro("Número inválido");
 		}
 		return Integer.parseInt(num);
@@ -150,12 +190,12 @@ public class MainGUI extends JFrame {
 	 */
 	public int mostarOpcaoComprar(Compravel c){
 		Object[] acoes = {"Sim","Nao"};
-		//ImageIcon carta = new ImageIcon("images/carta-teste.png");
-		ImageIcon carta = null;
+		ImageIcon carta = new ImageIcon(c.getEndImg());
+		//ImageIcon carta = null;
 		String texto = "";
-		texto += "Nome: " + c.getNome() + "\n";
-		texto += "Preço: " + c.getPreco() + "\n";
-		texto += "Hipoteca:" + c.getValorHipoteca();
+		//texto += "Nome: " + c.getNome() + "\n";
+		//texto += "Preço: " + c.getPreco() + "\n";
+		//texto += "Hipoteca:" + c.getValorHipoteca();
 		
 		return JOptionPane.showOptionDialog(null,texto,"Deseja comprar?",JOptionPane.DEFAULT_OPTION,JOptionPane.DEFAULT_OPTION,carta,acoes,acoes[0]);
 	}
@@ -187,11 +227,18 @@ public class MainGUI extends JFrame {
 	 * @return Inteiro equivalente a posição escolhida
 	 */
 	public int mostrarOpcoesJogo(){
-		Object[] acoes = {"Hipotecar","Comprar Casa","Vender Casa","Encerrar Rodada"};
+		Object[] acoes = {"Hipotecar","Comprar Casa","Vender Casa","Encerrar Rodada","Sair do Jogo"};
 
 		String titulo = "Escolha a opção do jogo";
 		String nome_janela = "";
-		return JOptionPane.showOptionDialog(null,titulo,nome_janela,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,acoes,acoes[0]);
+		int ret =  JOptionPane.showOptionDialog(null,titulo,nome_janela,JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,acoes,acoes[0]);
+		if(ret == 4){ //pediu para sair do jogo
+			Object[] opcoes = {"Sim","Nao"};
+			int conf = JOptionPane.showConfirmDialog(null,"Deseja mesmo sair?", "Confirmação", JOptionPane.YES_NO_OPTION);
+			if(conf == 0) return 4; //jogador realmente quer sair
+			else return -1;
+		}
+		return ret;
 	}
 	
 	
@@ -306,5 +353,9 @@ public class MainGUI extends JFrame {
 	public void alterarSaldo(int novo_saldo){
 		bensGui.setDinheiro(novo_saldo);
 	}
-	
+
+	public void setFalencia(String jogador, int indice){
+		jogadoresGui.setFalenciaJogador(jogador);
+		tabuleiroGui.removePeao(indice);
+	}
 }

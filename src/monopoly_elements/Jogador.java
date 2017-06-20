@@ -23,7 +23,7 @@ public class Jogador implements Serializable {
 		this.saldo = SALDO_INICIAL;
 		this.posicao_tabuleiro = 0;
 		this.preso = false;
-		this.compraveis = new ArrayList<Compravel>();
+		this.compraveis = new ArrayList<>();
 	}
 
 	/**
@@ -40,6 +40,10 @@ public class Jogador implements Serializable {
 		return this.saldo;
 	}
 
+	public void setSaldo(int valor) {
+		this.saldo = valor;
+	}
+	
 	/**
 	 * @return Boolean indicando se jogador está preso
 	 */
@@ -54,6 +58,7 @@ public class Jogador implements Serializable {
 	}
 	
 	public void setPreso(boolean b) {
+		this.turnosPreso = 0;
 		this.preso = b;
 	}
 	

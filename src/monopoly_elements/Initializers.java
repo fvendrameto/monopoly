@@ -20,7 +20,9 @@ public class Initializers {
 		Scanner scanner = new Scanner(file);
 		int tipo;
 		ArrayList<Espaco> espacos = new ArrayList<Espaco>();
-		
+
+		int contP = 0;
+		int contC = 0;
 		while(scanner.hasNextInt()){
 			tipo = scanner.nextInt();
 			scanner.nextLine();
@@ -34,14 +36,16 @@ public class Initializers {
 				}
 				int preco_casa = scanner.nextInt();
 				int cor = scanner.nextInt();
-				Propriedade p = new Propriedade(nome,preco,hipoteca,tabela_precos,preco_casa,cor);
+				String endImg = "images/carta" + contP++ + ".png";
+				Propriedade p = new Propriedade(nome,preco,hipoteca,tabela_precos,preco_casa,cor,endImg);
 				espacos.add(p);
 			}else if(tipo == 2){ //companhia
 				String nome = scanner.nextLine();
 				int preco = scanner.nextInt();
 				int hipoteca = scanner.nextInt();
 				int aluguel = scanner.nextInt();
-				Companhia c = new Companhia(nome,preco,hipoteca,aluguel);
+				String endImg = "images/companhia" + contC++ + ".png";
+				Companhia c = new Companhia(nome,preco,hipoteca,aluguel,endImg);
 				espacos.add(c);
 			}else{ //jogavel
 				String nome = scanner.nextLine();

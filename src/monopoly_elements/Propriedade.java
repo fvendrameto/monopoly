@@ -12,8 +12,8 @@ public class Propriedade extends Compravel implements Serializable {
     private int preco_casa;
     private static int[] quantidade_cor = new int[10];
     
-    Propriedade(String nome, int preco, int hipoteca,int[] tabela_precos,int preco_casa, int cor) {
-        super(nome,preco,hipoteca);
+    Propriedade(String nome, int preco, int hipoteca,int[] tabela_precos,int preco_casa, int cor,String endImg) {
+        super(nome,preco,hipoteca,endImg);
         this.tabela_precos = tabela_precos;
         this.n_casas = 0;
         this.cor = cor;

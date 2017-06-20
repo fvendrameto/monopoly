@@ -90,7 +90,6 @@ public class Cliente{
 				mainGui.mostrarRolarDados();
 			} else if(cmd.equals("Você não tem dinheiro para pagar e faliu!")) {
 				mainGui.mostrarFalencia();
-				setNoJogo(false);
 			}
 			
 			saida.writeUTF(t);
@@ -154,7 +153,7 @@ public class Cliente{
 				}
 
 				mainGui.mostrarAvisoEspaco(str);
-			}else if(codigo.equals("06")){ //acão que altera o saldo
+			}if(codigo.equals("06")){ //acão que altera o saldo
 				int novo_saldo = Integer.parseInt(mensagem[0]);
 				String str = mensagem[1];
 
@@ -164,6 +163,18 @@ public class Cliente{
 				}
 
 				mainGui.mostrarAvisoEspaco(str);
+			}if(codigo.equals("07")){ //falir um jogador
+				String jogador = mensagem[0];
+				int indice = Integer.parseInt(mensagem[1]);
+				mainGui.setFalencia(jogador,indice);
+			}if(codigo.equals("08")){ //jogador ganhou o jogo
+				String ganhador = mensagem[0];
+				mainGui.anunciarGanhador(ganhador);
+				setNoJogo(false);
+				mainGui.setVisible(false);
+			}if(codigo.equals("09")){ //retirou uma carta
+				String descricao = mensagem[0];
+				mainGui.mostrarRetirouCarta(descricao);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -247,7 +258,7 @@ public class Cliente{
 	public static void main(String[] args) throws IOException {
 		Socket cliente = null;
 
-		boolean run = true;
+		/*boolean run = true;
 		while(run){
 			String ip = MainGUI.mostrarDigiteIp();
 			if(ip == null) System.exit(0);
@@ -259,7 +270,9 @@ public class Cliente{
 			}catch(Exception e){
 				MainGUI.mostrarMensagemErro("Não foi possível conectar com host");
 			}
-		}
+		}*/
+
+		cliente = new Socket("127.0.0.1",6996);
 
 		cliente.setKeepAlive(true);
 		Scanner teclado = new Scanner(System.in);
@@ -305,12 +318,14 @@ public class Cliente{
 				e.printStackTrace();
 				return;
 			}
-
 		}
+
 
 		teclado.close();
 		cliente.close();
 		entrada.close();
 		saida.close();
+
+		System.exit(0);
 	}
 }

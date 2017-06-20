@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.text.DefaultCaret;
 
 /**
  * Responsavel pelo log de jogo exibido na GUI
@@ -20,6 +21,8 @@ public class LogGUI extends JPanel{
 	
 	public LogGUI(){
 		area_texto = new JTextArea();
+		DefaultCaret caret = (DefaultCaret) area_texto.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		titulo = new JLabel();
 	
 		setLayout(new GridBagLayout());

@@ -9,9 +9,13 @@ import java.util.Calendar;
 public class Dado {
 	private int valor;
 	private int nLados;
-	
+
 	public Dado() {
 		this.nLados = 6;
+	}
+
+	public Dado(int nLados) {
+		this.nLados = nLados;
 	}
 
 	private void setValor(int val) {
@@ -26,12 +30,12 @@ public class Dado {
 	}
 
 	/**
-	 * Rola o dado, gerando um inteiro no intervalo [1,6]
+	 * Rola o dado, gerando um inteiro no intervalo [1,nLados]
 	 */
 	public void rolar() {
 		Random rand = new Random();
 		rand.setSeed(Calendar.getInstance().getTimeInMillis());
-		
+
 		this.setValor(rand.nextInt(this.nLados) + 1);
 	}
 

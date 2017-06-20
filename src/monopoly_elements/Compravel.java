@@ -9,12 +9,21 @@ public abstract class Compravel extends Espaco implements Serializable {
     private Jogador propietario;
     private int preco;
     private int hipoteca;
+    private String endImg;
     
-    public Compravel(String nome, int preco, int hipoteca) {
+    public Compravel(String nome, int preco, int hipoteca, String endImg) {
         super(nome);
         this.hipoteca = hipoteca;
         this.propietario = null;
         this.preco = preco;
+        this.endImg = endImg;
+    }
+
+    /**
+     * @return Endereço da imagem da carta do compravels
+     */
+    public String getEndImg(){
+        return this.endImg;
     }
 
     /**
