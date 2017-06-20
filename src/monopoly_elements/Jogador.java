@@ -54,6 +54,7 @@ public class Jogador implements Serializable {
 	}
 	
 	public void setPreso(boolean b) {
+		this.turnosPreso = 0;
 		this.preso = b;
 	}
 	

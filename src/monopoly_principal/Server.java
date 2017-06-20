@@ -152,12 +152,12 @@ public class Server {
 	 * @param jogador Jogador atual
 	 * @param jogadores Lista com todos os jogadores que estão no jogo
 	 * @param clientes Lista com os clientes conectados ao servidor
-	 * @param nJogadores Número de jogadores que estão no jogo
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 * @param dados Valor dos dados, usado espacoCompravel seja uma companhia
 	 */
-	private static void pagarAluguel(Compravel espacoCompravel, Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int dados) {
+	private static void pagarAluguel(Compravel espacoCompravel, Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int indJogadorAtual, int dados) {
 		int aluguel = espacoCompravel.getAluguel();
+		System.out.println(dados);
 		if(espacoCompravel instanceof Companhia) aluguel *= dados;
 		jogador.sacarDinheiro(aluguel);
 		espacoCompravel.getDono().depositarDinheiro(aluguel);
@@ -221,7 +221,11 @@ public class Server {
 	 */
 	private static void moverJogador(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual, int posicao) {
 		//avisa no log
-		String mensagem = jogador.getNome() + " teve posição alterada...";
+		String mensagem = jogador.getNome() + " teve posição alterada";
+		if(posicao == 10) {
+			jogador.setPreso(true);
+			mensagem += " e foi preso por 3 rodadas!";
+		}
 		for(Server c : clientes) c.enviarStr(mensagem);
 		
 		//muda a posição nos tabuleiros
@@ -318,7 +322,7 @@ public class Server {
 	private static void receberJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int quantia) {
 		//avisa no log
 		String mensagem = jogador.getNome() + " recebeu " + quantia + " de todos os jogadores";
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+		for(Server c : clientes) c.enviarStr(mensagem);
 		
 		//atualiza saldo gui do jogador e avisa
 		for(int i=0;i<nJogadores;i++){
@@ -562,7 +566,7 @@ public class Server {
 			jogadores.add(new Jogador(nome));
 		}
 
-		String[] awesomeBotsName = {"bot1","bot2","bot3","bot4","bot5"};
+		String[] awesomeBotsName = {"Willian DUBGod","Reusger Guedes","Kenaldinho","Zé Sabotagem","Dudibres"};
 		while(botsConectados < nBots){
 			jogadores.add(new Bot(awesomeBotsName[botsConectados++]));
 		}
@@ -588,7 +592,8 @@ public class Server {
 						informarFalencia(jogador,clientes,indJogadorAtual);
 						continue;
 					}
-					pagarAluguel(espacoCompravel, jogador, jogadores, clientes, nJogadores, indJogadorAtual, resultadoDados);
+					System.out.println(resultadoDados);
+					pagarAluguel(espacoCompravel, jogador, jogadores, clientes, indJogadorAtual, resultadoDados);
 				} else if(!espacoCompravel.temDono()){ //o espaço n tem dono, entao pode ser comprado
 					if(jogador.getSaldo() >= espacoCompravel.getPreco()) {
 						comprarPropriedade(espacoCompravel, jogador, clientes, indJogadorAtual);
