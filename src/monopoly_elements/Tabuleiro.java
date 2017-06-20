@@ -64,12 +64,17 @@ public class Tabuleiro implements Serializable {
 	 */
 	public boolean jogoContinua() {
 		int cont = 0;
-		
+		int players = 0;
+
 		for(int i=0; i<jogadores.size(); i++)
 			if(this.temDinheiro[i])
 				cont++;
 
-		return cont >= 2;
+		for(int i=0;i<jogadores.size();i++)
+			if(this.temDinheiro[i] && !(jogadores.get(i) instanceof Bot))
+				players++;
+
+		return cont >= 2 && players > 0;
 	}
 
 	/**
@@ -115,8 +120,13 @@ public class Tabuleiro implements Serializable {
 	 */
 	public int getIndiceGanhador(){
 		int ganhador = -1;
+		int players = 0;
 
-		if(jogoContinua()) return -1; //se jogo continua não tem um vencedor
+		for(int i=0;i<jogadores.size();i++)
+			if(this.temDinheiro[i] && !(jogadores.get(i) instanceof Bot))
+				players++;
+
+		if(players <= 0) return -1; //se jogo terminou porque não tinham mais jogadores(humanos) com dinheiro;
 
 		for(int i=0;i<jogadores.size();i++)
 			if(temDinheiro[i])

@@ -118,6 +118,7 @@ public class Cliente{
 				mainGui.posicionaPeao(jogador, posicao);
 				if(saldo != novo_saldo && novo_saldo != -1){ //novo salvo == -1 significa que esse jogador não deve atualizar o saldo
 					saldo = novo_saldo;
+					System.out.println(">>0");
 					mainGui.alterarSaldo(saldo);
 				}
 			} else if(codigo.equals("01")) { //pagar aluguel
@@ -153,23 +154,16 @@ public class Cliente{
 				}
 
 				mainGui.mostrarAvisoEspaco(str);
-			}if(codigo.equals("06")){ //acão que altera o saldo
-				int novo_saldo = Integer.parseInt(mensagem[0]);
-				String str = mensagem[1];
-
-				if(saldo != novo_saldo){
-					saldo = novo_saldo;
-					mainGui.alterarSaldo(saldo);
-				}
-
-				mainGui.mostrarAvisoEspaco(str);
 			}if(codigo.equals("07")){ //falir um jogador
 				String jogador = mensagem[0];
 				int indice = Integer.parseInt(mensagem[1]);
 				mainGui.setFalencia(jogador,indice);
 			}if(codigo.equals("08")){ //jogador ganhou o jogo
 				String ganhador = mensagem[0];
-				mainGui.anunciarGanhador(ganhador);
+				String str;
+				if(ganhador.equals("!")) str = "Fim de jogo, as máquinas venceram!";
+				else str = "Fim de jogo, " + ganhador + " ganhou!";
+				mainGui.anunciarGanhador(str);
 				setNoJogo(false);
 				mainGui.setVisible(false);
 			}if(codigo.equals("09")){ //retirou uma carta
@@ -284,7 +278,7 @@ public class Cliente{
 		while(noJogo) {
 			try {
 				int codigoOp = entrada.readInt();
-				System.out.println(codigoOp);
+				//System.out.println(codigoOp);
 
 				if(codigoOp == OP.RECEBER_STR.codOp()) { //MENSAGENS QUE VÃO PARA O LOG
 					String str = entrada.readUTF();

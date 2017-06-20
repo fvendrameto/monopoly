@@ -19,6 +19,7 @@ public class MainGUI extends JFrame {
 	private JogadoresGUI jogadoresGui;
 	private LogGUI logGui;
 	private BensGUI bensGui;
+	private boolean falido;
 	
 	
 	public MainGUI(Tabuleiro tabuleiro){
@@ -26,6 +27,8 @@ public class MainGUI extends JFrame {
 		this.setLayout(new GridBagLayout());
 		this.setSize(1100,690);
 		this.setResizable(true);
+
+		this.falido = false;
 		
 		JPanel esquerda = new JPanel();
 		JPanel direita = new JPanel();
@@ -99,8 +102,7 @@ public class MainGUI extends JFrame {
 	 * Exibe caixa de dialogo informando o ganhador da partida
 	 * @param ganhador Nome do ganhador que será anunciano
 	 */
-	public static void anunciarGanhador(String ganhador){
-		String str = "Fim da partida! Parabéns " + ganhador + "!";
+	public static void anunciarGanhador(String str){
 		JOptionPane.showMessageDialog(null,str);
 	}
 
@@ -219,7 +221,8 @@ public class MainGUI extends JFrame {
 	 * @param string String que sera exibida
 	 */
 	public void mostrarAvisoEspaco(String string){
-		JOptionPane.showMessageDialog(null, string);
+		if(!this.falido)
+			JOptionPane.showMessageDialog(null, string);
 	}
 	
 	/**
@@ -351,11 +354,14 @@ public class MainGUI extends JFrame {
 	 * @param novo_saldo Novo valor de saldo
 	 */
 	public void alterarSaldo(int novo_saldo){
-		bensGui.setDinheiro(novo_saldo);
+		if(!this.falido)
+			bensGui.setDinheiro(novo_saldo);
 	}
 
 	public void setFalencia(String jogador, int indice){
 		jogadoresGui.setFalenciaJogador(jogador);
+		alterarSaldo(0);
+		this.falido = true;
 		tabuleiroGui.removePeao(indice);
 	}
 }

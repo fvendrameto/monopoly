@@ -269,8 +269,12 @@ public class Server {
 		String mensagem = jogador.getNome() + " pagou ao banco e mudou de posição";
 		for(Server c : clientes) c.enviarStr(mensagem);
 		
-		//muda a posição nos tabuleiros
-		mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
+		//muda a posição nos tabuleiro
+		if(!(jogador instanceof Bot)){
+			mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
+			clientes.get(indJogadorAtual).enviarGUI("00", mensagem);
+		}
+		mensagem = indJogadorAtual + "#" + posicao + "#" + -1;
 		for(Server c : clientes) c.enviarGUI("00", mensagem);
 
 		//atualiza saldo gui do jogador e avisa
@@ -454,7 +458,11 @@ public class Server {
 		Espaco espacoAtual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
 		espacoAtual.addJogador(jogador);
 
-		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
+		if(!(jogador instanceof Bot)){
+			mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
+			clientes.get(indJogadorAtual).enviarGUI("00",mensagem);
+		}
+		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + -1;
 		for(Server c : clientes) c.enviarGUI("00", mensagem);
 
 		return espacoAtual;
@@ -485,10 +493,14 @@ public class Server {
 	 * @param nJogadores Numero de jogadores na partida
 	 */
 	private static void informarGanhador(Jogador ganhador, ArrayList<Server> clientes, int nJogadores){
-		String str_log = ganhador + "ganhou o jogo!";
+		String str_log;
+		if(ganhador != null) str_log = ganhador + "ganhou o jogo!";
+		else str_log = "Todos os players reais perderam!";
 		for(Server c : clientes) c.enviarStr(str_log);
 
-		String mensagem = ganhador + "#";
+		String mensagem;
+		if(ganhador != null) mensagem= ganhador + "#";
+		else  mensagem = "!#";
 		for(Server c : clientes) c.enviarGUI("08",mensagem);
 
 	}
@@ -674,7 +686,8 @@ public class Server {
 		}
 
 		int indGanhador = tabuleiro.getIndiceGanhador();
-		Jogador ganhador = tabuleiro.getJogadores().get(indGanhador);
+		Jogador ganhador = null;
+		if(indGanhador != -1) ganhador = tabuleiro.getJogadores().get(indGanhador);
 		informarGanhador(ganhador,clientes,nJogadores);
 
 		servidor.close();
