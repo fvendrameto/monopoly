@@ -15,7 +15,7 @@ public class Jogavel extends Espaco implements Serializable {
     	super(null);
     }
 	
-	public Jogavel(String nome, String descricao, int acao, int quantia, int posicao) {
+	public Jogavel(String nome, String descricao, int acao, int quantia, int posicao){
         super(nome);
         this.acao = new Acao(acao, quantia, posicao);
         this.descricao = descricao;

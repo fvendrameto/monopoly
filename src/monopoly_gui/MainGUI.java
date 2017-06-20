@@ -80,6 +80,14 @@ public class MainGUI extends JFrame {
 	}
 
 	/**
+	 * Exibe uma caixa de dialogo com a descrição de uma carta retirada pelo jogador
+	 * @param descricao Descrição da carta retirada pelo jogador
+	 */
+	public static void mostrarRetirouCarta(String descricao){
+		JOptionPane.showMessageDialog(null,descricao);
+	}
+
+	/**
 	 * Exibe caixa de dialogo pedindo nome
 	 * @return Nome digitado pelo jogador
 	 */

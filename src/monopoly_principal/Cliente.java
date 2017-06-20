@@ -171,6 +171,9 @@ public class Cliente{
 				mainGui.anunciarGanhador(ganhador);
 				setNoJogo(false);
 				mainGui.setVisible(false);
+			}if(codigo.equals("09")){ //retirou uma carta
+				String descricao = mensagem[0];
+				mainGui.mostrarRetirouCarta(descricao);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -254,7 +257,7 @@ public class Cliente{
 	public static void main(String[] args) throws IOException {
 		Socket cliente = null;
 
-		boolean run = true;
+		/*boolean run = true;
 		while(run){
 			String ip = MainGUI.mostrarDigiteIp();
 			if(ip == null) System.exit(0);
@@ -266,7 +269,9 @@ public class Cliente{
 			}catch(Exception e){
 				MainGUI.mostrarMensagemErro("Não foi possível conectar com host");
 			}
-		}
+		}*/
+
+		cliente = new Socket("127.0.0.1",6996);
 
 		cliente.setKeepAlive(true);
 		Scanner teclado = new Scanner(System.in);

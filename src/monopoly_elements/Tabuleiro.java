@@ -38,11 +38,10 @@ public class Tabuleiro implements Serializable {
 	 * Avança para o proximo jogador
 	 */
 	private void proximoIndJogador() {
-		do {
-			this.indJogador++;
-			if(this.indJogador >= this.jogadores.size())
-				this.indJogador = 0;
-		} while(!this.temDinheiro[this.indJogador] && this.jogadores.get(indJogador).naPrisao());
+		indJogador = (indJogador + 1) % getNumeroJogadores();
+		while(!temDinheiro[this.indJogador] || jogadores.get(indJogador).naPrisao()){
+			indJogador = (indJogador + 1) % getNumeroJogadores();
+		}
 	}
 
 	/**

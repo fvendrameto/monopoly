@@ -12,6 +12,7 @@ import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -194,7 +195,15 @@ public class Server {
 			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("02", mensagem);
 		}
 	}
-	
+
+	private static void retirarCarta(Jogador jogador, ArrayList<Server> clientes, Carta carta, int indJogadorAtual){
+		String msg_log = jogador + " retirou uma carta de sorte ou revés";
+		for(int i=0; i<clientes.size();i++) clientes.get(i).enviarStr(msg_log);
+
+		String descricao = carta.getDescricao() + "#";
+		clientes.get(indJogadorAtual).enviarGUI("09",descricao);
+	}
+
 	/**
 	 * Método estático para mover o jogador no tabuleiro, caso ele tenha parado em um espaço que
 	 * executa essa ação
@@ -232,7 +241,7 @@ public class Server {
 		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
 		//atualiza gui do jogador
-		if(acao == 1) mensagem = jogador.getSaldo() + "Você pagou " + quantia ;
+		if(acao == 1) mensagem = jogador.getSaldo() + "#" + "Você pagou " + quantia ;
 		else mensagem = jogador.getSaldo() + "#" + "Você recebeu " + quantia ;
 		clientes.get(indJogadorAtual).enviarGUI("05", mensagem);
 	}
@@ -279,7 +288,7 @@ public class Server {
 		//atualiza saldo gui do jogador e avisaJogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores
 		for(int i=0;i<nJogadores;i++){
 			mensagem = jogadores.get(i).getSaldo() + "#";
-			if(i != indJogadorAtual) mensagem +="Você recebeu " + quantia + "de" + jogador.getNome();
+			if(i != indJogadorAtual) mensagem += "Você recebeu " + quantia + "de" + jogador.getNome();
 			else mensagem += "Você pagou " + quantia + " para todos os jogadores";
 			clientes.get(i).enviarGUI("05", mensagem);
 		}
@@ -364,6 +373,13 @@ public class Server {
 		}
 	}
 
+	/**
+	 * Informa os jogadores da falencia de um jogador, atualizando os componentes da GUI necessarios
+	 * @param jogador Jogador que declarou falencia
+	 * @param clientes Clientes conectados ao servidor
+	 * @param nJogadores Numero de jogadores na partida
+	 * @param indJogadorAtual Indice do jogador atual(declarou falencia)
+	 */
 	private static void informarFalencia(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual){
 		String str_log = jogador + " faliu";
 		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarStr(str_log);
@@ -374,7 +390,14 @@ public class Server {
 		clientes.get(indJogadorAtual).enviarEReceberStr("Você não tem dinheiro para pagar e faliu!");
 	}
 
-	private static void informarGanhador(Jogador ganhador, ArrayList<Server> clientes, int nJogadores, int indGanhador){
+
+	/**
+	 * Informa os jogadores sobre o fim da partida e do jogador que ganhou
+	 * @param ganhador Jogador que ganhou a partida
+	 * @param clientes Clientes conectados ao servidos
+	 * @param nJogadores Numero de jogadores na partida
+	 */
+	private static void informarGanhador(Jogador ganhador, ArrayList<Server> clientes, int nJogadores){
 		String str_log = ganhador + "ganhou o jogo!";
 		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarStr(str_log);
 
@@ -432,7 +455,7 @@ public class Server {
 		mensagem = "Aperte ENTER para rolar os dados";
 		clientes.get(indJogadorAtual).enviarEReceberStr(mensagem);
 		resultadoDados = Dados.rolar(2, null);
-		
+
 		mensagem = jogador + " rolou " + resultadoDados;
 		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
 		
@@ -458,6 +481,7 @@ public class Server {
 		ArrayList<Jogador> jogadores = new ArrayList<>();
 		ArrayList<Espaco> espacos =  Initializers.initEspacos("espacos.dat");
 		ArrayList<Carta> cartas = Initializers.initCartas("cartas.dat");
+		Random random = new Random();
 		
 		Tabuleiro tabuleiro;
 		Jogador jogador;
@@ -466,6 +490,7 @@ public class Server {
 		InetAddress addr = null;
 		ServerSocket servidor = null;
 
+		/*
 		boolean run = true;
 		while(run){
 			String ip = MainGUI.mostrarDigiteIp();
@@ -480,6 +505,13 @@ public class Server {
 				MainGUI.mostrarMensagemErro("Não foi possível conectar com host");
 			}
 		}
+		*/
+
+		addr = InetAddress.getByName("127.0.0.1");
+		servidor = new ServerSocket(6996,50, addr);
+
+
+		System.out.println("Servidor iniciado");
 
 		Scanner teclado = new Scanner(System.in);
 
@@ -532,13 +564,26 @@ public class Server {
 				int acao = espacoJogavel.getAcao().getCodigo();
 				int posicao = espacoJogavel.getAcao().getPosicao();
 				int quantia = espacoJogavel.getAcao().getQuantia();
+
+				if(acao == 7){ //se a ação foi retirar uma carta
+					int indice = random.nextInt(cartas.size());
+					Carta carta = cartas.get(indice);
+					carta.getAcao().realizarAcao(tabuleiro,jogador);
+
+					retirarCarta(jogador,clientes,carta,indJogadorAtual);
+
+					acao = carta.getAcao().getCodigo();
+					posicao = carta.getAcao().getPosicao();
+					quantia = carta.getAcao().getQuantia();
+				}
+
 				switch(acao){
 					case 0: //mudar posiçao
 						moverJogador(jogador, clientes, nJogadores, indJogadorAtual, posicao);
 						break;
 					case 1: //pagar ao banco
 					case 2: //receber do banco
-						pagarOuReceber(jogador, clientes, nJogadores, indJogadorAtual, quantia, acao);
+						pagarOuReceber(jogador, clientes, nJogadores, indJogadorAtual, acao, quantia);
 						break;
 					case 3: //mudar posição e pagar
 						moverEPagar(jogador, clientes, nJogadores, indJogadorAtual, posicao, quantia,tabuleiro.getEspacoPosicao(posicao).getNome());
@@ -581,7 +626,7 @@ public class Server {
 
 		int indGanhador = tabuleiro.getIndiceGanhador();
 		Jogador ganhador = tabuleiro.getJogadores().get(indGanhador);
-		informarGanhador(ganhador,clientes,nJogadores,indGanhador);
+		informarGanhador(ganhador,clientes,nJogadores);
 
 		servidor.close();
 		teclado.close();
