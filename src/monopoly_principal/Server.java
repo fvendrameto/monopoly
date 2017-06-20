@@ -367,7 +367,7 @@ public class Server {
 	 * @param clientes Lista com os clientes conectados ao servidor
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 */
-	private static void construirCasa(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual) {
+	private static Propriedade construirCasa(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual) {
 		ArrayList<Compravel> propriedades = new ArrayList<>();
 		
 		for(Compravel p : jogador.getCompraveis()) {
@@ -375,21 +375,22 @@ public class Server {
 				propriedades.add(p);
 		}
 		
-		if(propriedades.size() == 0) return;
+		if(propriedades.size() == 0) return null;
 		
 		Propriedade propEscolhida;
 		if(jogador instanceof Bot) propEscolhida = ((Bot) jogador).escolherOpcaoComprarCasa(propriedades);
 		else propEscolhida = (Propriedade) clientes.get(indJogadorAtual).enviarEReceberObj("03", propriedades);
 		
 		if(propEscolhida != null){ //caso tenha escolhido construir casa em alguma propriedade
-			Banco.comprarCasa(propEscolhida, jogador);
-			
+
 			String mensagem = jogador + " construiu um casa em " + propEscolhida;
 			for(Server c : clientes) c.enviarStr(mensagem);
 			
 			mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
 			for(Server c : clientes) c.enviarGUI("04", mensagem);
 		}
+
+		return propEscolhida;
 	}
 
 	/**
@@ -398,7 +399,7 @@ public class Server {
 	 * @param clientes Lista com os clientes conectados ao servidor
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 */
-	private static void venderCasa(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual) {
+	private static Propriedade venderCasa(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual) {
 		ArrayList<Compravel> propriedades = new ArrayList<>();
 
 		for(Compravel p : jogador.getCompraveis()){
@@ -407,7 +408,7 @@ public class Server {
 			}
 		}
 
-		if(propriedades.size() == 0) return;
+		if(propriedades.size() == 0) return null;
 
 		Propriedade propEscolhida;
 		if(jogador instanceof Bot) propEscolhida = ((Bot) jogador).escolherOpcaoVenderCasa(propriedades);
@@ -415,14 +416,14 @@ public class Server {
 
 
 		if(propEscolhida != null){
-			Banco.venderCasa(propEscolhida, jogador);
-
 			String mensagem  = jogador + " vendeu uma casa em " + propEscolhida;
 			for(Server c : clientes) c.enviarStr(mensagem);
 
 			mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
 			for(Server c : clientes) c.enviarGUI("04", mensagem);
 		}
+
+		return propEscolhida;
 	}
 
 	/**
@@ -654,12 +655,14 @@ public class Server {
 				
 				// construir casa
 				if(cmd == 1){
-					construirCasa(jogador, clientes, indJogadorAtual);
+					Propriedade escolhida = construirCasa(jogador, clientes, indJogadorAtual);
+					if(escolhida != null) Banco.comprarCasa(escolhida,jogador);
 				}
 
 				// vender casa
 				if(cmd == 2){
-					venderCasa(jogador, clientes,indJogadorAtual);
+					Propriedade escolhida = venderCasa(jogador, clientes,indJogadorAtual);
+					if(escolhida != null) Banco.venderCasa(escolhida,jogador);
 				}
 				//sair do partida
 				if(cmd == 4) {
