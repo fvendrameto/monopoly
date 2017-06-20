@@ -159,12 +159,12 @@ public class MainGUI extends JFrame {
 	 */
 	public int mostarOpcaoComprar(Compravel c){
 		Object[] acoes = {"Sim","Nao"};
-		//ImageIcon carta = new ImageIcon("images/carta-teste.png");
-		ImageIcon carta = null;
+		ImageIcon carta = new ImageIcon(c.getEndImg());
+		//ImageIcon carta = null;
 		String texto = "";
-		texto += "Nome: " + c.getNome() + "\n";
-		texto += "Preço: " + c.getPreco() + "\n";
-		texto += "Hipoteca:" + c.getValorHipoteca();
+		//texto += "Nome: " + c.getNome() + "\n";
+		//texto += "Preço: " + c.getPreco() + "\n";
+		//texto += "Hipoteca:" + c.getValorHipoteca();
 		
 		return JOptionPane.showOptionDialog(null,texto,"Deseja comprar?",JOptionPane.DEFAULT_OPTION,JOptionPane.DEFAULT_OPTION,carta,acoes,acoes[0]);
 	}

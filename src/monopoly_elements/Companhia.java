@@ -8,8 +8,8 @@ import java.io.Serializable;
 public class Companhia extends Compravel implements Serializable{
     int aluguel;
     
-    Companhia(String nome, int preco, int hipoteca, int aluguel) {
-        super(nome,preco,hipoteca);
+    Companhia(String nome, int preco, int hipoteca, int aluguel,String endImg) {
+        super(nome,preco,hipoteca,endImg);
         this.aluguel = aluguel;
     }
 
