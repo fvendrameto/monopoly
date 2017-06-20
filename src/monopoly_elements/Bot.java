@@ -30,7 +30,7 @@ public class Bot extends Jogador{
      * Sempre que possível, o bot comprará uma propriedade ou companhia
      * @return valor afirmativo para a compra.
      */
-    public static int OpcaoComprarPropriedade () {
+    public int opcaoComprarPropriedade () {
         return 0;
     }
 
@@ -42,7 +42,7 @@ public class Bot extends Jogador{
      * @param compraveis lista com as propriedades e compamhias que o bot possui
      * @return o comprável selecionado para hipotecar.
      */
-    public Compravel EscolherOpcaoHipoteca (ArrayList<Compravel> compraveis) {
+    public Compravel escolherOpcaoHipoteca (ArrayList<Compravel> compraveis) {
         ArrayList<Compravel> companhias = new ArrayList<Compravel>();
         ArrayList<Compravel> propSemTodosDaCor = new ArrayList<Compravel>();
         ArrayList<Compravel> propTemTodosDaCor = new ArrayList<Compravel>();
@@ -79,10 +79,10 @@ public class Bot extends Jogador{
      * @param propriedades Propriedades que o bot possui todas de uma cor.
      * @return A propriedade escolhida para contruir casa
      */
-    public Compravel EscolherOpcaoComprarCasa (ArrayList<Propriedade> propriedades){
+    public Propriedade escolherOpcaoComprarCasa (ArrayList<Compravel> propriedades){
         Dado dado = new Dado (propriedades.size());
         dado.rolar();
-        return propriedades.get(dado.getValor());
+        return (Propriedade) propriedades.get(dado.getValor());
     }
 
     /**
@@ -90,16 +90,18 @@ public class Bot extends Jogador{
      * @param propriedades Lista de propriedades com casas que o bot possui.
      * @return A propriedade cuja casa será vendida.
      */
-    public Compravel EscolherOpcaoVenderCasa (ArrayList<Propriedade> propriedades){
-
-        Collections.sort(propriedades, new Comparator<Propriedade>() {
+    public Propriedade escolherOpcaoVenderCasa (ArrayList<Compravel> propriedades){
+        Collections.sort(propriedades, new Comparator<Compravel>() {
             @Override
-            public int compare(Propriedade p2, Propriedade p1)
+            public int compare(Compravel c2, Compravel c1)
             {
+                Propriedade p1 = (Propriedade) c1;
+                Propriedade p2 = (Propriedade) c2;
                 return  (p1.getNumeroCasas() > p2.getNumeroCasas()) ? -1 : (p1.getNumeroCasas() < p2.getNumeroCasas()) ? 1 : 0;
             }
         });
-        return propriedades.get(0);
+
+        return (Propriedade) propriedades.get(0);
     }
 
     /**
@@ -107,7 +109,7 @@ public class Bot extends Jogador{
      * Se tiver saldo acima de 300, o bot irá construir casa.
      * @return Um inteiro que representa a opção selecionada.
      */
-    public int EscolherOpcaoJogo (){
+    public int escolherOpcaoJogo (){
         ArrayList<Compravel> propComCasa = new ArrayList<Compravel>();
         ArrayList<Compravel> companhias = new ArrayList<Compravel>();
         ArrayList<Compravel> propSemCasa = new ArrayList<Compravel>();

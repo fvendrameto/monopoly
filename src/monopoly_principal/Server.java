@@ -163,15 +163,19 @@ public class Server {
 		espacoCompravel.getDono().depositarDinheiro(aluguel);
 		
 		String mensagem = jogador.getNome() + " pagou aluguel em " + espacoCompravel.getNome() + " para " + espacoCompravel.getDono();
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+		for(Server c : clientes) c.enviarStr(mensagem);
 		
 		//atualizar saldo jogador que pagou
-		mensagem = espacoCompravel.getAluguel() + "#" + espacoCompravel.getDono() + "#" + espacoCompravel.getNome();
-		clientes.get(indJogadorAtual).enviarGUI("01", mensagem);
-		
+		if(!(jogador instanceof Bot)){
+			mensagem = espacoCompravel.getAluguel() + "#" + espacoCompravel.getDono() + "#" + espacoCompravel.getNome();
+			clientes.get(indJogadorAtual).enviarGUI("01", mensagem);
+		}
+
 		//atualizar saldo jogador que recebeu
-		mensagem = espacoCompravel.getAluguel() + "#" + jogador.getNome() + "#" + espacoCompravel.getNome();
-		clientes.get(jogadores.indexOf(espacoCompravel.getDono())).enviarGUI("02", mensagem);
+		if(!(espacoCompravel.getDono() instanceof Bot)){
+			mensagem = espacoCompravel.getAluguel() + "#" + jogador.getNome() + "#" + espacoCompravel.getNome();
+			clientes.get(jogadores.indexOf(espacoCompravel.getDono())).enviarGUI("02", mensagem);
+		}
 	}
 	
 	/**
@@ -179,29 +183,32 @@ public class Server {
 	 * @param espacoCompravel Espaco em que o jogador parou
 	 * @param jogador Jogador atual
 	 * @param clientes Lista com os clientes conectados ao servidor
-	 * @param nJogadores Número de jogadores que estão no jogo
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 */
-	private static void comprarPropriedade(Compravel espacoCompravel, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
-		int ret  = (int) clientes.get(indJogadorAtual).enviarEReceberObj("00", espacoCompravel);
+	private static void comprarPropriedade(Compravel espacoCompravel, Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual) {
+		int ret;
+		if(jogador instanceof Bot ) ret = ((Bot) jogador).opcaoComprarPropriedade();
+		else ret = (int) clientes.get(indJogadorAtual).enviarEReceberObj("00", espacoCompravel);
 
 		if(ret == 0) { //vai comprar
 			Banco.comprarCompravel(espacoCompravel, jogador);
 			
 			String mensagem = jogador.getNome() + " comprou " + espacoCompravel.getNome();
-			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+			for(Server c : clientes) c.enviarStr(mensagem);
 			
 			mensagem = jogador.getNome() + "#" + espacoCompravel.getNome();
-			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("02", mensagem);
+			for(Server c : clientes) c.enviarGUI("02", mensagem);
 		}
 	}
 
 	private static void retirarCarta(Jogador jogador, ArrayList<Server> clientes, Carta carta, int indJogadorAtual){
 		String msg_log = jogador + " retirou uma carta de sorte ou revés";
-		for(int i=0; i<clientes.size();i++) clientes.get(i).enviarStr(msg_log);
+		for(Server c : clientes) c.enviarStr(msg_log);
 
-		String descricao = carta.getDescricao() + "#";
-		clientes.get(indJogadorAtual).enviarGUI("09",descricao);
+		if(!(jogador instanceof Bot)){
+			String descricao = carta.getDescricao() + "#";
+			clientes.get(indJogadorAtual).enviarGUI("09",descricao);
+		}
 	}
 
 	/**
@@ -209,18 +216,17 @@ public class Server {
 	 * executa essa ação
 	 * @param jogador Jogador atual
 	 * @param clientes Lista com os clientes conectados ao servidor
-	 * @param nJogadores Número de jogadores que estão no jogo
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 * @param posicao Posição do tabuleiro para a qual o jogador deve ir
 	 */
-	private static void moverJogador(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int posicao) {
+	private static void moverJogador(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual, int posicao) {
 		//avisa no log
 		String mensagem = jogador.getNome() + " teve posição alterada...";
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+		for(Server c : clientes) c.enviarStr(mensagem);
 		
 		//muda a posição nos tabuleiros
 		mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
+		for(Server c : clientes) c.enviarGUI("00", mensagem);
 	}
 	
 	/**
@@ -228,46 +234,48 @@ public class Server {
 	 * que executa alguma dessas ações
 	 * @param jogador Jogador atual
 	 * @param clientes Lista com os clientes conectados ao servidor
-	 * @param nJogadores Número de jogadores que estão no jogo
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 * @param acao Código númerico da ação a ser executada
 	 * @param quantia Valor a ser recebido ou pago
 	 */
-	private static void pagarOuReceber(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int acao, int quantia) {
+	private static void pagarOuReceber(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual, int acao, int quantia) {
 		//avisa no log
 		String mensagem;
 		if(acao == 1) mensagem = jogador.getNome() + " pagou ao banco";
 		else mensagem = jogador.getNome() + " recebeu do banco";
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+		for(Server c : clientes) c.enviarStr(mensagem);
 		
 		//atualiza gui do jogador
-		if(acao == 1) mensagem = jogador.getSaldo() + "#" + "Você pagou " + quantia ;
-		else mensagem = jogador.getSaldo() + "#" + "Você recebeu " + quantia ;
-		clientes.get(indJogadorAtual).enviarGUI("05", mensagem);
+		if(!(jogador instanceof Bot)){
+			if(acao == 1) mensagem = jogador.getSaldo() + "#" + "Você pagou " + quantia ;
+			else mensagem = jogador.getSaldo() + "#" + "Você recebeu " + quantia ;
+			clientes.get(indJogadorAtual).enviarGUI("05", mensagem);
+		}
 	}
 	
 	/**
 	 * Método estático usado para mover o jogador atual e fazer ele receber um valor,  @param jogador Jogador atual
 	 * @param clientes Lista com os clientes conectados ao servidor
-	 * @param nJogadores Número de jogadores que estão no jogo
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 * @param posicao Posição do tabuleiro para a qual o jogador deve ir
 	 * @param quantia Valor a ser recebido ou pago
 	 * @param nome Nome do espaço ao qual o jogador foi movido
 	 */
-	private static void moverEPagar(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int posicao, int quantia, String nome) {
+	private static void moverEPagar(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual, int posicao, int quantia, String nome) {
 		//avisa no log
 		String mensagem = jogador.getNome() + " pagou ao banco e mudou de posição";
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+		for(Server c : clientes) c.enviarStr(mensagem);
 		
 		//muda a posição nos tabuleiros
 		mensagem = indJogadorAtual + "#" + posicao + "#" + jogador.getSaldo();
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
-		
+		for(Server c : clientes) c.enviarGUI("00", mensagem);
+
 		//atualiza saldo gui do jogador e avisa
-		mensagem = jogador.getSaldo() + "#" + "Você pagou " + quantia + "e foi para " + nome;
-		clientes.get(indJogadorAtual).enviarGUI("05", mensagem);
-		
+		if(!(jogador instanceof Bot)){
+			mensagem = jogador.getSaldo() + "#" + "Você pagou " + quantia + "e foi para " + nome;
+			clientes.get(indJogadorAtual).enviarGUI("05", mensagem);
+		}
+
 	}
 	
 	/**
@@ -283,14 +291,17 @@ public class Server {
 	private static void pagarJogadores(Jogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int quantia) {
 		//avisa no log
 		String mensagem = jogador.getNome() + " pagou " + quantia + " para todos os jogadores";
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+		for(Server c : clientes) c.enviarStr(mensagem);
 		
 		//atualiza saldo gui do jogador e avisaJogador jogador, ArrayList<Jogador> jogadores, ArrayList<Server> clientes, int nJogadores
 		for(int i=0;i<nJogadores;i++){
-			mensagem = jogadores.get(i).getSaldo() + "#";
-			if(i != indJogadorAtual) mensagem += "Você recebeu " + quantia + "de" + jogador.getNome();
-			else mensagem += "Você pagou " + quantia + " para todos os jogadores";
-			clientes.get(i).enviarGUI("05", mensagem);
+			if(!(jogadores.get(i) instanceof Bot)){
+				mensagem = jogadores.get(i).getSaldo() + "#";
+				if(i != indJogadorAtual) mensagem += "Você recebeu " + quantia + "de" + jogador.getNome();
+				else mensagem += "Você pagou " + quantia + " para todos os jogadores";
+				clientes.get(i).enviarGUI("05", mensagem);
+			}
+
 		}
 	}
 	
@@ -311,10 +322,12 @@ public class Server {
 		
 		//atualiza saldo gui do jogador e avisa
 		for(int i=0;i<nJogadores;i++){
-			mensagem = jogadores.get(i).getSaldo() + "#";
-			if(i != indJogadorAtual) mensagem +="Você pagou " + quantia + " para " + jogador.getNome();
-			else mensagem += "Você recebeu " + quantia + " de todos os jogadores";
-			clientes.get(i).enviarGUI("05", mensagem);
+			if(!(jogadores.get(i) instanceof Bot)){
+				mensagem = jogadores.get(i).getSaldo() + "#";
+				if(i != indJogadorAtual) mensagem +="Você pagou " + quantia + " para " + jogador.getNome();
+				else mensagem += "Você recebeu " + quantia + " de todos os jogadores";
+				clientes.get(i).enviarGUI("05", mensagem);
+			}
 		}
 	}
 	
@@ -322,24 +335,26 @@ public class Server {
 	 * Método estático para o jogador atual hipotecar uma de suas propriedades
 	 * @param jogador Jogador atual
 	 * @param clientes Lista com os clientes conectados ao servidor
-	 * @param nJogadores Número de jogadores que estão no jogo
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 */
-	private static void hipotecar(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
+	private static void hipotecar(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual) {
 		ArrayList<Compravel> compraveis = jogador.getCompraveis();
 		
 		if(compraveis.size() == 0) return;
-		
-		Compravel propHipoteca = (Compravel) clientes.get(indJogadorAtual).enviarEReceberObj("02", compraveis);
-		
-		if(propHipoteca != null){ //caso
+
+		Compravel propHipoteca;
+		if(jogador instanceof Bot) propHipoteca = ((Bot) jogador).escolherOpcaoHipoteca(compraveis);
+		else propHipoteca = (Compravel) clientes.get(indJogadorAtual).enviarEReceberObj("02", compraveis);
+
+
+		if(propHipoteca != null){ //caso tenha escolhido hipotecar algum compravel
 			Banco.hipotecaCompravel(propHipoteca,jogador);
 			
 			String mensagem = jogador + " hipotecou " + propHipoteca;
-			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+			for(Server c : clientes) c.enviarStr(mensagem);
 			
 			mensagem = jogador + "#" + propHipoteca;
-			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("03", mensagem);
+			for(Server c : clientes) c.enviarGUI("03", mensagem);
 		}
 	}
 	
@@ -347,10 +362,9 @@ public class Server {
 	 * Método estático para o jogador atual construir uma casa em uma de suas propriedades
 	 * @param jogador Jogador atual
 	 * @param clientes Lista com os clientes conectados ao servidor
-	 * @param nJogadores Número de jogadores que estão no jogo
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 */
-	private static void construirCasa(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
+	private static void construirCasa(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual) {
 		ArrayList<Compravel> propriedades = new ArrayList<>();
 		
 		for(Compravel p : jogador.getCompraveis()) {
@@ -360,34 +374,103 @@ public class Server {
 		
 		if(propriedades.size() == 0) return;
 		
-		Propriedade propEscolhida = (Propriedade) clientes.get(indJogadorAtual).enviarEReceberObj("03", propriedades);
+		Propriedade propEscolhida;
+		if(jogador instanceof Bot) propEscolhida = ((Bot) jogador).escolherOpcaoComprarCasa(propriedades);
+		else propEscolhida = (Propriedade) clientes.get(indJogadorAtual).enviarEReceberObj("03", propriedades);
 		
-		if(propEscolhida != null){
+		if(propEscolhida != null){ //caso tenha escolhido construir casa em alguma propriedade
 			Banco.comprarCasa(propEscolhida, jogador);
 			
 			String mensagem = jogador + " construiu um casa em " + propEscolhida;
-			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+			for(Server c : clientes) c.enviarStr(mensagem);
 			
 			mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
-			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("04", mensagem);
+			for(Server c : clientes) c.enviarGUI("04", mensagem);
 		}
+	}
+
+	/**
+	 * Método estático para o jogador atual vender uma casa de uma de suas propriedades
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 */
+	private static void venderCasa(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual) {
+		ArrayList<Compravel> propriedades = new ArrayList<>();
+
+		for(Compravel p : jogador.getCompraveis()){
+			if(p instanceof Propriedade && ((Propriedade)p).temCasa()) {
+				propriedades.add(p);
+			}
+		}
+
+		if(propriedades.size() == 0) return;
+
+		Propriedade propEscolhida;
+		if(jogador instanceof Bot) propEscolhida = ((Bot) jogador).escolherOpcaoVenderCasa(propriedades);
+		else propEscolhida = (Propriedade) clientes.get(indJogadorAtual).enviarEReceberObj("04", propriedades);
+
+
+		if(propEscolhida != null){
+			Banco.venderCasa(propEscolhida, jogador);
+
+			String mensagem  = jogador + " vendeu uma casa em " + propEscolhida;
+			for(Server c : clientes) c.enviarStr(mensagem);
+
+			mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
+			for(Server c : clientes) c.enviarGUI("04", mensagem);
+		}
+	}
+
+	/**
+	 * Método estático que começa uma rodada, fazendo a rolagem dos dados e movendo o jogador no
+	 * tabuleiro de acordo com a rolagem, retornando para a main o espaço em que ele parou
+	 * @param tabuleiro Tabuleiro de jogo
+	 * @param jogador Jogador atual
+	 * @param clientes Lista com os clientes conectados ao servidor
+	 * @param nJogadores Número de jogadores que estão no jogo
+	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
+	 * @param resultadoDados Valor que foi rolado dos dados, para que possa ser usado posteriormente na main
+	 * @return O espaço em que o jogador atual parou
+	 */
+	private static Espaco comecarRodada(Tabuleiro tabuleiro, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int resultadoDados) {
+		String mensagem = "É a vez de " + jogador;
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+
+		mensagem = "Aperte ENTER para rolar os dados";
+		clientes.get(indJogadorAtual).enviarEReceberStr(mensagem);
+		resultadoDados = Dados.rolar(2, null);
+
+		mensagem = jogador + " rolou " + resultadoDados;
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+
+		tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro()).removeJogador(jogador);
+		boolean passouInicio = jogador.andarPosicaoTabuleiro(resultadoDados);
+		if(passouInicio) jogador.depositarDinheiro(200); //se jogador passou pelo inicio recebe dinheiro
+		Espaco espacoAtual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
+		espacoAtual.addJogador(jogador);
+
+		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
+		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
+
+		return espacoAtual;
 	}
 
 	/**
 	 * Informa os jogadores da falencia de um jogador, atualizando os componentes da GUI necessarios
 	 * @param jogador Jogador que declarou falencia
 	 * @param clientes Clientes conectados ao servidor
-	 * @param nJogadores Numero de jogadores na partida
 	 * @param indJogadorAtual Indice do jogador atual(declarou falencia)
 	 */
-	private static void informarFalencia(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual){
+	private static void informarFalencia(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual){
 		String str_log = jogador + " faliu";
-		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarStr(str_log);
+		for(int i=0;i<clientes.size();i++) clientes.get(i).enviarStr(str_log);
 
-		String mensagem = jogador + "#";
-		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarGUI("07",mensagem);
+		String mensagem = jogador + "#" + indJogadorAtual;
+		for(int i=0;i<clientes.size();i++) clientes.get(i).enviarGUI("07",mensagem);
 
-		clientes.get(indJogadorAtual).enviarEReceberStr("Você não tem dinheiro para pagar e faliu!");
+		if(!(jogador instanceof Bot))
+			clientes.get(indJogadorAtual).enviarEReceberStr("Você não tem dinheiro para pagar e faliu!");
 	}
 
 
@@ -405,72 +488,7 @@ public class Server {
 		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarGUI("08",mensagem);
 
 	}
-	
-	/**
-	 * Método estático para o jogador atual vender uma casa de uma de suas propriedades
-	 * @param jogador Jogador atual
-	 * @param clientes Lista com os clientes conectados ao servidor
-	 * @param nJogadores Número de jogadores que estão no jogo
-	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
-	 */
-	private static void venderCasa(Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual) {
-		ArrayList<Compravel> propriedades = new ArrayList<>();
-		
-		for(Compravel p : jogador.getCompraveis()){
-			if(p instanceof Propriedade && ((Propriedade)p).temCasa()) {
-				propriedades.add(p);
-			}
-		}
-		
-		if(propriedades.size() == 0) return;
-		
-		Propriedade propEscolhida = (Propriedade) clientes.get(indJogadorAtual).enviarEReceberObj("04", propriedades);
-		
-		if(propEscolhida != null){
-			Banco.venderCasa(propEscolhida, jogador);
-			
-			String mensagem  = jogador + " vendeu uma casa em " + propEscolhida;
-			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
-			
-			mensagem = jogador + "#" + propEscolhida + "#" +  propEscolhida.getNumeroCasas();
-			for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("04", mensagem);
-		}
-	}
-	
-	/**
-	 * Método estático que começa uma rodada, fazendo a rolagem dos dados e movendo o jogador no
-	 * tabuleiro de acordo com a rolagem, retornando para a main o espaço em que ele parou
-	 * @param tabuleiro Tabuleiro de jogo
-	 * @param jogador Jogador atual
-	 * @param clientes Lista com os clientes conectados ao servidor
-	 * @param nJogadores Número de jogadores que estão no jogo
-	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
-	 * @param resultadoDados Valor que foi rolado dos dados, para que possa ser usado posteriormente na main
-	 * @return O espaço em que o jogador atual parou
-	 */
-	private static Espaco comecarRodada(Tabuleiro tabuleiro, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int resultadoDados) {
-		String mensagem = "É a vez de " + jogador;
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
-		
-		mensagem = "Aperte ENTER para rolar os dados";
-		clientes.get(indJogadorAtual).enviarEReceberStr(mensagem);
-		resultadoDados = Dados.rolar(2, null);
 
-		mensagem = jogador + " rolou " + resultadoDados;
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
-		
-		tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro()).removeJogador(jogador);
-		boolean passouInicio = jogador.andarPosicaoTabuleiro(resultadoDados);
-		if(passouInicio) jogador.depositarDinheiro(200); //se jogador passou pelo inicio recebe dinheiro
-		Espaco espacoAtual = tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro());
-		espacoAtual.addJogador(jogador);
-		
-		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
-		
-		return espacoAtual;
-	}
-	
 	/**
 	 * Método principal, que inicializa o tabuleiro, abre as conexões dos clientes e roda o jogo
 	 * @param args
@@ -550,13 +568,13 @@ public class Server {
 				if(espacoCompravel.temDono() && espacoCompravel.getDono() != jogador) { //SE TEM DONO PAGA O ALUGUEL
 					if(jogador.getSaldo() < espacoCompravel.getAluguel()) {
 						tabuleiro.setFalencia(jogador);
-						informarFalencia(jogador,clientes,nJogadores,indJogadorAtual);
+						informarFalencia(jogador,clientes,indJogadorAtual);
 						continue;
 					}
 					pagarAluguel(espacoCompravel, jogador, jogadores, clientes, nJogadores, indJogadorAtual, resultadoDados);
 				} else if(!espacoCompravel.temDono()){ //o espaço n tem dono, entao pode ser comprado
 					if(jogador.getSaldo() >= espacoCompravel.getPreco()) {
-						comprarPropriedade(espacoCompravel, jogador, clientes, nJogadores, indJogadorAtual);
+						comprarPropriedade(espacoCompravel, jogador, clientes, indJogadorAtual);
 					}
 				}
 			} else {
@@ -580,14 +598,14 @@ public class Server {
 
 				switch(acao){
 					case 0: //mudar posiçao
-						moverJogador(jogador, clientes, nJogadores, indJogadorAtual, posicao);
+						moverJogador(jogador, clientes, indJogadorAtual, posicao);
 						break;
 					case 1: //pagar ao banco
 					case 2: //receber do banco
-						pagarOuReceber(jogador, clientes, nJogadores, indJogadorAtual, acao, quantia);
+						pagarOuReceber(jogador, clientes, indJogadorAtual, acao, quantia);
 						break;
 					case 3: //mudar posição e pagar
-						moverEPagar(jogador, clientes, nJogadores, indJogadorAtual, posicao, quantia,tabuleiro.getEspacoPosicao(posicao).getNome());
+						moverEPagar(jogador, clientes,  indJogadorAtual, posicao, quantia,tabuleiro.getEspacoPosicao(posicao).getNome());
 						break;
 					case 4: //pagar aos jogadores
 						pagarJogadores(jogador, jogadores, clientes, nJogadores, indJogadorAtual, quantia);
@@ -600,26 +618,27 @@ public class Server {
 			
 			int cmd = 1;
 			while(cmd != 3) {
-				cmd = (int) clientes.get(indJogadorAtual).enviarEReceberObj("01", "");
+				if(jogador instanceof Bot) cmd = ((Bot) jogador).escolherOpcaoJogo();
+				else cmd = (int) clientes.get(indJogadorAtual).enviarEReceberObj("01", "");
 				
 				// hipotecar uma propriedade
 				if(cmd == 0) {
-					hipotecar(jogador, clientes, nJogadores, indJogadorAtual);
+					hipotecar(jogador, clientes, indJogadorAtual);
 				}
 				
 				// construir casa
 				if(cmd == 1){
-					construirCasa(jogador, clientes, nJogadores, indJogadorAtual);
+					construirCasa(jogador, clientes, indJogadorAtual);
 				}
 
 				// vender casa
 				if(cmd == 2){
-					venderCasa(jogador, clientes, nJogadores, indJogadorAtual);
+					venderCasa(jogador, clientes,indJogadorAtual);
 				}
 				//sair do partida
 				if(cmd == 4){
 					tabuleiro.setFalencia(jogador);
-					informarFalencia(jogador,clientes,nJogadores, indJogadorAtual);
+					informarFalencia(jogador,clientes, indJogadorAtual);
 					break;
 				}
 			}
