@@ -136,9 +136,32 @@ public class MainGUI extends JFrame {
 		String num = "";
 		boolean run = true;
 		while(run){
-			num = JOptionPane.showInputDialog(null,"Digite numero de jogadores:","Iniciando...",JOptionPane.DEFAULT_OPTION);
+			num = JOptionPane.showInputDialog(null,"Digite numero de jogadores:(Min = 1 | Máx = 6)","Iniciando...",JOptionPane.DEFAULT_OPTION);
 			if(num == null) return 0;
-			if(num.matches("[0-9]+") && Integer.parseInt(num) >= 2) run = false;
+			if(num.matches("[0-9]+") && Integer.parseInt(num) >= 1 && Integer.parseInt(num) <= 6) run = false;
+			else mostrarMensagemErro("Número inválido");
+		}
+		return Integer.parseInt(num);
+	}
+
+	/**
+	 * Exibe janela de dialogo pedindo o numero de bots
+	 * @param numeroMinimo Número minimo que pode ser inserido
+	 * @param numeroMaximo Número máximo que pode ser inserido
+	 * @return
+	 */
+	public static int mostrarDigiteNumeroBots(int numeroMinimo,int numeroMaximo){
+		String num = "";
+		String texto;
+
+		if(numeroMinimo > 0) texto = "Digite o numero de bots(Min = "+numeroMinimo+" | Máx = "+numeroMaximo+")";
+		else texto = "Digite o numero de bots(Min = 0 | Máx = "+numeroMaximo+")";
+
+		boolean run = true;
+		while(run){
+			num = JOptionPane.showInputDialog(null,texto,"Iniciando...",JOptionPane.DEFAULT_OPTION);
+			if(num == null) return 0;
+			if(num.matches("[0-9]+") && Integer.parseInt(num) >= numeroMinimo && Integer.parseInt(num) <= numeroMaximo) run = false;
 			else mostrarMensagemErro("Número inválido");
 		}
 		return Integer.parseInt(num);

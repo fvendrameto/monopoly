@@ -428,21 +428,22 @@ public class Server {
 	 * @param tabuleiro Tabuleiro de jogo
 	 * @param jogador Jogador atual
 	 * @param clientes Lista com os clientes conectados ao servidor
-	 * @param nJogadores Número de jogadores que estão no jogo
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 * @param resultadoDados Valor que foi rolado dos dados, para que possa ser usado posteriormente na main
 	 * @return O espaço em que o jogador atual parou
 	 */
-	private static Espaco comecarRodada(Tabuleiro tabuleiro, Jogador jogador, ArrayList<Server> clientes, int nJogadores, int indJogadorAtual, int resultadoDados) {
+	private static Espaco comecarRodada(Tabuleiro tabuleiro, Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual, int resultadoDados) {
 		String mensagem = "É a vez de " + jogador;
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+		for(Server c : clientes) c.enviarStr(mensagem);
 
-		mensagem = "Aperte ENTER para rolar os dados";
-		clientes.get(indJogadorAtual).enviarEReceberStr(mensagem);
+		if(!(jogador instanceof Bot)){
+			mensagem = "Aperte ENTER para rolar os dados";
+			clientes.get(indJogadorAtual).enviarEReceberStr(mensagem);
+		}
 		resultadoDados = Dados.rolar(2, null);
 
 		mensagem = jogador + " rolou " + resultadoDados;
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarStr(mensagem);
+		for(Server c : clientes) c.enviarStr(mensagem);
 
 		tabuleiro.getEspacoPosicao(jogador.getPosicaoTabuleiro()).removeJogador(jogador);
 		boolean passouInicio = jogador.andarPosicaoTabuleiro(resultadoDados);
@@ -451,7 +452,7 @@ public class Server {
 		espacoAtual.addJogador(jogador);
 
 		mensagem = indJogadorAtual + "#" + jogador.getPosicaoTabuleiro() + "#" + jogador.getSaldo();
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarGUI("00", mensagem);
+		for(Server c : clientes) c.enviarGUI("00", mensagem);
 
 		return espacoAtual;
 	}
@@ -464,10 +465,10 @@ public class Server {
 	 */
 	private static void informarFalencia(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual){
 		String str_log = jogador + " faliu";
-		for(int i=0;i<clientes.size();i++) clientes.get(i).enviarStr(str_log);
+		for(Server c : clientes) c.enviarStr(str_log);
 
 		String mensagem = jogador + "#" + indJogadorAtual;
-		for(int i=0;i<clientes.size();i++) clientes.get(i).enviarGUI("07",mensagem);
+		for(Server c : clientes) c.enviarGUI("07",mensagem);
 
 		if(!(jogador instanceof Bot))
 			clientes.get(indJogadorAtual).enviarEReceberStr("Você não tem dinheiro para pagar e faliu!");
@@ -482,10 +483,10 @@ public class Server {
 	 */
 	private static void informarGanhador(Jogador ganhador, ArrayList<Server> clientes, int nJogadores){
 		String str_log = ganhador + "ganhou o jogo!";
-		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarStr(str_log);
+		for(Server c : clientes) c.enviarStr(str_log);
 
 		String mensagem = ganhador + "#";
-		for(int i=0;i<nJogadores;i++) clientes.get(i).enviarGUI("08",mensagem);
+		for(Server c : clientes) c.enviarGUI("08",mensagem);
 
 	}
 
@@ -535,12 +536,18 @@ public class Server {
 
 		int indJogadorAtual;
 		int nJogadores;
+		int nBots = 0;
+		int botsConectados = 0;
 		int jogadoresConectados = 0;
 		int resultadoDados = 0;
 
 		nJogadores = MainGUI.mostrarDigiteNumeroJogadores();
 		if(nJogadores == 0) System.exit(0);
-		
+
+		//caso tenha menos de 6 jogadores é possivel inserir bots
+		if(nJogadores < 6) nBots = MainGUI.mostrarDigiteNumeroBots(2-nJogadores,6-nJogadores);
+
+
 		while(jogadoresConectados < nJogadores) {
 			Cliente cliente = new Cliente(servidor.accept());
 			Server s = new Server(cliente);
@@ -550,18 +557,28 @@ public class Server {
 		
 		System.out.println("Todos conectados");
 		
-		for(int i=0; i<nJogadores; i++) {
-			String nome = clientes.get(i).enviarEReceberStr("Digite seu nome: ");
+		for(Server c : clientes) {
+			String nome = c.enviarEReceberStr("Digite seu nome: ");
 			jogadores.add(new Jogador(nome));
 		}
-		
+
+		String[] awesomeBotsName = {"bot1","bot2","bot3","bot4","bot5"};
+		while(botsConectados < nBots){
+			jogadores.add(new Bot(awesomeBotsName[botsConectados++]));
+		}
+
+		nJogadores += nBots;
+
+		System.out.println("Bots adicionados");
+
+
 		tabuleiro = new Tabuleiro(jogadores, espacos, cartas);
-		for(int i=0; i<nJogadores; i++) clientes.get(i).enviarObj(tabuleiro);
+		for(Server c : clientes) c.enviarObj(tabuleiro);
 		
 		while(tabuleiro.jogoContinua()) {
 			jogador = tabuleiro.getJogadorAtual();
 			indJogadorAtual = tabuleiro.getIndJogador();
-			espacoAtual = comecarRodada(tabuleiro, jogador, clientes, nJogadores, indJogadorAtual, resultadoDados);
+			espacoAtual = comecarRodada(tabuleiro, jogador, clientes, indJogadorAtual, resultadoDados);
 
 			if(espacoAtual.compravel()) {
 				Compravel espacoCompravel = (Compravel) espacoAtual;
