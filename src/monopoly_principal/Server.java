@@ -550,6 +550,7 @@ public class Server {
 				if(espacoCompravel.temDono() && espacoCompravel.getDono() != jogador) { //SE TEM DONO PAGA O ALUGUEL
 					if(jogador.getSaldo() < espacoCompravel.getAluguel()) {
 						tabuleiro.setFalencia(jogador);
+						informarFalencia(jogador,clientes,nJogadores,indJogadorAtual);
 						continue;
 					}
 					pagarAluguel(espacoCompravel, jogador, jogadores, clientes, nJogadores, indJogadorAtual, resultadoDados);

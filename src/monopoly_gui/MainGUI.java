@@ -331,7 +331,8 @@ public class MainGUI extends JFrame {
 		bensGui.setDinheiro(novo_saldo);
 	}
 
-	public void setFalencia(String jogador){
+	public void setFalencia(String jogador, int indice){
 		jogadoresGui.setFalenciaJogador(jogador);
+		tabuleiroGui.removePeao(indice);
 	}
 }

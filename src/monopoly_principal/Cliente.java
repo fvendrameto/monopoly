@@ -165,7 +165,8 @@ public class Cliente{
 				mainGui.mostrarAvisoEspaco(str);
 			}if(codigo.equals("07")){ //falir um jogador
 				String jogador = mensagem[0];
-				mainGui.setFalencia(jogador);
+				int indice = Integer.parseInt(mensagem[1]);
+				mainGui.setFalencia(jogador,indice);
 			}if(codigo.equals("08")){ //jogador ganhou o jogo
 				String ganhador = mensagem[0];
 				mainGui.anunciarGanhador(ganhador);

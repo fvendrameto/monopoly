@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8332e6ea-09ae-4929-9e4c-68966081ae68" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_elements/Dado.java" afterPath="$PROJECT_DIR$/src/monopoly_elements/Dado.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_gui/MainGUI.java" afterPath="$PROJECT_DIR$/src/monopoly_gui/MainGUI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_gui/TabuleiroGUI.java" afterPath="$PROJECT_DIR$/src/monopoly_gui/TabuleiroGUI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_principal/Cliente.java" afterPath="$PROJECT_DIR$/src/monopoly_principal/Cliente.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_principal/Server.java" afterPath="$PROJECT_DIR$/src/monopoly_principal/Server.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,63 +20,53 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Server.java">
+      <file leaf-file-name="Bot.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Bot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1007">
-              <caret line="568" column="63" lean-forward="false" selection-start-line="568" selection-start-column="63" selection-end-line="568" selection-end-column="63" />
+            <state relative-caret-position="960">
+              <caret line="141" column="1" lean-forward="false" selection-start-line="141" selection-start-column="1" selection-end-line="141" selection-end-column="1" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#629#630#0" expanded="true" />
+                <element signature="e#656#657#0" expanded="true" />
+                <element signature="e#843#844#0" expanded="true" />
+                <element signature="e#867#868#0" expanded="true" />
+                <element signature="e#1383#1394#0" expanded="true" />
+                <element signature="e#1460#1471#0" expanded="true" />
+                <element signature="e#1537#1548#0" expanded="true" />
+                <element signature="e#4063#4074#0" expanded="true" />
+                <element signature="e#4133#4144#0" expanded="true" />
+                <element signature="e#4204#4215#0" expanded="true" />
+                <element signature="e#4281#4292#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Acao.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Acao.java">
+      <file leaf-file-name="Dado.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Dado.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-10">
-              <caret line="61" column="7" lean-forward="true" selection-start-line="61" selection-start-column="7" selection-end-line="61" selection-end-column="7" />
+            <state relative-caret-position="620">
+              <caret line="32" column="61" lean-forward="false" selection-start-line="32" selection-start-column="61" selection-end-line="32" selection-end-column="61" />
               <folding>
-                <element signature="e#1896#1897#0" expanded="true" />
-                <element signature="e#1927#1928#0" expanded="true" />
-                <element signature="e#1984#1985#0" expanded="true" />
-                <element signature="e#2019#2020#0" expanded="true" />
+                <element signature="e#206#207#0" expanded="true" />
+                <element signature="e#228#229#0" expanded="true" />
+                <element signature="e#256#257#0" expanded="true" />
+                <element signature="e#283#284#0" expanded="true" />
+                <element signature="e#318#319#0" expanded="true" />
+                <element signature="e#341#342#0" expanded="true" />
+                <element signature="e#424#425#0" expanded="true" />
+                <element signature="e#443#444#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainGUI.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/monopoly_gui/MainGUI.java">
+      <file leaf-file-name="Jogador.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Jogador.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="19" column="26" lean-forward="true" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
-              <folding>
-                <element signature="e#2458#2459#0" expanded="true" />
-                <element signature="e#2510#2511#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Cliente.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Cliente.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="556">
-              <caret line="320" column="0" lean-forward="false" selection-start-line="320" selection-start-column="0" selection-end-line="320" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Tabuleiro.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Tabuleiro.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1342">
-              <caret line="40" column="61" lean-forward="true" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
+            <state relative-caret-position="140">
+              <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -89,16 +83,12 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>setfALEN</find>
-      <find>construir</find>
-      <find>setFa</find>
       <find>digite se</find>
       <find>FAL</find>
       <find>sim</find>
       <find>s</find>
       <find>false</find>
       <find>VOCê</find>
-      <find>falencia</find>
       <find>opç</find>
       <find>Gu</find>
       <find>digite</find>
@@ -119,6 +109,10 @@
       <find>pa</find>
       <find>pagarou</find>
       <find>rodada</find>
+      <find>falencia</find>
+      <find>falenc</find>
+      <find>pagarourece</find>
+      <find>set</find>
     </findStrings>
     <replaceStrings>
       <replace>Cliente</replace>
@@ -149,12 +143,10 @@
         <option value="$PROJECT_DIR$/src/monopoly_elements/Background.java" />
         <option value="$PROJECT_DIR$/src/monopoly_elements/Banco.java" />
         <option value="$PROJECT_DIR$/src/monopoly_elements/Carta.java" />
-        <option value="$PROJECT_DIR$/src/monopoly_elements/Dado.java" />
         <option value="$PROJECT_DIR$/src/monopoly_elements/Dados.java" />
         <option value="$PROJECT_DIR$/src/monopoly_elements/Espaco.java" />
         <option value="$PROJECT_DIR$/src/monopoly_elements/Jogador.java" />
         <option value="$PROJECT_DIR$/src/monopoly_gui/LogGUI.java" />
-        <option value="$PROJECT_DIR$/src/monopoly_gui/TabuleiroGUI.java" />
         <option value="$PROJECT_DIR$/src/monopoly_gui/Background.java" />
         <option value="$PROJECT_DIR$/src/monopoly_principal/ClienteTeste.java" />
         <option value="$PROJECT_DIR$/src/monopoly_gui/BensGUI.java" />
@@ -165,10 +157,14 @@
         <option value="$PROJECT_DIR$/src/monopoly_elements/Initializers.java" />
         <option value="$PROJECT_DIR$/src/monopoly_elements/Jogavel.java" />
         <option value="$PROJECT_DIR$/src/monopoly_elements/Tabuleiro.java" />
-        <option value="$PROJECT_DIR$/src/monopoly_elements/Acao.java" />
-        <option value="$PROJECT_DIR$/src/monopoly_principal/Server.java" />
+        <option value="$PROJECT_DIR$/src/monopoly_gui/TabuleiroGUI.java" />
         <option value="$PROJECT_DIR$/src/monopoly_gui/MainGUI.java" />
         <option value="$PROJECT_DIR$/src/monopoly_principal/Cliente.java" />
+        <option value="$PROJECT_DIR$/src/monopoly_elements/Acao.java" />
+        <option value="$PROJECT_DIR$/src/monopoly_principal/Server.java" />
+        <option value="$PROJECT_DIR$/src/monopoly_principal/Bot.java" />
+        <option value="$PROJECT_DIR$/src/monopoly_elements/Bot.java" />
+        <option value="$PROJECT_DIR$/src/monopoly_elements/Dado.java" />
       </list>
     </option>
   </component>
@@ -760,12 +756,12 @@
       <workItem from="1497212800753" duration="4980000" />
       <workItem from="1497297282313" duration="6382000" />
       <workItem from="1497802980914" duration="8713000" />
-      <workItem from="1497900588073" duration="16979000" />
+      <workItem from="1497900588073" duration="18619000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43541000" />
+    <option name="totallyTimeSpent" value="45181000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="48" y="-11" width="1319" height="780" extended-state="6" />
@@ -809,7 +805,9 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="antWorkspaceConfiguration">
@@ -817,8 +815,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Tabuleiro.java" />
-    <entry file="file://$PROJECT_DIR$/src/Acao.java" />
     <entry file="file://$PROJECT_DIR$/src/JogadoresGUI.java" />
     <entry file="file://$PROJECT_DIR$/src/Server.java" />
     <entry file="file://$PROJECT_DIR$/src/Companhia.java" />
@@ -853,11 +849,9 @@
     <entry file="file://$PROJECT_DIR$/src/Server.java" />
     <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Banco.java" />
     <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Background.java" />
-    <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Dado.java" />
     <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Dados.java" />
     <entry file="file://$PROJECT_DIR$/src/monopoly_gui/LogGUI.java" />
     <entry file="file://$PROJECT_DIR$/src/monopoly_gui/Background.java" />
-    <entry file="file://$PROJECT_DIR$/src/monopoly_gui/TabuleiroGUI.java" />
     <entry file="file://$PROJECT_DIR$/src/monopoly_principal/ClienteTeste.java" />
     <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Espaco.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -934,18 +928,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Jogador.java">
+    <entry file="file://$PROJECT_DIR$/src/monopoly_gui/TabuleiroGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1530">
-          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        <state relative-caret-position="150">
+          <caret line="162" column="56" lean-forward="false" selection-start-line="162" selection-start-column="56" selection-end-line="162" selection-end-column="56" />
+          <folding>
+            <element signature="e#4627#4628#0" expanded="true" />
+            <element signature="e#4694#4695#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Bot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="25" lean-forward="false" selection-start-line="0" selection-start-column="25" selection-end-line="0" selection-end-column="25" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="116">
+          <caret line="552" column="86" lean-forward="false" selection-start-line="552" selection-start-column="86" selection-end-line="552" selection-end-column="86" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Acao.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-10">
-          <caret line="61" column="7" lean-forward="true" selection-start-line="61" selection-start-column="7" selection-end-line="61" selection-end-column="7" />
+        <state relative-caret-position="290">
+          <caret line="82" column="56" lean-forward="false" selection-start-line="82" selection-start-column="56" selection-end-line="82" selection-end-column="56" />
           <folding>
             <element signature="e#1896#1897#0" expanded="true" />
             <element signature="e#1927#1928#0" expanded="true" />
@@ -955,28 +970,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Server.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1007">
-          <caret line="568" column="63" lean-forward="false" selection-start-line="568" selection-start-column="63" selection-end-line="568" selection-end-column="63" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Tabuleiro.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1342">
-          <caret line="40" column="61" lean-forward="true" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/monopoly_gui/MainGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="19" column="26" lean-forward="true" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
+        <state relative-caret-position="375">
+          <caret line="335" column="40" lean-forward="false" selection-start-line="335" selection-start-column="40" selection-end-line="335" selection-end-column="40" />
           <folding>
             <element signature="e#2458#2459#0" expanded="true" />
             <element signature="e#2510#2511#0" expanded="true" />
@@ -986,10 +983,64 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Cliente.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="556">
-          <caret line="320" column="0" lean-forward="false" selection-start-line="320" selection-start-column="0" selection-end-line="320" selection-end-column="0" />
+        <state relative-caret-position="237">
+          <caret line="168" column="52" lean-forward="false" selection-start-line="168" selection-start-column="52" selection-end-line="168" selection-end-column="52" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Tabuleiro.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1130">
+          <caret line="40" column="61" lean-forward="true" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Jogador.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Dado.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="620">
+          <caret line="32" column="61" lean-forward="false" selection-start-line="32" selection-start-column="61" selection-end-line="32" selection-end-column="61" />
+          <folding>
+            <element signature="e#206#207#0" expanded="true" />
+            <element signature="e#228#229#0" expanded="true" />
+            <element signature="e#256#257#0" expanded="true" />
+            <element signature="e#283#284#0" expanded="true" />
+            <element signature="e#318#319#0" expanded="true" />
+            <element signature="e#341#342#0" expanded="true" />
+            <element signature="e#424#425#0" expanded="true" />
+            <element signature="e#443#444#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Bot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="960">
+          <caret line="141" column="1" lean-forward="false" selection-start-line="141" selection-start-column="1" selection-end-line="141" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#629#630#0" expanded="true" />
+            <element signature="e#656#657#0" expanded="true" />
+            <element signature="e#843#844#0" expanded="true" />
+            <element signature="e#867#868#0" expanded="true" />
+            <element signature="e#1383#1394#0" expanded="true" />
+            <element signature="e#1460#1471#0" expanded="true" />
+            <element signature="e#1537#1548#0" expanded="true" />
+            <element signature="e#4063#4074#0" expanded="true" />
+            <element signature="e#4133#4144#0" expanded="true" />
+            <element signature="e#4204#4215#0" expanded="true" />
+            <element signature="e#4281#4292#0" expanded="true" />
           </folding>
         </state>
       </provider>
