@@ -92,18 +92,6 @@ public class Tabuleiro implements Serializable {
 	 */
 	public void setFalencia(Jogador jogador) {
 		this.temDinheiro[jogadores.indexOf(jogador)] = false;
-		jogador.setSaldo(0);
-		for(int i=0; i<jogador.getCompraveis().size(); i++) {
-			Compravel compravel = jogador.getCompraveis().get(i);
-			if(compravel.propriedade()) {
-				Propriedade propriedade = (Propriedade) compravel;
-				while (propriedade.temCasa()) {
-					Banco.venderCasa(propriedade, jogador);
-				}
-			}
-			Banco.hipotecaCompravel(compravel, jogador);
-			compravel.getDono();
-		}
 	}
 
 	/**
@@ -134,5 +122,19 @@ public class Tabuleiro implements Serializable {
 
 		return ganhador;
 	}
-
+	
+	public void removerDonoCompravel(Compravel compravel) {
+		ArrayList<Compravel> compraveis = new ArrayList<>();
+		for(Espaco e : this.espacos)
+			if(e instanceof Compravel)
+				compraveis.add((Compravel) e);
+		
+		for(int i=0; i < compraveis.size(); i++) {
+			Compravel c = compraveis.get(i);
+			if(c.getDono() != null && c.getDono().getNome().equals(compravel.getDono().getNome()) && c.getNome().equals(compravel.getNome())) {
+				compraveis.get(i).setDono(null);
+			}
+		}
+	}
+	
 }

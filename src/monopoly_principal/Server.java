@@ -600,7 +600,7 @@ public class Server {
 				Compravel espacoCompravel = (Compravel) espacoAtual;
 				if(espacoCompravel.temDono() && espacoCompravel.getDono() != jogador) { //SE TEM DONO PAGA O ALUGUEL
 					if(jogador.getSaldo() < espacoCompravel.getAluguel()) {
-						tabuleiro.setFalencia(jogador);
+						Banco.setFalencia(jogador, tabuleiro);
 						informarFalencia(jogador,clientes,indJogadorAtual);
 						continue;
 					}
@@ -638,7 +638,7 @@ public class Server {
 						pagarOuReceber(jogador, clientes, indJogadorAtual, acao, quantia);
 						break;
 					case 3: //mudar posição e pagar
-						moverEPagar(jogador, clientes,  indJogadorAtual, posicao, quantia,tabuleiro.getEspacoPosicao(posicao).getNome());
+						moverEPagar(jogador, clientes,  indJogadorAtual, posicao, quantia, tabuleiro.getEspacoPosicao(posicao).getNome());
 						break;
 					case 4: //pagar aos jogadores
 						pagarJogadores(jogador, jogadores, clientes, nJogadores, indJogadorAtual, quantia);
@@ -650,7 +650,7 @@ public class Server {
 			}
 			
 			if(jogador.getSaldo() < 0) {
-				tabuleiro.setFalencia(jogador);
+				Banco.setFalencia(jogador, tabuleiro);
 				informarFalencia(jogador, clientes, indJogadorAtual);
 			}
 			
@@ -662,7 +662,7 @@ public class Server {
 				// hipotecar uma propriedade
 				if(cmd == 0) {
 					Compravel escolhido = hipotecar(jogador, clientes, indJogadorAtual);
-					if(escolhido != null) Banco.hipotecaCompravel(escolhido,jogador);
+					if(escolhido != null) Banco.hipotecaCompravel(escolhido, jogador, tabuleiro);
 				}
 				
 				// construir casa
@@ -678,7 +678,7 @@ public class Server {
 				}
 				//sair do partida
 				if(cmd == 4) {
-					tabuleiro.setFalencia(jogador);
+					Banco.setFalencia(jogador, tabuleiro);
 					informarFalencia(jogador, clientes, indJogadorAtual);
 					break;
 				}

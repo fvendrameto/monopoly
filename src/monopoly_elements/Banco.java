@@ -22,8 +22,9 @@ public class Banco {
 	 * @param compravel Compravel que deve ser hipotecado
 	 * @param jogador Jogador que irá hipotecar um bem
 	 */
-	public static void hipotecaCompravel(Compravel compravel, Jogador jogador){
+	public static void hipotecaCompravel(Compravel compravel, Jogador jogador, Tabuleiro tabuleiro){
 		if(compravel.getDono().getNome().equals(jogador.getNome())){ //caso o jogador seja o dono da compravel
+			tabuleiro.removerDonoCompravel(compravel);
 			compravel.setDono(null); //compravel fica sem nome
 			jogador.removerCompravel(compravel); 
 			jogador.depositarDinheiro(compravel.getValorHipoteca());
@@ -40,7 +41,7 @@ public class Banco {
 			propriedade.adicionarCasa();
 			jogador.sacarDinheiro(propriedade.getPrecoCasa());
 		}
-}
+	}
 
 	/**
 	 * Remove uma casa na propriedade de um jogador
@@ -53,5 +54,24 @@ public class Banco {
 			jogador.depositarDinheiro(propriedade.getPrecoCasa()/2);
 		}
 		
+	}
+	
+	public static void setFalencia(Jogador jogador, Tabuleiro tabuleiro) {
+		jogador.setSaldo(0);
+		tabuleiro.setFalencia(jogador);
+		for(int i=0; i<jogador.getCompraveis().size(); i++) {
+			Compravel compravel = jogador.getCompraveis().get(i);
+			tabuleiro.removerDonoCompravel(compravel);
+			if(compravel.propriedade()) {
+				Propriedade propriedade = (Propriedade) compravel;
+				while (propriedade.temCasa()) {
+					Banco.venderCasa(propriedade, jogador);
+				}
+			}
+			tabuleiro.removerDonoCompravel(compravel);
+			compravel.setDono(null); //compravel fica sem nome
+			jogador.removerCompravel(compravel);
+			jogador.depositarDinheiro(compravel.getValorHipoteca());
+		}
 	}
 }
