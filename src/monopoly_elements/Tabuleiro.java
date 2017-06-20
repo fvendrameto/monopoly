@@ -131,7 +131,7 @@ public class Tabuleiro implements Serializable {
 		
 		for(int i=0; i < compraveis.size(); i++) {
 			Compravel c = compraveis.get(i);
-			if(c.getDono() != null && c.getDono().getNome().equals(compravel.getDono().getNome()) && c.getNome().equals(compravel.getNome())) {
+			if(compravel.getDono() != null && c.getDono() != null && c.getDono().getNome().equals(compravel.getDono().getNome()) && c.getNome().equals(compravel.getNome())) {
 				compraveis.get(i).setDono(null);
 			}
 		}

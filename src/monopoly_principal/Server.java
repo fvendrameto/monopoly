@@ -479,7 +479,12 @@ public class Server {
 		for(Server c : clientes) c.enviarStr(str_log);
 
 		String mensagem = jogador + "#" + indJogadorAtual;
-		for(Server c : clientes) c.enviarGUI("07",mensagem);
+		for(Server c : clientes) c.enviarGUI("06",mensagem);
+
+		if(!(jogador instanceof Bot)){
+			clientes.get(indJogadorAtual).enviarGUI("07",mensagem);
+		}
+
 
 		if(!(jogador instanceof Bot))
 			clientes.get(indJogadorAtual).enviarEReceberStr("Você não tem dinheiro para pagar e faliu!");
@@ -524,7 +529,6 @@ public class Server {
 		InetAddress addr = null;
 		ServerSocket servidor = null;
 
-		/*
 		boolean run = true;
 		while(run){
 			String ip = MainGUI.mostrarDigiteIp();
@@ -539,10 +543,6 @@ public class Server {
 				MainGUI.mostrarMensagemErro("Não foi possível conectar com host");
 			}
 		}
-		*/
-
-		addr = InetAddress.getByName("127.0.0.1");
-		servidor = new ServerSocket(6996,50, addr);
 
 
 		System.out.println("Servidor iniciado");
@@ -577,7 +577,7 @@ public class Server {
 			jogadores.add(new Jogador(nome));
 		}
 
-		String[] awesomeBotsName = {"Willian DUBGod","Reusger Guedes","Kenaldinho","Zé Sabotagem","Dudibres"};
+		String[] awesomeBotsName = {"R2D2","C3PO","Marvin","Data","K2SO"};
 		while(botsConectados < nBots){
 			jogadores.add(new Bot(awesomeBotsName[botsConectados++]));
 		}

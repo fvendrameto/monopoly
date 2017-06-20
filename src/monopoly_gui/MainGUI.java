@@ -100,7 +100,7 @@ public class MainGUI extends JFrame {
 
 	/**
 	 * Exibe caixa de dialogo informando o ganhador da partida
-	 * @param ganhador Nome do ganhador que será anunciano
+	 * @param str Mensagem que será exibida
 	 */
 	public static void anunciarGanhador(String str){
 		JOptionPane.showMessageDialog(null,str);
@@ -358,10 +358,21 @@ public class MainGUI extends JFrame {
 			bensGui.setDinheiro(novo_saldo);
 	}
 
-	public void setFalencia(String jogador, int indice){
+	/**
+	 * Marca um outro jogador como falido e faz os ajustes necessarios
+	 * @param jogador Nome do jogador que faliu
+	 * @param indice Indice do jogador que faliu
+	 */
+	public void setFalenciaOutro(String jogador, int indice){
 		jogadoresGui.setFalenciaJogador(jogador);
+		tabuleiroGui.removePeao(indice);
+	}
+
+	/**
+	 * Fali um jogador do cliente na GUI
+	 */
+	public void setFalencia(){
 		alterarSaldo(0);
 		this.falido = true;
-		tabuleiroGui.removePeao(indice);
 	}
 }

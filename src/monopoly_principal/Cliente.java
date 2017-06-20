@@ -118,7 +118,6 @@ public class Cliente{
 				mainGui.posicionaPeao(jogador, posicao);
 				if(saldo != novo_saldo && novo_saldo != -1){ //novo salvo == -1 significa que esse jogador não deve atualizar o saldo
 					saldo = novo_saldo;
-					System.out.println(">>0");
 					mainGui.alterarSaldo(saldo);
 				}
 			} else if(codigo.equals("01")) { //pagar aluguel
@@ -154,10 +153,14 @@ public class Cliente{
 				}
 
 				mainGui.mostrarAvisoEspaco(str);
-			}if(codigo.equals("07")){ //falir um jogador
+			}if(codigo.equals("06")) { //falir um jogador
 				String jogador = mensagem[0];
 				int indice = Integer.parseInt(mensagem[1]);
-				mainGui.setFalencia(jogador,indice);
+				mainGui.setFalenciaOutro(jogador, indice);
+			}if(codigo.equals("07")){ //falir um jogador do cliente
+				String jogador = mensagem[0];
+				int indice = Integer.parseInt(mensagem[1]);
+				mainGui.setFalencia();
 			}if(codigo.equals("08")){ //jogador ganhou o jogo
 				String ganhador = mensagem[0];
 				String str;
@@ -252,7 +255,7 @@ public class Cliente{
 	public static void main(String[] args) throws IOException {
 		Socket cliente = null;
 
-		/*boolean run = true;
+		boolean run = true;
 		while(run){
 			String ip = MainGUI.mostrarDigiteIp();
 			if(ip == null) System.exit(0);
@@ -264,9 +267,7 @@ public class Cliente{
 			}catch(Exception e){
 				MainGUI.mostrarMensagemErro("Não foi possível conectar com host");
 			}
-		}*/
-
-		cliente = new Socket("127.0.0.1",6996);
+		}
 
 		cliente.setKeepAlive(true);
 		Scanner teclado = new Scanner(System.in);
