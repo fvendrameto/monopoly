@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8332e6ea-09ae-4929-9e4c-68966081ae68" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_elements/Acao.java" afterPath="$PROJECT_DIR$/src/monopoly_elements/Acao.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_elements/Jogavel.java" afterPath="$PROJECT_DIR$/src/monopoly_elements/Jogavel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_elements/Tabuleiro.java" afterPath="$PROJECT_DIR$/src/monopoly_elements/Tabuleiro.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_gui/MainGUI.java" afterPath="$PROJECT_DIR$/src/monopoly_gui/MainGUI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_principal/Cliente.java" afterPath="$PROJECT_DIR$/src/monopoly_principal/Cliente.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/monopoly_principal/Server.java" afterPath="$PROJECT_DIR$/src/monopoly_principal/Server.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,7 +19,7 @@
       <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-495">
+            <state relative-caret-position="-1007">
               <caret line="568" column="63" lean-forward="false" selection-start-line="568" selection-start-column="63" selection-end-line="568" selection-end-column="63" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -47,24 +43,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainGUI.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainGUI.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/monopoly_gui/MainGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="79" column="5" lean-forward="true" selection-start-line="79" selection-start-column="5" selection-end-line="79" selection-end-column="5" />
+            <state relative-caret-position="200">
+              <caret line="19" column="26" lean-forward="true" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
               <folding>
-                <element signature="e#2452#2453#0" expanded="true" />
-                <element signature="e#2504#2505#0" expanded="true" />
+                <element signature="e#2458#2459#0" expanded="true" />
+                <element signature="e#2510#2511#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Cliente.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Cliente.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Cliente.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="284" column="0" lean-forward="false" selection-start-line="284" selection-start-column="0" selection-end-line="284" selection-end-column="0" />
+            <state relative-caret-position="556">
+              <caret line="320" column="0" lean-forward="false" selection-start-line="320" selection-start-column="0" selection-end-line="320" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -75,7 +71,7 @@
       <file leaf-file-name="Tabuleiro.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Tabuleiro.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1130">
+            <state relative-caret-position="-1342">
               <caret line="40" column="61" lean-forward="true" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
               <folding />
             </state>
@@ -169,10 +165,10 @@
         <option value="$PROJECT_DIR$/src/monopoly_elements/Initializers.java" />
         <option value="$PROJECT_DIR$/src/monopoly_elements/Jogavel.java" />
         <option value="$PROJECT_DIR$/src/monopoly_elements/Tabuleiro.java" />
-        <option value="$PROJECT_DIR$/src/monopoly_principal/Cliente.java" />
-        <option value="$PROJECT_DIR$/src/monopoly_gui/MainGUI.java" />
         <option value="$PROJECT_DIR$/src/monopoly_elements/Acao.java" />
         <option value="$PROJECT_DIR$/src/monopoly_principal/Server.java" />
+        <option value="$PROJECT_DIR$/src/monopoly_gui/MainGUI.java" />
+        <option value="$PROJECT_DIR$/src/monopoly_principal/Cliente.java" />
       </list>
     </option>
   </component>
@@ -764,12 +760,12 @@
       <workItem from="1497212800753" duration="4980000" />
       <workItem from="1497297282313" duration="6382000" />
       <workItem from="1497802980914" duration="8713000" />
-      <workItem from="1497900588073" duration="16043000" />
+      <workItem from="1497900588073" duration="16979000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="42605000" />
+    <option name="totallyTimeSpent" value="43541000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="48" y="-11" width="1319" height="780" extended-state="6" />
@@ -938,39 +934,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Tabuleiro.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1130">
-          <caret line="40" column="61" lean-forward="true" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Jogador.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1530">
           <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Cliente.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="284" column="0" lean-forward="false" selection-start-line="284" selection-start-column="0" selection-end-line="284" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Server.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-495">
-          <caret line="568" column="63" lean-forward="false" selection-start-line="568" selection-start-column="63" selection-end-line="568" selection-end-column="63" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -987,13 +955,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1007">
+          <caret line="568" column="63" lean-forward="false" selection-start-line="568" selection-start-column="63" selection-end-line="568" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/monopoly_elements/Tabuleiro.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1342">
+          <caret line="40" column="61" lean-forward="true" selection-start-line="40" selection-start-column="61" selection-end-line="40" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/monopoly_gui/MainGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="79" column="5" lean-forward="true" selection-start-line="79" selection-start-column="5" selection-end-line="79" selection-end-column="5" />
+        <state relative-caret-position="200">
+          <caret line="19" column="26" lean-forward="true" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
           <folding>
-            <element signature="e#2452#2453#0" expanded="true" />
-            <element signature="e#2504#2505#0" expanded="true" />
+            <element signature="e#2458#2459#0" expanded="true" />
+            <element signature="e#2510#2511#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/monopoly_principal/Cliente.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="556">
+          <caret line="320" column="0" lean-forward="false" selection-start-line="320" selection-start-column="0" selection-end-line="320" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

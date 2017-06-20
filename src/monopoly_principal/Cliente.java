@@ -317,12 +317,14 @@ public class Cliente{
 				e.printStackTrace();
 				return;
 			}
-
 		}
+
 
 		teclado.close();
 		cliente.close();
 		entrada.close();
 		saida.close();
+
+		System.exit(0);
 	}
 }
