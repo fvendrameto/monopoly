@@ -13,6 +13,10 @@ public class Dado {
 	public Dado() {
 		this.nLados = 6;
 	}
+	
+	public Dado(int nLados) {
+		this.nLados = nLados;
+	}
 
 	private void setValor(int val) {
 		this.valor = val;
