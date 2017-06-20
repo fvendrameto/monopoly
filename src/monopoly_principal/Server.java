@@ -340,10 +340,10 @@ public class Server {
 	 * @param clientes Lista com os clientes conectados ao servidor
 	 * @param indJogadorAtual Índice do jogador atual na lista de jogadores
 	 */
-	private static void hipotecar(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual) {
+	private static Compravel hipotecar(Jogador jogador, ArrayList<Server> clientes, int indJogadorAtual) {
 		ArrayList<Compravel> compraveis = jogador.getCompraveis();
 		
-		if(compraveis.size() == 0) return;
+		if(compraveis.size() == 0) return null;
 
 		Compravel propHipoteca;
 		if(jogador instanceof Bot) propHipoteca = ((Bot) jogador).escolherOpcaoHipoteca(compraveis);
@@ -351,14 +351,14 @@ public class Server {
 
 
 		if(propHipoteca != null){ //caso tenha escolhido hipotecar algum compravel
-			Banco.hipotecaCompravel(propHipoteca,jogador);
-			
 			String mensagem = jogador + " hipotecou " + propHipoteca;
 			for(Server c : clientes) c.enviarStr(mensagem);
 			
 			mensagem = jogador + "#" + propHipoteca;
 			for(Server c : clientes) c.enviarGUI("03", mensagem);
 		}
+
+		return propHipoteca;
 	}
 	
 	/**
@@ -648,7 +648,8 @@ public class Server {
 				
 				// hipotecar uma propriedade
 				if(cmd == 0) {
-					hipotecar(jogador, clientes, indJogadorAtual);
+					Compravel escolhido = hipotecar(jogador, clientes, indJogadorAtual);
+					if(escolhido != null) Banco.hipotecaCompravel(escolhido,jogador);
 				}
 				
 				// construir casa

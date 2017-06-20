@@ -24,7 +24,6 @@ public class Banco {
 	 */
 	public static void hipotecaCompravel(Compravel compravel, Jogador jogador){
 		if(compravel.getDono().getNome().equals(jogador.getNome())){ //caso o jogador seja o dono da compravel
-			System.out.println("TA AQUI");
 			compravel.setDono(null); //compravel fica sem nome
 			jogador.removerCompravel(compravel); 
 			jogador.depositarDinheiro(compravel.getValorHipoteca());
